@@ -1,0 +1,51 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="seccion-login">
+    <div class="contenedor-login">
+        <div class="lado-izquierdo">
+            <img src="{% static 'Imagenes/buscar_usuario.png' %}" 
+                alt="imagen de verificar si se encuentra registrado" 
+                class="imagen-login">
+
+            <p class="texto-info-login">
+                Este formulario está destinado exclusivamente para estudiantes.  
+                Si usted es docente o personal administrativo, por favor Diríjase al administrador.
+            </p>
+        </div>
+
+        <div class="lado-derecho">
+            <form method="post" class="tarjeta-login">
+                {% csrf_token %}
+                <h3>¿Se te olvidaron las credenciales?</h3>
+
+                <label for="cedula_identidad">
+                    Ingresa tú cédula de identidad:
+                </label>
+
+                <div class="grupo-input">
+                    <select name="nacionalidad" id="nacionalidad">
+                        <option value="">N</option>
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                    </select>
+
+                    <input type="text" name="usuario" id="cedula_identidad" class="control-entrada" placeholder="Selecciona la nacionalidad">
+                </div>
+
+                <button type="submit" class="boton-login">Verificar</button>
+
+                <div class="texto-registro">
+                    <p>¿Ya tienes tus credenciales? <a href="{% url 'inicio_sesion' %}">haz clic aquí</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+
+{% endblock %}

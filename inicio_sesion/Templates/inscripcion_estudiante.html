@@ -1,0 +1,99 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="inscripcion">
+    <h3>Inscripción de Estudiante</h3>
+
+    <form method="post">
+
+        <label>Nombres:</label>
+        <input type="text" name="nombres">
+
+        <label>Apellidos:</label>
+        <input type="text" name="apellidos">
+¿
+        <label>Cédula de Identidad:</label>
+        <div class="grupo-inline">
+            <select name="nacionalidad">
+                <option value="">N</option>
+                <option value="V">V</option>
+                <option value="E">E</option>
+            </select>
+            <input type="text" name="cedula_identidad">
+        </div>
+
+        <label>Número Telefónico:</label>
+        <div class="grupo-inline">
+            <select name="prefijo_tlf">
+                <option value="">Prefijo</option>
+            </select>
+            <input type="text" name="numero_tlf">
+        </div>
+
+        <label for="CorreoPrin">Correo Electrónico (Principal):</label>
+        <div class="grupo-inline">
+            <input type="text" name="correo1">
+            <select name="dominio_email1">
+                <option value="">Dominio</option>
+                <option value="@gmail.com">@gmail.com</option>
+                <option value="@yahoo.com">@yahoo.com</option>
+                <option value="@outlook.com">@outlook.com</option>
+            </select>
+        </div>
+
+        <label for="CorreoSecundario">Correo Electrónico (Alternativo):</label>
+        <div class="grupo-inline">
+            <input type="text" name="correo2" id="CorreoSecundario">
+            <select name="dominio_email2" id="select_dominio">
+                <option value="">Dominio</option>
+                <option value="@gmail.com">@gmail.com</option>
+                <option value="@yahoo.com">@yahoo.com</option>
+                <option value="@outlook.com">@outlook.com</option>
+            </select>
+        </div>
+
+        <label for="condicion_residencia">Condición de Residencia:</label>
+        <select name="condicion_domicilio" id="condicion_residencia" required>
+            <option value="">Selecciona</option>
+            <option value="Residente">Residente</option>
+            <option value="Foraneo">Foráneo</option>
+        </select>
+
+        <label for="municipio_residencia">Municipio:</label>
+        <select name="municipio_domicilio" id="municipio_residencia" required></select>
+
+        <label for="parroquia_residencia">Parroquia:</label>
+        <select name="parroquia" id="parroquia_residencia" disabled required></select>
+
+        <label for="direccion_domicilio">Dirección de Residencia:</label>
+        <textarea name="direccion" id="direccion_domicilio" disabled required></textarea>
+
+        <label for="TipoInstitucion">Tipo de Institución:</label>
+        <select name="tipoinstitucion" id="TipoInstitucion" required>
+            <option value="">Selecciona</option>
+            <option value="publico">Público</option>
+            <option value="privado">Privado</option>
+        </select>
+
+        <label for="nombre_institucion">Nombre de la Institución:</label>
+        <input type="text" name="nombre_institucion" id="nombre_institucion" placeholder="Nombre de las Institución" required>
+
+        <label for="fecha_graduacion">Fecha de Graduación:</label>
+        <input type="date" name="fecha_grado" id="fecha_graduacion" required>
+
+        <label for="codigo_sni_opsu">Código SNI/OPSU</label>
+        <input type="text" name="codigo_opsu" id="codigo_sni_opsu" placeholder="0123456789" required>
+
+        <input type="submit" value="Inscribir">
+    </form>
+</section>
+
+<script src="{% static 'Funcionalidades/correo_electronico.js'%}"></script>
+<script src="{% static 'Funcionalidades/municipio.js'%}"></script>
+<script src="{% static 'Funcionalidades/parroquia.js'%}"></script>
+<script src="{% static 'Funcionalidades/telefono.js'%}"></script>
+
+{% endblock %}

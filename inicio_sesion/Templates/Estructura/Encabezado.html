@@ -1,0 +1,34 @@
+{% load static %}
+
+<header>
+    <nav id="navegacion">
+        <div class="contenedor cintillo">
+
+            <article class="bloque-logo">
+                <img src="{% static 'Imagenes/bandera-cintillo.png' %}" alt="Bandera de Venezuela">
+            </article>
+
+            <div class="bloque-texto">
+                <h6>Gobierno Bolivariano de Venezuela</h6>
+                <span class="separador">|</span>
+                <h6>Ministerio del Poder Popular para la Educación Universitaria</h6>
+            </div>
+
+            <article class="bloque-logo">
+                <img src="{% static 'Imagenes/UPT_LOGO.png' %}" alt="Logo UPT">
+            </article>
+
+            <div class="bloque-texto bloque-universidad">
+                <h6>Universidad Politécnica Territorial del Estado Barinas</h6>
+                <h6>“José Félix Ribas”</h6>
+            </div>
+
+            {% if request.path == '/' %}
+                <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
+
+                {% else %}
+                    <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar Sesión</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,50 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="registrar_administrativo">
+    <div class="contenedor_personal_administrativo">
+        <div class="contenedor-info-personal-administrativo">
+            <img src="{% static 'Imagenes/personal_administrativo.png' %}" alt="Personal Administrativo">
+            <p>El presente formulario esta destinado a los Docentes, Coordinadores de PNFs y los encargados del Control de Estudio</p>
+            <p>Debe de estar previamente registrado, sino estas registrada debe de ir al director general.</p>
+        </div>
+        
+       
+
+        <form action="">
+              <h3>Registro Personal</h3>
+
+            <label for="cedula_identidad">Ingresa tú cedula de identidad:</label>    
+            <div class="grupo-input">
+                <select name="nacionalidad" id="nacionalidad">
+                    <option value="">N</option>
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                </select>
+
+                <input type="text" name="usuario_ci" id="cedula_identidad">
+            </div>
+            
+            <label for="nombre_usuario" hidden>Ingrese el nombre de usuario:</label>
+            <input type="text" name="nombre_usuario" id="nombre_usuario" hidden>
+
+            <div class="input-group password-group">
+                <label for="password" hidden>Ingrese la contraseña</label>
+                <input type="password" name="password_usuario" id="password" hidden>
+
+                <i class="icon-eye icon-password" id="mostrar_password" hidden></i>
+                <i class="icon-eye-off icon-password" id="ocultar_password"></i>
+            </div>
+
+            <button type="submit" hidden>Registrarte</button>
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+
+{% endblock %}

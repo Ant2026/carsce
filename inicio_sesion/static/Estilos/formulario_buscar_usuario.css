@@ -1,0 +1,152 @@
+#seccion-login {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #e9eef5);
+    color: #000;
+}
+
+.contenedor-login {
+    width: 850px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.lado-izquierdo {
+    flex: 1;
+    background: #f3f6fb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 22px;
+    gap: 10px;
+}
+
+.imagen-login {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+}
+
+.texto-info-login,
+.texto-registro p {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    text-indent: 0;
+}
+
+.lado-derecho {
+    flex: 1;
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarjeta-login {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tarjeta-login h3 {
+    text-align: center;
+    margin-bottom: 5px;
+    
+}
+
+.tarjeta-login label {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.grupo-input {
+    display: flex;
+    gap: 8px;
+}
+
+#nacionalidad {
+    width: 70px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    background: #fff;
+}
+
+.control-entrada {
+    flex: 1;
+    padding: 11px 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.control-entrada:focus,
+#nacionalidad:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+}
+
+.boton-login {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #4a90e2;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.boton-login:hover {
+    background: #357bd8;
+}
+
+.texto-registro {
+    margin-top: 8px;
+    text-align: center;
+}
+
+.texto-registro a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.texto-registro a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+
+    .contenedor-login {
+        flex-direction: column;
+    }
+
+    .lado-izquierdo,
+    .lado-derecho {
+        padding: 20px;
+    }
+
+    .imagen-login {
+        max-width: 220px;
+    }
+}

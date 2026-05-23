@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'Imagenes/UPT_LOGO.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'Estilos/fontello.css' %}">
+    <link rel="stylesheet" href="{% static 'Estilos/estilos.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <title>UPT José Félix Ribas</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% if request.path == '/' or request.session.usuario_nombre %}
+     
+        {% include 'Estructura/Encabezado.html' %}
+
+    {% endif %}
+
+    {% if request.session.usuario_nombre %}
+
+        {% include 'Estructura/Barra_Laterial.html' %}
+
+    {% endif %}
+
+    <main>
+        {% block content %}
+
+        {% endblock %}   
+    </main>
+
+    {% if request.path == '/' %}
+     
+        {% include 'Estructura/Pie_Pagina.html' %} 
+
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

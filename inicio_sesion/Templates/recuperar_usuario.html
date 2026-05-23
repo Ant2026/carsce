@@ -1,0 +1,18 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="recuperar_usuario">
+    <div class="tarjeta-recuperacion">
+        <img src="{% static 'Imagenes/recuperar_usuario.png' %}" alt="imagen para recuperar nombre usuario">
+        
+        <h3>Usuario</h3>
+
+        <p>El nombre de usuario fue enviado al correo electrónico principal registrado, verifique en la bandeja de entrada</p>
+        <a href="{% url 'inicio_sesion' %}">Regresar</a>
+    </div>
+</section>
+
+{% endblock %}

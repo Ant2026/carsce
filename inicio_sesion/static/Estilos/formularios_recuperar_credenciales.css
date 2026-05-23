@@ -1,0 +1,382 @@
+#seccion-login {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #e9eef5);
+    color: #000;
+}
+
+.contenedor-login {
+    width: 850px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.lado-izquierdo {
+    flex: 1;
+    background: #f3f6fb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 22px;
+    gap: 10px;
+}
+
+.imagen-login {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+}
+
+.texto-info-login,
+.texto-registro p {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    text-indent: 0;
+}
+
+.lado-derecho {
+    flex: 1;
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarjeta-login {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tarjeta-login h3 {
+    text-align: center;
+    margin-bottom: 5px;
+    
+}
+
+.tarjeta-login label {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.grupo-input {
+    display: flex;
+    gap: 8px;
+}
+
+#nacionalidad {
+    width: 70px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    background: #fff;
+}
+
+.control-entrada {
+    flex: 1;
+    padding: 11px 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.control-entrada:focus,
+#nacionalidad:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+}
+
+.boton-login {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #4a90e2;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.boton-login:hover {
+    background: #357bd8;
+}
+
+.texto-registro {
+    margin-top: 8px;
+    text-align: center;
+}
+
+.texto-registro a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.texto-registro a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+
+    .contenedor-login {
+        flex-direction: column;
+    }
+
+    .lado-izquierdo,
+    .lado-derecho {
+        padding: 20px;
+    }
+
+    .imagen-login {
+        max-width: 220px;
+    }
+}
+
+
+/* Panel de Recuperar o cambiar credenciales */
+#panel_recuperacion {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #e9eef5);
+}
+
+.recuperar_usuario,
+.recuperar_contrasenia {
+    width: 420px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+    transition: 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.recuperar_usuario:hover,
+.recuperar_contrasenia:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.15);
+}
+
+.recuperar_usuario a,
+.recuperar_contrasenia a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.recuperar_usuario img,
+.recuperar_contrasenia img {
+    width: 80px;
+    height: auto;
+}
+
+.recuperar_usuario p,
+.recuperar_contrasenia p {
+    margin: 0;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+}
+
+.recuperar_usuario:hover img,
+.recuperar_contrasenia:hover img {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    #panel_recuperacion {
+        flex-direction: column;
+    }
+
+    .recuperar_usuario,
+    .recuperar_contrasenia {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+/* Estilos de Formulario de recuperar usuario */
+#recuperar_usuario {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #e9eef5);
+}
+
+#recuperar_usuario .tarjeta-recuperacion {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    gap: 18px;
+}
+
+#recuperar_usuario img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+}
+
+#recuperar_usuario h3 {
+    margin: 0;
+    font-size: 28px;
+    color: #2c3e50;
+}
+
+#recuperar_usuario p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #6c757d;
+}
+
+#recuperar_usuario a {
+    margin-top: 10px;
+    background: #4a90e2;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    font-weight: 600;
+}
+
+#recuperar_usuario a:hover {
+    background: #357bd8;
+    transform: translateY(-2px);
+}
+
+
+/* Estilos de Formulario de cambiar contraseña */
+#recuperar_contrasenia {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #e9eef5);
+}
+
+.tarjeta-contrasenia {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+
+    text-align: center;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+.tarjeta-contrasenia img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+}
+
+.tarjeta-contrasenia h3 {
+    margin: 0;
+    font-size: 28px;
+    color: #2c3e50;
+}
+
+.tarjeta-contrasenia form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.input-group {
+    width: 100%;
+}
+
+.password-group {
+    position: relative;
+}
+
+.password-group input {
+    width: 100%;
+    padding: 12px 45px 12px 12px; 
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    outline: none;
+    transition: 0.3s ease;
+    font-size: 15px;
+}
+
+.password-group input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.icon-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+    font-size: 18px;
+}
+
+.tarjeta-contrasenia button {
+    width: 100%;
+    background: #4a90e2;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.tarjeta-contrasenia button:hover {
+    background: #357bd8;
+    transform: translateY(-2px);
+}
