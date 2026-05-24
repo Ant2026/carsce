@@ -12,8 +12,9 @@
             <p>Debe de estar previamente registrado, sino estas registrada debe de ir al director general.</p>
         </div>
         
-        <form action="">
-              <h3>Registro Personal</h3>
+        <form method="post">
+            <h3>Registro Personal</h3>
+            {% csrf_token %}
 
             <label for="cedula_identidad">Ingresa tú cedula de identidad:</label>    
             <div class="grupo-input">

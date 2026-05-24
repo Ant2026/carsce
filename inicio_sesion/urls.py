@@ -9,6 +9,8 @@ urlpatterns = [
     path('panel_recuperar_credenciales/', views.panel_recuperar_credenciales, name="panel_recuperar_credenciales"),
     path('recuperar_contrasenia/', views.recuperar_contrasenia, name="recuperar_contrasenia"),
     path('recuperar_usuario/', views.recuperar_usuario, name="recuperar_usuario"),
+
+    path('comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
     
     path('panel_registro/', views.panel_registro, name="panel_registro"),
     path('confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),

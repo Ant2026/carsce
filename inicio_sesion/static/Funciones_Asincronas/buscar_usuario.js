@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowEscapeKey: false
                 });
 
-                window.location.href = "/panel_recuperar_credenciales/";
+                window.location.href = "/comprobar_usuario/";
 
             } else {
                 await Swal.fire({
@@ -47,5 +47,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
     });
-
 });

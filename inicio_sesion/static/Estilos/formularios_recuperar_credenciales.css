@@ -1,3 +1,102 @@
+#comprobar_usuario{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4f6f9;
+    padding: 20px;
+}
+
+.contenedor-comprobar{
+    width: 100%;
+    max-width: 500px;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+}
+
+.contenedor-comprobar h3{
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #1e293b;
+}
+
+.contenedor-comprobar form{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.contenedor-comprobar label{
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.grupo-input{
+    position: relative;
+    width: 100%;
+}
+
+.grupo-input input{
+    width: 100%;
+    padding: 14px 45px 14px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+    background: #f8fafc;
+}
+
+.grupo-input input:focus{
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 5px rgba(37,99,235,0.3);
+}
+
+.grupo-input input::placeholder{
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.icon-password{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #64748b;
+    transition: 0.3s;
+}
+
+.icon-password:hover{
+    color: #2563eb;
+}
+
+
+.contenedor-comprobar button{
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.contenedor-comprobar button:hover{
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
 #seccion-login {
     min-height: 100vh;
     display: flex;

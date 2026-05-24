@@ -1,0 +1,29 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="comprobar_usuario">
+    <div class="contenedor-comprobar">
+        <h3>Verificar Código</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="comprobar_codigo">Ingrese el código:</label>
+            <div class="grupo-input">
+                <input type="password" name="codigo" id="comprobar_codigo" placeholder="Debe ingresar el código enviado a su Correo Electronico (Principal)" required>
+
+                <i class="icon-eye icon-password" id="mostrar_password"></i>
+                <i class="icon-eye-off icon-password" id="ocultar_password"></i>    
+            </div>
+            
+            <button type="submit">Verificar</button>
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/codigo_email.js' %}"></script>
+
+{% endblock %}

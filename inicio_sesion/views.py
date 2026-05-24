@@ -15,7 +15,6 @@ def inicio_sesion(request):
         contrasenia = request.POST.get("contrasenia")
 
         if nombre_usuario and contrasenia:
-
             usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
 
             if check_password(contrasenia, usuario.clave):
@@ -47,69 +46,72 @@ def cerrar_sesion(request):
     request.session.flush() 
     return redirect("inicio_sesion")
 
+# Esto son los modulos para recuperar o cambiar de credenciales con sus procesos de autenticación
+
 def buscar_usuario(request):
-
     if request.method == "POST":
-
         nacionalidad = request.POST.get("nacionalidad")
         num_cedula = request.POST.get("ci")
 
         if nacionalidad and num_cedula:
-
             cedula_identidad = nacionalidad + num_cedula
 
-            existe = Usuario.objects.filter(
-                cedula_identidad=cedula_identidad
-            ).exists()
+            existe = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
 
             if existe:
-
                 request.session['usuario_existe'] = True
 
                 return JsonResponse({
-                    "estado": "exito",
-                    "icon": "success",
-                    "descripcion": "Usuario encontrado"
-                })
-
+                            "estado": "exito",
+                            "icon": "success",
+                            "descripcion": "Usuario encontrado"
+                        })
             else:
-
                 return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "descripcion": "No se encuentra registrado"
-                })
-
+                            "estado": "fallo",
+                            "icon": "error",
+                            "descripcion": "No se encuentra registrado"
+                        })
         return JsonResponse({
-            "estado": "fallo",
-            "icon": "warning",
-            "descripcion": "Debe completar los campos"
-        })
+                    "estado": "fallo",
+                    "icon": "warning",
+                    "descripcion": "Debe completar los campos"
+                })
         
     return render(request, 'buscar_usuario.html')
 
+def comprobar_usuario(request):
+    if not request.session.get("usuario_existe"):
+        return redirect("buscar_usuario")
+    
+    return render(request, 'comprobar_usuario.html')
+
 def panel_recuperar_credenciales(request):
+    if not request.session.get("usuario_existe"):
+        return redirect("buscar_usuario")
+    
     return render(request, 'panel_recuperar_credenciales.html')
 
 def recuperar_contrasenia(request):
+    if not request.session.get("usuario_existe"):
+        return redirect("buscar_usuario")
+    
     return render(request, 'recuperar_contrasenia.html')
 
 def recuperar_usuario(request):
+    if not request.session.get("usuario_existe"):
+        return redirect("buscar_usuario")
+    
     return render(request, 'recuperar_usuario.html')
 
+# Esto son los modulos para registrar credenciales por parte del personal y
+# pre-inscripción para los estudiantes
 
 def panel_registro(request):
     return render(request, 'panel_registro.html')
 
 def confirmar_registro_personal(request):
     return render(request, 'confirmar_registro_personal.html')
-
-
-def panel_usuario(request):
-    return render(request, 'panel_usuario.html')
-
-def inscripcion_estudiante(request):
-    return render(request, 'inscripcion_estudiante.html')
 
 def pre_inscripción(request):
 
@@ -196,3 +198,11 @@ def pre_inscripción(request):
         })
 
     return render(request, "pre_inscripción.html")
+
+# Esto son los modulos del panel de usuarios
+
+def panel_usuario(request):
+    return render(request, 'panel_usuario.html')
+
+def inscripcion_estudiante(request):
+    return render(request, 'inscripcion_estudiante.html')
