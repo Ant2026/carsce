@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Usuario, UsuarioPerfil, Perfiles, Contacto
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 
 # Create your views here.
 
@@ -18,32 +16,29 @@ def inicio_sesion(request):
 
         if nombre_usuario and contrasenia:
 
-            try:
-                usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
+            usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
 
+            if check_password(contrasenia, usuario.clave):
+                nombre_completo = usuario.nombres + " " + usuario.apellidos
 
-                if check_password(contrasenia, usuario.clave):
-                    nombre_completo = usuario.nombres + " " + usuario.apellidos
+                perfiles = Perfiles.objects.filter(usuarioperfil__id_usuario=usuario)
 
-                    perfiles = Perfiles.objects.filter(usuarioperfil__id_usuario=usuario)
+                lista_perfiles = list(perfiles.values_list('perfil', flat=True))
 
-                    lista_perfiles = list(perfiles.values_list('perfil', flat=True))
+                request.session['usuario_nombre'] = nombre_completo
+                request.session['perfiles'] = lista_perfiles
 
-                    request.session['usuario_nombre'] = nombre_completo
-                    request.session['perfiles'] = lista_perfiles
-
-                    return redirect("panel_usuario")
-                else:
-                    request.session['login_error'] = "Contraseña incorrecta"
-                    return redirect("inicio_sesion")
-
-            except Usuario.DoesNotExist:
-                request.session['login_error'] = "Usuario no existe"
-                return redirect("inicio_sesion")
-
+                return redirect("panel_usuario")
+            else:
+                return JsonResponse({
+                            "icon": "error",
+                            "descripcion": "Ya existe un correo registrado"
+                        }) 
         else:
-            request.session['login_error'] = "Campos vacíos"
-            return redirect("inicio_sesion")
+            return JsonResponse({
+                        "icon": "warning",
+                        "descripcion": "Ya existe un correo registrado"
+                    })
 
     error = request.session.pop('login_error', None)
     return render(request, 'inicio_sesion.html', {'login_error': error})
@@ -53,6 +48,44 @@ def cerrar_sesion(request):
     return redirect("inicio_sesion")
 
 def buscar_usuario(request):
+
+    if request.method == "POST":
+
+        nacionalidad = request.POST.get("nacionalidad")
+        num_cedula = request.POST.get("ci")
+
+        if nacionalidad and num_cedula:
+
+            cedula_identidad = nacionalidad + num_cedula
+
+            existe = Usuario.objects.filter(
+                cedula_identidad=cedula_identidad
+            ).exists()
+
+            if existe:
+
+                request.session['usuario_existe'] = True
+
+                return JsonResponse({
+                    "estado": "exito",
+                    "icon": "success",
+                    "descripcion": "Usuario encontrado"
+                })
+
+            else:
+
+                return JsonResponse({
+                    "estado": "fallo",
+                    "icon": "error",
+                    "descripcion": "No se encuentra registrado"
+                })
+
+        return JsonResponse({
+            "estado": "fallo",
+            "icon": "warning",
+            "descripcion": "Debe completar los campos"
+        })
+        
     return render(request, 'buscar_usuario.html')
 
 def panel_recuperar_credenciales(request):
@@ -94,7 +127,6 @@ def pre_inscripción(request):
         password = request.POST.get("password")
 
         if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono and usuario and password:
-
             correo_electronico = nombre_correo + dominio
             cedula_identidad = nacionalidad + num_cedula
             telefono = prefijo + num_telefono
@@ -112,23 +144,20 @@ def pre_inscripción(request):
             ).exists()
 
             if verificar_cedula:
-
                 return JsonResponse({
-                    "estado": "fallo",
+                    "icon": "error",
                     "descripcion": "Ya existe una cédula registrada"
                 })
 
             if verificar_correo:
-
                 return JsonResponse({
-                    "estado": "fallo",
+                    "icon": "error",
                     "descripcion": "Ya existe un correo registrado"
                 })
 
             if verificar_usuario:
-
                 return JsonResponse({
-                    "estado": "fallo",
+                    "icon": "error",
                     "descripcion": "Ya existe el usuario registrado"
                 })
 
@@ -157,12 +186,12 @@ def pre_inscripción(request):
             )
 
             return JsonResponse({
-                "estado": "exito",
+                "icon": "success",
                 "descripcion": "Se registró correctamente"
             })
 
         return JsonResponse({
-            "estado": "fallo",
+            "icon": "warning",
             "descripcion": "Complete todos los campos"
         })
 

@@ -183,7 +183,6 @@
     margin-bottom: -10px;
 }
 
-/* Inputs normales */
 #pre_inscripcion input,
 #pre_inscripcion select{
     height: 48px;
@@ -196,7 +195,6 @@
     background: #f8fafc;
 }
 
-/* Focus */
 #pre_inscripcion input:focus,
 #pre_inscripcion select:focus{
     border-color: #2563eb;
@@ -204,20 +202,17 @@
     background: #ffffff;
 }
 
-/* Agrupación equitativa */
 .grupo-campo{
     display: flex;
     gap: 12px;
     width: 100%;
 }
 
-/* Ambos ocupan el mismo espacio */
 .grupo-campo input,
 .grupo-campo select{
     flex: 1;
 }
 
-/* Botón */
 #pre_inscripcion button{
     margin-top: 15px;
     height: 50px;
@@ -256,7 +251,6 @@
     background: #ffffff;
 }
 
-/* Iconos */
 .icon-password{
     position: absolute;
     top: 50%;
@@ -277,7 +271,32 @@
     transform: translateY(-2px);
 }
 
-/* Responsive */
+.seguridad-password{
+    margin-top: 10px;
+}
+
+.barra-password{
+    width: 100%;
+    height: 8px;
+    background: #dbe2ea;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#nivel_password{
+    width: 0%;
+    height: 100%;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+#texto_password{
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 @media(max-width: 600px){
 
     .grupo-campo{

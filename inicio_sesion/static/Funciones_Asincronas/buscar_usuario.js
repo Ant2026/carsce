@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const formulario = document.getElementById("formulario")
+    const formulario = document.getElementById("formulario_buscar_usuario");
 
     formulario.addEventListener("submit", async function(e) {
         e.preventDefault()
-
         const datos_formulario = new FormData(formulario)
 
         try {
@@ -12,28 +11,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: datos_formulario
             });
             const resultado = await respuesta.json()
+            
+           if (resultado.estado === "exito") {
 
-            if (resultado.estado == "exito") {
-                Swal.fire({
-                    title: "Exito",
+                await Swal.fire({
+                    title: "Correcto",
                     text: resultado.descripcion,
                     icon: "success",
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
+
+                window.location.href = "/panel_recuperar_credenciales/";
+
             } else {
-                Swal.fire({
+                await Swal.fire({
                     title: "Error",
                     text: resultado.descripcion,
-                    icon: "error",
+                    icon: resultado.icon,
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
+
+                formulario.reset()
             }
 
-            formulario.reset()
         } catch (error) {
-            console.error(error)
+            Swal.fire({
+                title: "Error",
+                text: "Ocurrió un error, por favor verifique!",
+                icon: "error",
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+
         }
     });
 

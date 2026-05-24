@@ -11,7 +11,7 @@
         </div>
 
         <div class="login-right">
-            <form method="post" id="loginForm">
+            <form method="post" id="formulario_login">
                 <h3 class="titulo">Inicio de Sesión</h3>
                 {% csrf_token %}
 
@@ -48,7 +48,7 @@
     </div>
 </section>
 
-<script type="module" src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
-
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/autenticación.js' %}"></script>
 
 {% endblock %}
