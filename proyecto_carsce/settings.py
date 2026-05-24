@@ -76,14 +76,13 @@ WSGI_APPLICATION = 'proyecto_carsce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'carsce',
-        'USER': 'postgres',
-        'PASSWORD': '31438140',
-        'HOST': 'localhost',
+        'NAME': 'postgres',
+        'USER': 'postgres.zfdolwowtsmmepqcjggp',
+        'PASSWORD': 'j31OZHDeFXpwPvam',
+        'HOST': 'aws-1-us-east-2.pooler.supabase.com',
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

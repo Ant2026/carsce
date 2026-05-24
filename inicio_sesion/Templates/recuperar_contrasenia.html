@@ -9,7 +9,7 @@
         <img src="{% static 'Imagenes/nueva_contrasenia.png' %}" alt="imagen para recuperar nueva contraseña">
         <h3>Cambiar Contraseña</h3>
 
-        <form action="" method="post">
+        <form method="post">
             {% csrf_token %}
             <div class="input-group password-group">
                 <input type="password" id="password" placeholder="Nueva contraseña">

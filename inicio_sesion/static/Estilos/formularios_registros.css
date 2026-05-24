@@ -151,3 +151,141 @@
     cursor: pointer;
     color: #000;
 }
+
+#pre_inscripcion{
+    width: 100%;
+    max-width: 750px;
+    margin: 40px auto;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#pre_inscripcion h3{
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 30px;
+    color: #1e293b;
+}
+
+#pre_inscripcion form{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#pre_inscripcion label{
+    font-size: 15px;
+    font-weight: bold;
+    color: #334155;
+    margin-bottom: -10px;
+}
+
+/* Inputs normales */
+#pre_inscripcion input,
+#pre_inscripcion select{
+    height: 48px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+    background: #f8fafc;
+}
+
+/* Focus */
+#pre_inscripcion input:focus,
+#pre_inscripcion select:focus{
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37,99,235,0.3);
+    background: #ffffff;
+}
+
+/* Agrupación equitativa */
+.grupo-campo{
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+/* Ambos ocupan el mismo espacio */
+.grupo-campo input,
+.grupo-campo select{
+    flex: 1;
+}
+
+/* Botón */
+#pre_inscripcion button{
+    margin-top: 15px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+.contrasenia{
+    position: relative;
+    width: 100%;
+}
+
+.contrasenia input{
+    width: 100%;
+    height: 48px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0 45px 0 14px;
+    font-size: 15px;
+    outline: none;
+    background: #f8fafc;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.contrasenia input:focus{
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37,99,235,0.3);
+    background: #ffffff;
+}
+
+/* Iconos */
+.icon-password{
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #475569;
+    transition: 0.3s;
+}
+
+.icon-password:hover{
+    color: #2563eb;
+}
+
+#pre_inscripcion button:hover{
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media(max-width: 600px){
+
+    .grupo-campo{
+        flex-direction: column;
+    }
+
+    #pre_inscripcion{
+        padding: 20px;
+    }
+
+}

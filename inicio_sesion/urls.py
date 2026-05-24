@@ -18,4 +18,6 @@ urlpatterns = [
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
     path('inscripcion_estudiante/', views.inscripcion_estudiante, name="inscripcion_estudiante"),
+
+    path('pre_inscripción/', views.pre_inscripción, name="pre_inscripción"),
 ]

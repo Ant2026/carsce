@@ -50,16 +50,5 @@
 
 <script type="module" src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
 
-{% if login_error %}
-<script>
-    Swal.fire({
-        icon: 'error',
-        title: 'Error de acceso',
-        text: "{{ login_error }}",
-        confirmButtonColor: '#d33'
-    });
-</script>
-{% endif %}
-
 
 {% endblock %}
