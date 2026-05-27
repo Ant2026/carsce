@@ -31,10 +31,10 @@ class Residencia(models.Model):
 
 class Contacto(models.Model):
     id_contacto = models.IntegerField(primary_key=True)
-    telefono_suplete = models.CharField(max_length=12, blank=True, null=True)
-    telefono_personal = models.CharField(max_length=12, blank=True, null=True)
+    telefono_suplete = models.CharField(max_length=12)
+    telefono_personal = models.CharField(max_length=12)
     correo_electronico = models.CharField(max_length=50, unique=True)
-    correo_alternativo = models.CharField(max_length=50, blank=True, null=True)
+    correo_alternativo = models.CharField(max_length=50)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='contacto')
 
 class Nacimiento(models.Model):
@@ -47,7 +47,7 @@ class Nacimiento(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='nacimiento')
 
 class Pnf(models.Model):
-    id_pnf = models.IntegerField(primary_key=True)
+    id_pnf = models.AutoField(primary_key=True)
     pnf = models.CharField(max_length=40)
     codigo = models.CharField(max_length=10)
 
@@ -55,14 +55,14 @@ class Pnf(models.Model):
         return self.pnf
 
 class Nucleos(models.Model):
-    id_nucleo = models.IntegerField(primary_key=True)
+    id_nucleo = models.AutoField(primary_key=True)
     municipio = models.CharField(max_length=40)
 
     def __str__(self):
         return self.municipio
     
 class Perfiles(models.Model):
-    id_pefil = models.IntegerField(primary_key=True)
+    id_pefil = models.AutoField(primary_key=True)
     perfil = models.CharField(max_length=40)
 
     def __str__(self):
@@ -71,22 +71,22 @@ class Perfiles(models.Model):
 # Clases (Tablas) relacionadas usuario general
 
 class UsuarioPerfil(models.Model):
-    id_perfil_asignado = models.IntegerField(primary_key=True)
+    id_perfil_asignado = models.AutoField(primary_key=True)
     id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE, db_column='id_perfil')
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
 
 class PNFNucleo(models.Model):
-    id_pnf_nucleo = models.IntegerField(primary_key=True)
+    id_pnf_nucleo = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, db_column='id_pnf')
 
 class PerfilesPnf(models.Model):
-    id_perfil_pnf = models.IntegerField(primary_key=True)
+    id_perfil_pnf = models.AutoField(primary_key=True)
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, db_column='id_pnf')
     id_perfil_asignado = models.ForeignKey(UsuarioPerfil, on_delete=models.CASCADE, db_column='id_perfil_asignado')
 
 class UsuarioNucleo(models.Model):
-    id_usuario_nucleo = models.IntegerField(primary_key=True)
+    id_usuario_nucleo = models.AutoField(primary_key=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
 

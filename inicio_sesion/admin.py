@@ -2,9 +2,9 @@ from django.contrib import admin
 from .models import Usuario, Contacto, Pnf, Nucleos, Perfiles, UsuarioPerfil, PerfilesPnf, UsuarioNucleo, PNFNucleo
 from django import forms
 from django.contrib.auth.hashers import make_password
+from django.forms import PasswordInput
 
 class UsuarioAdminForm(forms.ModelForm):
-
     GENERO_CHOICES = [
         ('', 'Seleccione el Genero'),
         ('Masculino', 'Masculino'),
@@ -50,6 +50,12 @@ class UsuarioAdminForm(forms.ModelForm):
         model = Usuario
         fields = '__all__'
 
+        widgets = {
+            'clave': PasswordInput(attrs={
+                'id': 'id_clave'
+            }),
+        }
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -60,29 +66,45 @@ class UsuarioAdminForm(forms.ModelForm):
                 nacionalidad, cedula = self.instance.cedula_identidad.split("-", 1)
 
                 self.fields['nacionalidad'].initial = nacionalidad
-                self.fields['cedula_identidad'].initial = cedula
+                self.fields['cedula_identidad'].initial = cedula  
 
 class ContactoInline(admin.StackedInline):
     model = Contacto
     can_delete = False
-    extra = 0
+    extra = 1
+    exclude = ('id_contacto',)
+
+class UsuarioPerfilInlineForm(forms.ModelForm):
+
+    class Meta:
+        model = UsuarioPerfil
+        fields = '__all__'
+
+    id_perfil = forms.ModelChoiceField(
+        queryset=Perfiles.objects.all(),
+        label='Perfil Usuario'
+    )
 
 class UsuarioPerfilInline(admin.TabularInline):
     model = UsuarioPerfil
+    form = UsuarioPerfilInlineForm
     extra = 1
+
+class UsuarioNucleoInlineForm(forms.ModelForm):
+
+    class Meta:
+        model = UsuarioNucleo
+        fields = '__all__'
+
+    id_nucleo = forms.ModelChoiceField(
+        queryset=Nucleos.objects.all(),
+        label='Núcleo Usuario'
+    )
 
 class UsuarioNucleoInline(admin.TabularInline):
     model = UsuarioNucleo
+    form = UsuarioNucleoInlineForm
     extra = 1
-
-class PNFNucleoInline(admin.TabularInline):
-    model = PNFNucleo
-    extra = 1
-
-class PnfAdmin(admin.ModelAdmin):
-    inlines = [PNFNucleoInline]
-
-    list_display = ('id_pnf', 'pnf', 'codigo')
 
 class UsuarioAdmin(admin.ModelAdmin):
     form = UsuarioAdminForm
@@ -110,6 +132,21 @@ class UsuarioAdmin(admin.ModelAdmin):
         'nombre_usuario'
     )
 
+    class Meta:
+        model = Usuario
+        fields = '__all__'
+
+    class Media:
+        js = ('Funcionalidades/password_admin.js',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+
+        for field in form.base_fields.values():
+            field.widget.attrs['autocomplete'] = 'off'
+
+        return form
+
     def save_model(self, request, obj, form, change):
 
         nacionalidad = form.cleaned_data.get('nacionalidad')
@@ -122,16 +159,44 @@ class UsuarioAdmin(admin.ModelAdmin):
             obj.clave = make_password(obj.clave)
 
         super().save_model(request, obj, form, change)
-    
-    class Media:
-        css = {
-            'all': ('Estilos/estilos.css',)
-        }
-        media = {
-            'all': ('Funcionalidades/cedula_identidad.js',)
-        }
+
+        ultimo_contacto = Contacto.objects.last()
+
+        if ultimo_contacto:
+            ultimo_id = ultimo_contacto.id + 1
+        else:
+            ultimo_id = 1
+
+        Contacto.objects.create(
+            id_contacto=ultimo_id,
+            correo_electronico=form.cleaned_data.get('correo_electronico'),
+            correo_alternativo=form.cleaned_data.get('correo_alternativo'),
+            telefono_personal=form.cleaned_data.get('telefono_personal'),
+            telefono_suplete=form.cleaned_data.get('telefono_suplete'),
+            id_usuario=obj)
+
+
+class PNFNucleoAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = PNFNucleo
+        fields = '__all__'
+
+    id_pnf = forms.ModelChoiceField(
+        queryset=Pnf.objects.all(),
+        label='PNF'
+    )
+
+    id_nucleo = forms.ModelChoiceField(
+        queryset=Nucleos.objects.all(),
+        label='Núcleo'
+    )
+
+class PNFNucleoAdmin(admin.ModelAdmin):
+    form = PNFNucleoAdminForm
 
 admin.site.register(Usuario, UsuarioAdmin)
-admin.site.register(Pnf, PnfAdmin)
+admin.site.register(Pnf)
 admin.site.register(Nucleos)
 admin.site.register(Perfiles)
+admin.site.register(PNFNucleo, PNFNucleoAdmin)

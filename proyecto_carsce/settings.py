@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'inicio_sesion',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "CARSCE",
+    "site_brand": "CARSCE",
+    "site_header": "Sistema Administrativo",
+
+    "icons": {
+        "inicio_sesion.Usuario": "fas fa-user",
+        "inicio_sesion.Nucleos": "fas fa-university",
+        "inicio_sesion.Perfiles": "fas fa-id-card",
+        "inicio_sesion.Perfiles": "fas fa-id-card",
+        "inicio_sesion.PNF": "fas fa-graduation-cap",
+        "inicio_sesion.PNFNucleo": "fas fa-project-diagram",
+        
+        "auth.User": "fas fa-user-shield",
+        "auth.Group": "fas fa-users",
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
