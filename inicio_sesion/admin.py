@@ -27,11 +27,16 @@ class UsuarioAdminForm(forms.ModelForm):
 
     nacionalidad = forms.ChoiceField(
         choices=NACIONALIDAD_CHOICES,
-        widget=forms.Select(attrs={'class': 'inline-select'})
+        widget=forms.Select(attrs={
+            'class': 'inline-select'
+        })
     )
 
     cedula_identidad = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'inline-input'})
+        widget=forms.TextInput(attrs={
+            'class': 'inline-input',
+            'maxlength': '9'
+        })
     )
 
     clave = forms.CharField(
@@ -46,16 +51,6 @@ class UsuarioAdminForm(forms.ModelForm):
         choices=ESTADO_CIVIL_CHOICES
     )
 
-    class Meta:
-        model = Usuario
-        fields = '__all__'
-
-        widgets = {
-            'clave': PasswordInput(attrs={
-                'id': 'id_clave'
-            }),
-        }
-        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -67,12 +62,14 @@ class UsuarioAdminForm(forms.ModelForm):
 
                 self.fields['nacionalidad'].initial = nacionalidad
                 self.fields['cedula_identidad'].initial = cedula  
+    
 
 class ContactoInline(admin.StackedInline):
     model = Contacto
     can_delete = False
     extra = 1
     exclude = ('id_contacto',)
+
 
 class UsuarioPerfilInlineForm(forms.ModelForm):
 
@@ -90,6 +87,7 @@ class UsuarioPerfilInline(admin.TabularInline):
     form = UsuarioPerfilInlineForm
     extra = 1
 
+
 class UsuarioNucleoInlineForm(forms.ModelForm):
 
     class Meta:
@@ -105,6 +103,7 @@ class UsuarioNucleoInline(admin.TabularInline):
     model = UsuarioNucleo
     form = UsuarioNucleoInlineForm
     extra = 1
+
 
 class UsuarioAdmin(admin.ModelAdmin):
     form = UsuarioAdminForm
@@ -137,8 +136,10 @@ class UsuarioAdmin(admin.ModelAdmin):
         fields = '__all__'
 
     class Media:
-        js = ('Funcionalidades/password_admin.js',)
-
+        js = (
+            'Funcionalidades/password_admin.js',
+        )
+        
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
 
@@ -160,41 +161,33 @@ class UsuarioAdmin(admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-        ultimo_contacto = Contacto.objects.last()
-
-        if ultimo_contacto:
-            ultimo_id = ultimo_contacto.id + 1
-        else:
-            ultimo_id = 1
-
-        Contacto.objects.create(
-            id_contacto=ultimo_id,
-            correo_electronico=form.cleaned_data.get('correo_electronico'),
-            correo_alternativo=form.cleaned_data.get('correo_alternativo'),
-            telefono_personal=form.cleaned_data.get('telefono_personal'),
-            telefono_suplete=form.cleaned_data.get('telefono_suplete'),
-            id_usuario=obj)
-
-
 class PNFNucleoAdminForm(forms.ModelForm):
 
     class Meta:
         model = PNFNucleo
         fields = '__all__'
 
-    id_pnf = forms.ModelChoiceField(
-        queryset=Pnf.objects.all(),
-        label='PNF'
-    )
-
-    id_nucleo = forms.ModelChoiceField(
-        queryset=Nucleos.objects.all(),
-        label='Núcleo'
-    )
+    id_pnf = forms.ModelChoiceField(queryset=Pnf.objects.all(), label='PNF')
+    id_nucleo = forms.ModelChoiceField(queryset=Nucleos.objects.all(), label='Núcleo')
 
 class PNFNucleoAdmin(admin.ModelAdmin):
     form = PNFNucleoAdminForm
 
+
+class PerfilesPnfInlineForm(forms.ModelForm):
+
+    class Meta:
+        model = PerfilesPnf
+        fields = '__all__'
+
+    id_perfil_asignado = forms.ModelChoiceField(queryset=UsuarioPerfil.objects.all(), label='Usuario Perfil Asignado')
+    id_pnf = forms.ModelChoiceField(queryset=Pnf.objects.all(), label='Pnf')
+
+class PerfilesPnfAdmin(admin.ModelAdmin):
+    form = PerfilesPnfInlineForm
+
+
+admin.site.register(PerfilesPnf, PerfilesPnfAdmin)
 admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(Pnf)
 admin.site.register(Nucleos)

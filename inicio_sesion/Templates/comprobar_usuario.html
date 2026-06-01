@@ -7,23 +7,24 @@
 <section id="comprobar_usuario">
     <div class="contenedor-comprobar">
         <h3>Verificar Código</h3>
+        <p>Se ha enviado un código a su correo electrónico. Por favor, ingréselo a continuación para verificar su identidad.</p>
 
-        <form method="post">
+        <form method="post" id="formulario_comprar_usuario">
             {% csrf_token %}
-
-            <label for="comprobar_codigo">Ingrese el código:</label>
+            <label for="password">Ingrese el código:</label>
             <div class="grupo-input">
-                <input type="password" name="codigo" id="comprobar_codigo" placeholder="Debe ingresar el código enviado a su Correo Electronico (Principal)" required>
-
+                <input type="password" name="codigo" id="password" placeholder="Debe ingresar el código" required>
                 <i class="icon-eye icon-password" id="mostrar_password"></i>
-                <i class="icon-eye-off icon-password" id="ocultar_password"></i>    
+                <i class="icon-eye-off icon-password" id="ocultar_password"></i>
             </div>
-            
             <button type="submit">Verificar</button>
         </form>
+        <button type="button" id="btn_reenviar_codigo" class="btn-reenvio" disabled>Reenviar código (<span id="contador_reenvio">60</span>s)</button>
     </div>
 </section>
 
-<script src="{% static 'Funcionalidades/codigo_email.js' %}"></script>
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/reenvio_codigo.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/validar_usuario.js' %}"></script>
 
 {% endblock %}

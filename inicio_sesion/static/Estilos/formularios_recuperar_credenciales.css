@@ -78,7 +78,6 @@
     color: #2563eb;
 }
 
-
 .contenedor-comprobar button{
     width: 100%;
     padding: 14px;
@@ -96,6 +95,39 @@
     background: #1d4ed8;
     transform: translateY(-2px);
 }
+
+.btn-reenvio {
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-reenvio:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-reenvio:not(:disabled):hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #eff6ff;
+    transform: translateY(-1px);
+}
+
+.btn-reenvio span {
+    font-weight: bold;
+    color: #fff;
+}
+
+
 
 #seccion-login {
     min-height: 100vh;

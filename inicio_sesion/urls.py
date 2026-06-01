@@ -6,20 +6,18 @@ urlpatterns = [
     path('inicio_sesion/', views.inicio_sesion, name="inicio_sesion"),
     
     path('buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
+    path('comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
+    path('reenviar_codigo_btn/', views.reenviar_codigo_btn, name="reenviar_codigo_btn"),
     path('panel_recuperar_credenciales/', views.panel_recuperar_credenciales, name="panel_recuperar_credenciales"),
     path('recuperar_contrasenia/', views.recuperar_contrasenia, name="recuperar_contrasenia"),
     path('recuperar_usuario/', views.recuperar_usuario, name="recuperar_usuario"),
 
-    path('comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
-    
     path('panel_registro/', views.panel_registro, name="panel_registro"),
     path('confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),
     
     path('panel_usuario/', views.panel_usuario, name="panel_usuario"),
-    
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
     path('inscripcion_estudiante/', views.inscripcion_estudiante, name="inscripcion_estudiante"),
-
     path('pre_inscripción/', views.pre_inscripción, name="pre_inscripción"),
 ]
