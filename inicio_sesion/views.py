@@ -197,7 +197,6 @@ def validar_codigo(codigo, cedula_identidad, nombres, apellidos, correo_electron
     })
 
 def reenviar_codigo_btn(request):
-
     if not request.session.get("flujo_verificacion"):
         return JsonResponse({
             "estado": "error",
@@ -205,9 +204,7 @@ def reenviar_codigo_btn(request):
             "descripcion": "Sesión inválida"
         })
 
-    usuario = Usuario.objects.filter(
-        cedula_identidad=request.session.get("CI_usuario")
-    ).first()
+    usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
 
     if not usuario:
         return JsonResponse({
@@ -459,17 +456,9 @@ def pre_inscripción(request):
             cedula_identidad = nacionalidad + num_cedula
             telefono = prefijo + num_telefono
 
-            verificar_cedula = Usuario.objects.filter(
-                cedula_identidad=cedula_identidad
-            ).exists()
-
-            verificar_usuario = Usuario.objects.filter(
-                nombre_usuario=usuario
-            ).first()
-
-            verificar_correo = Contacto.objects.filter(
-                correo_electronico=correo_electronico
-            ).exists()
+            verificar_cedula = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
+            verificar_usuario = Usuario.objects.filter(nombre_usuario=usuario).first()
+            verificar_correo = Contacto.objects.filter(correo_electronico=correo_electronico).exists()
 
             if verificar_cedula:
                 return JsonResponse({
@@ -488,13 +477,8 @@ def pre_inscripción(request):
                     "icon": "error",
                     "descripcion": "Ya existe el usuario registrado"
                 })
-
-            ultimo_usuario = Usuario.objects.order_by("-id_usuario").first()
-
-            nuevo_id_usuario = ultimo_usuario.id_usuario + 1 if ultimo_usuario else 1 
-
+            
             nuevo_usuario = Usuario.objects.create(
-                id_usuario=nuevo_id_usuario,
                 nombres=nombres,
                 apellidos=apellidos,
                 cedula_identidad=cedula_identidad,
@@ -502,12 +486,7 @@ def pre_inscripción(request):
                 clave=make_password(password)
             )
 
-            ultimo_contacto = Contacto.objects.order_by("-id_contacto").first()
-
-            nuevo_id_contacto = ultimo_contacto.id_contacto + 1 if ultimo_contacto else 1 
-
             Contacto.objects.create(
-                id_contacto=nuevo_id_contacto,
                 telefono_personal=telefono,
                 correo_electronico=correo_electronico,
                 id_usuario=nuevo_usuario
@@ -529,6 +508,27 @@ def pre_inscripción(request):
 
 def panel_usuario(request):
     return render(request, 'panel_usuario.html')
+
+# def pre_registro_personal(request):
+#     if request.method == "POST":
+#         nombres = request.POST.get("nombres")
+#         apellidos = request.POST.get("apellidos")
+#         nacionalidad = request.POST.get("nacionalidad")
+#         num_cedula = request.POST.get("cedula_identidad")
+#         nombre_correo = request.POST.get("correo_electronico")
+#         dominio = request.POST.get("dominio")
+#         prefijo = request.POST.get("prefijo")
+#         num_telefono = request.POST.get("telefono")
+
+#         cedula_identidad = nacionalidad+"-"+num_cedula
+#         correo_principal = nombre_correo+dominio
+#         telefono_principal = prefijo+num_telefono
+
+#         Usuario.objects.create(nombres=nombres, apellidos=apellidos, )
+
+
+    
+#     return render(request, 'pre_registro_personal.html')
 
 def inscripcion_estudiante(request):
     return render(request, 'inscripcion_estudiante.html')
