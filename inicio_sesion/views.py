@@ -615,3 +615,23 @@ def pre_registro_personal(request):
 
 def inscripcion_estudiante(request):
     return render(request, 'inscripcion_estudiante.html')
+
+"""FORO"""
+
+def Historia(request):
+    return render(request, 'Foro/Historia.html')
+
+def mision_vision(request):
+    return render(request, 'Foro/mision_vision.html')
+
+def psc(request):
+    return render(request, 'Foro/psc.html')
+
+def pst(request):
+    return render(request, 'Foro/pst.html')
+
+def trayectoria(request):
+    return render(request, 'Foro/trayectoria.html')
+
+def carreras_impartidas(request):
+    return render(request, 'Foro/carreras_impartidas.html')
