@@ -1,0 +1,78 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="pre_registro_personal">
+    <div class="contenedor_pre_registro_personal">
+        <h3>Pre Registro Personal</h3>
+
+        <form method="post" id="formulario_pre_registro_personal">
+            {% csrf_token %}
+            
+            <label for="nombre">Nombres:</label>
+            <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese los nombres" required>
+
+            <label for="apellido">Apellidos:</label>
+            <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese el apellido parteno y materno" required>
+
+            <label for="cedula_identidad">Cedula Identidad:</label>
+            <div class="grupo-campo">
+                <select name="nacionalidad" id="nacionalidad">
+                    <option value="">N</option>
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                </select>
+                <input type="text" name="cedula_identidad" id="cedula_identidad" autocomplete="off" required>
+            </div>
+
+            <label for="Correo">Correo Electrónico (Principal):</label>
+            <div class="grupo-campo">
+                <input type="text" name="correo_electronico" id="Correo" autocomplete="off" required>
+                <select name="dominio" id="dominio"></select>
+            </div>
+
+            <label for="numero_telefonico">Telefono (Principal):</label>
+            <div class="grupo-campo">
+                <select name="prefijo" id="prefijo_telefono"></select>
+                <input type="text" name="telefono" id="numero_telefonico" autocomplete="off" disabled required>
+            </div>
+
+            <div id="contenedor_perfiles">
+                <label>Perfiles:</label>
+                <div id="perfil"></div>
+            </div>
+            
+            <div id="contenedor_gaceta">
+                <label for="gaceta_oficial">Gaceta Oficial:</label>
+                <input type="text" name="gaceta_oficial" id="gaceta_oficial" autocomplete="off" placeholder="Ingrese el numero de gaceta oficial">
+            </div>
+
+            <div id="contenedor_fecha_gaceta">
+                <label for="fecha_gaceta">Fecha Gaceta:</label>
+                <input type="date" name="fecha_gaceta" id="fecha_gaceta">
+            </div>
+
+            <div id="contenedor_nucleos">
+                <label>Nucleos:</label>
+                <div id="nucleo"></div>
+            </div>
+
+            <div id="contenedor_pnfs">
+                <label>PNF:</label>
+                <div id="pnf"></div>
+            </div>
+            
+            <button type="submit">Pre Registro</button>
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funcionalidades/correo_electronico.js' %}"></script>
+<script src="{% static 'Funcionalidades/telefono.js' %}"></script>
+<script src="{% static 'Funcionalidades/datos_registros.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/pre_registro_personal.js' %}"></script>
+
+{% endblock %}

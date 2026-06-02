@@ -4,8 +4,9 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.utils import timezone
-from datetime import timedelta
-from .models import Usuario, Perfiles, Contacto, VerificacionCodigo
+
+from .models import Usuario, Perfiles, Nucleos, Pnf, Contacto, VerificacionCodigo, PNFNucleo, GacetaOficial, UsuarioPerfil, PerfilesPnf, UsuarioNucleo
+
 import secrets, string
 from math import ceil
 from datetime import timedelta
@@ -437,9 +438,7 @@ def confirmar_registro_personal(request):
     return render(request, 'confirmar_registro_personal.html')
 
 def pre_inscripción(request):
-
     if request.method == "POST":
-
         nombres = request.POST.get("nombres")
         apellidos = request.POST.get("apellidos")
         nacionalidad = request.POST.get("nacionalidad")
@@ -509,26 +508,111 @@ def pre_inscripción(request):
 def panel_usuario(request):
     return render(request, 'panel_usuario.html')
 
-# def pre_registro_personal(request):
-#     if request.method == "POST":
-#         nombres = request.POST.get("nombres")
-#         apellidos = request.POST.get("apellidos")
-#         nacionalidad = request.POST.get("nacionalidad")
-#         num_cedula = request.POST.get("cedula_identidad")
-#         nombre_correo = request.POST.get("correo_electronico")
-#         dominio = request.POST.get("dominio")
-#         prefijo = request.POST.get("prefijo")
-#         num_telefono = request.POST.get("telefono")
+def datos_registro(request):
+    nucleos = list(Nucleos.objects.values("id_nucleo", "municipio"))
+    perfiles = list(Perfiles.objects.values("id_pefil", "perfil"))
 
-#         cedula_identidad = nacionalidad+"-"+num_cedula
-#         correo_principal = nombre_correo+dominio
-#         telefono_principal = prefijo+num_telefono
+    return JsonResponse({
+                "nucleos": nucleos,
+                "perfiles": perfiles
+            })
 
-#         Usuario.objects.create(nombres=nombres, apellidos=apellidos, )
+def pnfs_nucleos(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
 
+            nucleo_id = data.get("id_nucleo")
 
-    
-#     return render(request, 'pre_registro_personal.html')
+            if not nucleo_id:
+                return JsonResponse({"error": "Datos incompletos"}, status=400)
+
+            pnfs = PNFNucleo.objects.filter(
+                id_nucleo=nucleo_id
+            ).select_related("id_pnf")
+
+            resultado = [
+                {
+                    "id_pnf": item.id_pnf.id_pnf,
+                    "pnf": item.id_pnf.pnf
+                }
+                for item in pnfs
+            ]
+
+            return JsonResponse({"pnfs": resultado})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+
+def pre_registro_personal(request):
+    if request.method == "POST":
+        nombres = request.POST.get("nombres")
+        apellidos = request.POST.get("apellidos")
+        nacionalidad = request.POST.get("nacionalidad")
+        num_cedula = request.POST.get("cedula_identidad")
+        nombre_correo = request.POST.get("correo_electronico")
+        dominio = request.POST.get("dominio")
+        prefijo = request.POST.get("prefijo")
+        num_telefono = request.POST.get("telefono")
+
+        gaceta_oficial = request.POST.get("gaceta_oficial")
+        fecha_gaceta = request.POST.get("fecha_gaceta")
+
+        perfil = request.POST.get("perfiles")
+        nucleo = request.POST.get("nucleos")
+        pnf = request.POST.get("pnf")
+
+        if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono:
+            
+            cedula_identidad = nacionalidad+"-"+num_cedula
+            correo_principal = nombre_correo+dominio
+            telefono_principal = prefijo+num_telefono
+            
+            if Usuario.objects.filter(cedula_identidad=cedula_identidad).exists():
+                return JsonResponse({
+                    "icon": "error",
+                    "descripcion": "Ya existe un usuario con esta cédula"
+                })
+
+            usuario = Usuario.objects.create(nombres=nombres, apellidos=apellidos, cedula_identidad=cedula_identidad)
+            Contacto.objects.create(correo_electronico=correo_principal, telefono_personal=telefono_principal, id_usuario=usuario)
+            
+            if gaceta_oficial and fecha_gaceta:
+                GacetaOficial.objects.create(numero_gaceta=gaceta_oficial, fecha_gaceta=fecha_gaceta, id_usuario=usuario.id_usuario)
+            
+            UsuarioPerfil.objects.create(
+                id_usuario=usuario,
+                id_perfil=perfil
+            )
+            if nucleo:
+                UsuarioNucleo.objects.create(id_usuario=usuario.id_usuario, id_nucleo=nucleo)
+            if pnf:
+                if pnf:
+                    perfilpnf = UsuarioPerfil.objects.filter(id_usuario=usuario).first()
+
+                    if perfilpnf is None:
+                        return JsonResponse({
+                            "icon": "error",
+                            "descripcion": "Debe seleccionar un perfil antes de asignar un PNF"
+                        })
+
+                    PerfilesPnf.objects.create(
+                        id_perfil_asignado=perfilpnf.id_perfil_asignado,
+                        id_pnf_id=pnf
+                    )
+
+            return JsonResponse({
+                    "icon": "success",
+                    "descripcion": "Se registró correctamente"
+                })
+        else:
+            return JsonResponse({
+                    "icon": "warning",
+                    "descripcion": "Se encuentra vacio los campos"
+                })
+    return render(request, 'pre_registro_personal.html')
 
 def inscripcion_estudiante(request):
     return render(request, 'inscripcion_estudiante.html')

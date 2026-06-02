@@ -14,6 +14,9 @@ urlpatterns = [
 
     path('panel_registro/', views.panel_registro, name="panel_registro"),
     path('confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),
+    path('pre_registro_personal/', views.pre_registro_personal, name="pre_registro_personal"),
+    path('pnfs_nucleos/', views.pnfs_nucleos, name="pnfs_nucleos"),
+    path('datos_registro/', views.datos_registro, name="datos_registro"),
     
     path('panel_usuario/', views.panel_usuario, name="panel_usuario"),
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),

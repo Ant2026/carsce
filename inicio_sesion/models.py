@@ -93,14 +93,14 @@ class UsuarioNucleo(models.Model):
 # Clases (Tablas) para Docentes, Coordinadores de PNFs, Directores Generales y Control de estudio
 
 class DatosPreofesion(models.Model):
-    id_dato_academico = models.IntegerField(primary_key=True)
+    id_dato_academico = models.AutoField(primary_key=True)
     profesion_pregrado = models.CharField(max_length=30)
     universidad_egreso_pregrado = models.CharField(max_length=30)
     pais_profesion_pregrado = models.CharField(max_length=10)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='profesional')
 
 class GacetaOficial(models.Model):
-    id_gaceta = models.IntegerField(primary_key=True)
+    id_gaceta = models.AutoField(primary_key=True)
     gaceta_oficial = models.CharField(max_length=10)
     fecha_gaceta_oficial = models.DateField()
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='gaceta')
@@ -108,7 +108,7 @@ class GacetaOficial(models.Model):
 # Clases (Tablas) para Estudiantes
 
 class Discapacidad(models.Model):
-    id_discapacidad = models.IntegerField(primary_key=True)
+    id_discapacidad = models.AutoField(primary_key=True)
     codigo_carnet_discapacidad = models.CharField(max_length=50)
     nro_registro_medico = models.CharField(max_length=5)
     tipo_discapacidad = models.CharField(max_length=20)
@@ -117,7 +117,7 @@ class Discapacidad(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='discapacidad')
 
 class EstatusEstudiante(models.Model):
-    id_estatus_estudiante = models.IntegerField(primary_key=True)
+    id_estatus_estudiante = models.AutoField(primary_key=True)
     estatus = models.CharField(max_length=50)
     estado = models.CharField(max_length=50)
     ingreso = models.CharField(max_length=50)
@@ -127,12 +127,12 @@ class EstatusEstudiante(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='estatus')
 
 class DocumentosEstudiante(models.Model):
-    id_documento = models.IntegerField(primary_key=True)
+    id_documento = models.AutoField(primary_key=True)
     nombre_documento = models.CharField(max_length=50)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='documentos')
 
 class InformacionSecundaria(models.Model):
-    id_secundaria = models.IntegerField(primary_key=True)
+    id_secundaria = models.AutoField(primary_key=True)
     tipo_institucion = models.CharField(max_length=10)
     nombre_institucion = models.CharField(max_length=20)
     fecha_grado = models.DateField()
@@ -140,25 +140,25 @@ class InformacionSecundaria(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='secundaria')
 
 class CorteAcademico(models.Model):
-    id_corte_academico = models.IntegerField(primary_key=True)
+    id_corte_academico = models.AutoField(primary_key=True)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
 
 class SeccionAcademica(models.Model):
-    id_seccion = models.IntegerField(primary_key=True)
+    id_seccion = models.AutoField(primary_key=True)
     seccion = models.CharField(max_length=5)
 
 # Clases (Tablas) relacionadas para estudiantes
 
 class SeccionEstudiante(models.Model):
-    id_seccion_estudiante = models.IntegerField(primary_key=True)
+    id_seccion_estudiante = models.AutoField(primary_key=True)
     id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, db_column='id_seccion')
     id_perfil_pnf = models.ForeignKey(PerfilesPnf, on_delete=models.CASCADE, db_column='id_perfil_pnf')
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
     
 class EstudianteCorte(models.Model):
-    id_estudiante_corte = models.IntegerField(primary_key=True)
+    id_estudiante_corte = models.AutoField(primary_key=True)
     id_corte_academico = models.ForeignKey(CorteAcademico, on_delete=models.CASCADE, db_column='id_corte_academico')
     id_perfil_pnf = models.ForeignKey(PerfilesPnf, on_delete=models.CASCADE, db_column='id_perfil_pnf')
 
