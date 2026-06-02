@@ -23,4 +23,12 @@ urlpatterns = [
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
     path('inscripcion_estudiante/', views.inscripcion_estudiante, name="inscripcion_estudiante"),
+
+    #FORO
+    path('Historia/', views.Historia, name="Historia"),
+    path('mision_vision/', views.mision_vision, name="mision_vision"),
+    path('pst/', views.pst, name="pst"),
+    path('psc/', views.psc, name="psc"),
+    path('trayectoria/', views.trayectoria, name="trayectoria"),
+    path('carreras_impartidas/', views.carreras_impartidas, name="carreras_impartidas"),
 ]
