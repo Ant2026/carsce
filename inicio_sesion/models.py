@@ -5,13 +5,13 @@ from django.contrib.auth.hashers import make_password
 
 class Usuario(models.Model):
     id_usuario = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=30)
+    nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    genero = models.CharField(max_length=30)
-    cedula_identidad = models.CharField(max_length=12, unique=True)
-    estado_civil = models.CharField(max_length=30)
-    nombre_usuario = models.CharField(max_length=120)
-    clave = models.CharField(max_length=120)
+    genero = models.CharField(max_length=50)
+    cedula_identidad = models.CharField(max_length=15, unique=True)
+    estado_civil = models.CharField(max_length=50)
+    nombre_usuario = models.CharField(max_length=160)
+    clave = models.CharField(max_length=160)
 
     def save(self, *args, **kwargs):
         if self.clave and not self.clave.startswith('pbkdf2_'):
@@ -22,48 +22,48 @@ class Usuario(models.Model):
         return self.nombres
 
 class Residencia(models.Model):
-    id_residencia = models.AutoField(primary_key=True)
+    id_residencia = models.IntegerField(primary_key=True)
     condicion_residencia = models.CharField(max_length=20)
-    municipio = models.CharField(max_length=30)
-    parroquia = models.CharField(max_length=30)
-    direccion_residencia = models.CharField(max_length=30)
+    municipio = models.CharField(max_length=40)
+    parroquia = models.CharField(max_length=40)
+    direccion_residencia = models.CharField(max_length=40)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='residencia')
 
 class Contacto(models.Model):
-    id_contacto = models.AutoField(primary_key=True)
-    telefono_suplete = models.CharField(max_length=12, blank=True, null=True)
-    telefono_personal = models.CharField(max_length=12, blank=True, null=True)
-    correo_electronico = models.CharField(max_length=50, unique=True)
-    correo_alternativo = models.CharField(max_length=50)
+    id_usuario = models.AutoField(primary_key=True)
+    telefono_suplete = models.CharField(max_length=15, blank=True, null=True)
+    telefono_personal = models.CharField(max_length=15, blank=True, null=True)
+    correo_electronico = models.EmailField(max_length=100, unique=True)
+    correo_alternativo = models.EmailField(max_length=100, blank=True, null=True)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='contacto')
 
 class Nacimiento(models.Model):
-    id_nacimiento = models.AutoField(primary_key=True)
-    pais = models.CharField(max_length=30)
-    estado = models.CharField(max_length=30)
-    parroquia = models.CharField(max_length=30)
-    direccion_nacimiento = models.CharField(max_length=30)
+    id_nacimiento = models.IntegerField(primary_key=True)
+    pais = models.CharField(max_length=50)
+    estado = models.CharField(max_length=50)
+    parroquia = models.CharField(max_length=50)
+    direccion_nacimiento = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField()
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='nacimiento')
 
 class Pnf(models.Model):
     id_pnf = models.AutoField(primary_key=True)
-    pnf = models.CharField(max_length=40)
-    codigo = models.CharField(max_length=10)
+    pnf = models.CharField(max_length=50)
+    codigo = models.CharField(max_length=40)
 
     def __str__(self):
         return self.pnf
 
 class Nucleos(models.Model):
     id_nucleo = models.AutoField(primary_key=True)
-    municipio = models.CharField(max_length=40)
+    municipio = models.CharField(max_length=50)
 
     def __str__(self):
         return self.municipio
     
 class Perfiles(models.Model):
     id_pefil = models.AutoField(primary_key=True)
-    perfil = models.CharField(max_length=40)
+    perfil = models.CharField(max_length=50)
 
     def __str__(self):
         return self.perfil
@@ -109,26 +109,26 @@ class GacetaOficial(models.Model):
 
 class Discapacidad(models.Model):
     id_discapacidad = models.AutoField(primary_key=True)
-    codigo_carnet_discapacidad = models.CharField(max_length=10)
+    codigo_carnet_discapacidad = models.CharField(max_length=50)
     nro_registro_medico = models.CharField(max_length=5)
-    tipo_discapacidad = models.CharField(max_length=10)
-    grado_discapacidad = models.CharField(max_length=20)
-    causa_discapacidad = models.CharField(max_length=20)
+    tipo_discapacidad = models.CharField(max_length=20)
+    grado_discapacidad = models.CharField(max_length=50)
+    causa_discapacidad = models.CharField(max_length=50)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='discapacidad')
 
 class EstatusEstudiante(models.Model):
     id_estatus_estudiante = models.AutoField(primary_key=True)
-    estatus = models.CharField(max_length=20)
-    estado = models.CharField(max_length=10)
-    ingreso = models.CharField(max_length=10)
-    descripcion_ingreso = models.CharField(max_length=15)
-    trayecto = models.CharField(max_length=10)
+    estatus = models.CharField(max_length=50)
+    estado = models.CharField(max_length=50)
+    ingreso = models.CharField(max_length=50)
+    descripcion_ingreso = models.CharField(max_length=30)
+    trayecto = models.CharField(max_length=50)
     fecha_ingreso = models.DateField()
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='estatus')
 
 class DocumentosEstudiante(models.Model):
     id_documento = models.AutoField(primary_key=True)
-    nombre_documento = models.CharField(max_length=20)
+    nombre_documento = models.CharField(max_length=50)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='documentos')
 
 class InformacionSecundaria(models.Model):
@@ -161,4 +161,14 @@ class EstudianteCorte(models.Model):
     id_estudiante_corte = models.AutoField(primary_key=True)
     id_corte_academico = models.ForeignKey(CorteAcademico, on_delete=models.CASCADE, db_column='id_corte_academico')
     id_perfil_pnf = models.ForeignKey(PerfilesPnf, on_delete=models.CASCADE, db_column='id_perfil_pnf')
-    
+
+class VerificacionCodigo(models.Model):
+    id_codigo = models.AutoField(primary_key=True)
+    cedula_identidad = models.CharField(max_length=12)
+    codigo = models.CharField(max_length=10)
+    creado = models.DateTimeField()
+    intentos = models.PositiveIntegerField(default=0)
+    bloqueado_hasta = models.DateTimeField(null=True, blank=True)
+    activo = models.IntegerField()
+    descripcion = models.CharField(max_length=100)
+    fecha_expiracion = models.DateTimeField(null=True, blank=True)

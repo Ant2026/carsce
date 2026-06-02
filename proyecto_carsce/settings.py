@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -27,10 +26,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +38,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'inicio_sesion',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "CARSCE",
+    "site_brand": "CARSCE",
+    "site_header": "Sistema Administrativo",
+
+    "icons": {
+        "inicio_sesion.Usuario": "fas fa-user",
+        "inicio_sesion.Nucleos": "fas fa-university",
+        "inicio_sesion.Perfiles": "fas fa-id-card",
+        "inicio_sesion.Perfiles": "fas fa-id-card",
+        "inicio_sesion.PNF": "fas fa-graduation-cap",
+        "inicio_sesion.PNFNucleo": "fas fa-project-diagram",
+        
+        "auth.User": "fas fa-user-shield",
+        "auth.Group": "fas fa-users",
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'proyecto_carsce.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -77,13 +93,17 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'carsce',
+<<<<<<< HEAD
         'USER': 'postgres',
-        'PASSWORD': '31438140',
+        'PASSWORD': '31359116',
+=======
+        'USER': 'soporte',
+        'PASSWORD': '12345678',
+>>>>>>> e21527979260252bfbe5174b4b16ea5a0b94d0fb
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -103,7 +123,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -114,7 +133,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/

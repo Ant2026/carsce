@@ -1,0 +1,32 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="Carreras" class="reveal">
+    <div class="contenedor">
+        <h2 id="info_sedes"></h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre de la Carrera</th>
+                    <th>Nivel Academico</th>
+                    <th>Duración</th>
+                </tr>
+            </thead>
+            <tbody id="contenedor_carrera">
+
+            </tbody>
+        </table>
+
+        <div class="botones">
+            <button id="retoceder">Retroceder</button>
+            <button id="avanzar">Avanzar</button>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/archivo_carreras.js' %}"></script>
+
+{% endblock %}

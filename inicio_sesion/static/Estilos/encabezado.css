@@ -1,5 +1,5 @@
 #navegacion {
-    background: #ddd;
+    background: white;
     position: fixed;
     top: 0;
     left: 0;
@@ -7,7 +7,7 @@
     z-index: 1100;
 }
 
-.cintillo{
+#navegacion .contenedor_cintillo{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,19 +19,19 @@
     margin: 0 auto;      
 }
 
-.bloque-logo{
+#navegacion .contenedor_cintillo .bloque-logo{
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.bloque-logo img{
+#navegacion .contenedor_cintillo .bloque-logo img{
     width: 60px;
     height: auto;
     object-fit: contain;
 }
 
-.bloque-texto{
+#navegacion .contenedor_cintillo .bloque-texto{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,7 +39,7 @@
     gap: 8px;
 }
 
-.bloque-texto h6{
+#navegacion .contenedor_cintillo .bloque-texto h6{
     margin: 0;
     font-size: 14px;
     font-weight: 600;
@@ -47,13 +47,13 @@
     color: #222;
 }
 
-.separador{
-    font-size: 18px;
+#navegacion .contenedor_cintillo .separador{
+    font-size: 30px;
     color: #666;
     opacity: 0.7;
 }
 
-.bloque-universidad{
+#navegacion .contenedor_cintillo .bloque-universidad{
     display: flex;
     flex-direction: column;
     align-items: flex-start;  
@@ -63,14 +63,14 @@
     gap: 3px;
 }
 
-.bloque-universidad h6{
+#navegacion .contenedor_cintillo .bloque-universidad h6{
     margin: 0;
     font-size: 14px;
     color: #111;
     line-height: 1.1;
 }
 
-.btn_acceder{
+#navegacion .contenedor_barra .btn_acceder{
     padding: 8px 14px;
     border-radius: 8px;
     font-size: 13px;
@@ -83,23 +83,41 @@
     font-weight: 500;
 }
 
-.btn_acceder:hover{
+#navegacion .contenedor_barra .btn_acceder:hover{
     background: #1f56b8;
     transform: translateY(-1px);
 }
 
 @media (max-width: 768px){
-    .cintillo{
+    #navegacion .contenedor_cintillo{
         flex-direction: column;
         text-align: center;
         gap: 10px;
     }
 
-    .bloque-texto{
+    #navegacion .contenedor_cintillo .bloque-texto{
         flex-direction: column;
     }
 
-    .bloque-logo img{
+    #navegacion .contenedor_cintillo .bloque-logo img{
         width: 50px;
+    }
+}
+
+/*  DIVISION DE BARRA DE NAVEGACION  */
+
+#navegacion .contenedor_barra{
+    background: #333;
+    position: fixed;
+    top: 20;
+    left: 0;
+    width: 100%;
+    z-index: 1200;
+}
+
+@media (min-width: 992px) { 
+    .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
     }
 }

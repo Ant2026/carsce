@@ -18,14 +18,12 @@
         </div>
 
         <div class="lado-derecho">
-            <form method="post" class="tarjeta-login">
-                {% csrf_token %}
+                
+            <form method="post" id="formulario_buscar_usuario">
                 <h3>¿Se te olvidaron las credenciales?</h3>
-
-                <label for="cedula_identidad">
-                    Ingresa tú cédula de identidad:
-                </label>
-
+                {% csrf_token %}
+                
+                <label for="cedula_identidad">Ingresa tú cédula de identidad:</label>
                 <div class="grupo-input">
                     <select name="nacionalidad" id="nacionalidad">
                         <option value="">N</option>
@@ -33,7 +31,7 @@
                         <option value="E">E</option>
                     </select>
 
-                    <input type="text" name="usuario" id="cedula_identidad" class="control-entrada" placeholder="Selecciona la nacionalidad">
+                    <input type="text" name="ci" id="cedula_identidad" autocomplete="off" class="control-entrada" placeholder="Selecciona la nacionalidad">
                 </div>
 
                 <button type="submit" class="boton-login">Verificar</button>
@@ -47,5 +45,6 @@
 </section>
 
 <script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/buscar_usuario.js' %}"></script>
 
 {% endblock %}

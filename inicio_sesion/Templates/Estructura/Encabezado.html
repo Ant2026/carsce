@@ -2,7 +2,7 @@
 
 <header>
     <nav id="navegacion">
-        <div class="contenedor cintillo">
+        <div class="contenedor_cintillo">
 
             <article class="bloque-logo">
                 <img src="{% static 'Imagenes/bandera-cintillo.png' %}" alt="Bandera de Venezuela">
@@ -12,6 +12,7 @@
                 <h6>Gobierno Bolivariano de Venezuela</h6>
                 <span class="separador">|</span>
                 <h6>Ministerio del Poder Popular para la Educación Universitaria</h6>
+                <span class="separador">|</span>
             </div>
 
             <article class="bloque-logo">
@@ -22,13 +23,58 @@
                 <h6>Universidad Politécnica Territorial del Estado Barinas</h6>
                 <h6>“José Félix Ribas”</h6>
             </div>
-
-            {% if request.path == '/' %}
-                <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
-
-                {% else %}
-                    <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar Sesión</a>
-            {% endif %}
         </div>
+
+        <div class="contenedor_barra">
+            <ul class="nav p-4 align-items-center d-flex justify-content-center">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="" >Inicio</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Institución
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'Historia' %}">Nuestra Historia</a></li>
+                        <li><a class="dropdown-item" href="{% url 'mision_vision' %}">Mision y Vision</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Formación Estudiantil
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'pst' %}">Proyecto Socio-Tecnologico</a></li>
+                        <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Guia Estudiantil/Docente
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Trayectoria Academica</a></li>
+                        <li><a class="dropdown-item" href="#">Planificación Docente</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carreras_impartidas' %}" >Carreras Impartidas</a>
+                </li>
+
+                <li class="nav-item">
+                    {% if request.path == '/' %}
+                    <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
+
+                    {% else %}
+                        <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar Sesión</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div> 
     </nav>
 </header>
