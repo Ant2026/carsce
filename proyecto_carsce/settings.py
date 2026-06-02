@@ -93,13 +93,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'carsce',
-<<<<<<< HEAD
         'USER': 'postgres',
-        'PASSWORD': '31359116',
-=======
-        'USER': 'soporte',
-        'PASSWORD': '12345678',
->>>>>>> e21527979260252bfbe5174b4b16ea5a0b94d0fb
+        'PASSWORD': '31438140',
         'HOST': 'localhost',
         'PORT': '5432',
     }
