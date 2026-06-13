@@ -26,9 +26,16 @@ urlpatterns = [
 
     #FORO
     path('Historia/', views.Historia, name="Historia"),
+    
     path('mision_vision/', views.mision_vision, name="mision_vision"),
+
     path('pst/', views.pst, name="pst"),
+
     path('psc/', views.psc, name="psc"),
+
     path('trayectoria/', views.trayectoria, name="trayectoria"),
+
     path('carreras_impartidas/', views.carreras_impartidas, name="carreras_impartidas"),
+
+    path('Planificacion_Docente/', views.Planificacion_Docente, name="Planificacion_Docente")
 ]

@@ -15,7 +15,7 @@ import json
 # Create your views here.
 
 def foro(request):
-    return render(request, 'foro.html')
+    return render(request, 'Foro/foro.html')
 
 def inicio_sesion(request):
 
@@ -635,3 +635,6 @@ def trayectoria(request):
 
 def carreras_impartidas(request):
     return render(request, 'Foro/carreras_impartidas.html')
+
+def Planificacion_Docente(request):
+    return render(request, 'Foro/Planificacion_Docente.html')

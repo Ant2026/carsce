@@ -1,0 +1,128 @@
+#Carreras{
+    padding: 80px 20px;
+    margin-top: 120px;
+}
+
+#Carreras .contenedor{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* TITULO */
+#info_sedes{
+    color: #8C1007;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+#info_sedes::after{
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: #8C1007;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+/* TABLA */
+#Carreras table{
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,.08);
+}
+
+#Carreras thead{
+    background: #8C1007;
+    color: #fff;
+}
+
+#Carreras th{
+    padding: 18px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+#Carreras td{
+    padding: 16px;
+    text-align: center;
+    color: #444;
+    border-bottom: 1px solid #eee;
+}
+
+#Carreras tbody tr{
+    transition: .3s ease;
+}
+
+#Carreras tbody tr:hover{
+    background: rgba(140,16,7,.05);
+}
+
+#Carreras tbody tr:last-child td{
+    border-bottom: none;
+}
+
+/* BOTONES */
+#Carreras .botones{
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#Carreras .botones button{
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background: #8C1007;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+#Carreras .botones button:hover{
+    transform: translateY(-3px);
+    background: #a81309;
+    box-shadow: 0 5px 15px rgba(140,16,7,.25);
+}
+
+#Carreras .botones button:active{
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px){
+
+    #Carreras{
+        padding: 60px 15px;
+    }
+
+    #info_sedes{
+        font-size: 1.5rem;
+    }
+
+    #Carreras table{
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #Carreras th,
+    #Carreras td{
+        padding: 12px;
+    }
+
+    #Carreras .botones{
+        flex-direction: column;
+    }
+
+    #Carreras .botones button{
+        width: 100%;
+    }
+}
