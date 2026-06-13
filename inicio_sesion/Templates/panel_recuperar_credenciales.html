@@ -1,0 +1,27 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="panel_recuperacion">
+    <div class="recuperar_usuario">
+        <a href="{% url 'recuperar_usuario' %}">
+            <img src="{% static 'Imagenes/usuario.png' %}" 
+                alt="imagen para recuperar el nombre usuario">
+
+            <p>Recuperar Usuario</p>
+        </a>
+    </div>
+
+    <div class="recuperar_contrasenia">
+        <a href="{% url 'recuperar_contrasenia' %}">
+            <img src="{% static 'Imagenes/contrasena.png' %}" 
+                alt="imagen para cambiar la contraseña">
+
+            <p>Recuperar Contraseña</p>
+        </a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="PSC" class="reveal">
+    <div class="contenedor">
+
+        <h2>Proyecto Socio-Tecnológico</h2>
+
+        <!-- ========== CONTENEDOR GRID PRINCIPAL ========== -->
+        <div class="psc-grid">
+
+            <!-- ========== 1. Qué es (PST) ========== -->
+            <div class="psc-box">
+                <h3>¿Qué es el Proyecto Socio-Tecnológico?</h3>
+                <p>
+                    El Proyecto Socio-Tecnológico (PST) es una unidad curricular anual desarrollada en todos los Programas Nacionales de Formación (PNF). Su finalidad es promover el aprendizaje experiencial dentro y fuera de la universidad mediante la participación activa en organizaciones, comunidades o instituciones públicas y privadas. 
+                    Los estudiantes aplican sus conocimientos teóricos en situaciones reales, fortaleciendo el pensamiento crítico, la innovación y la responsabilidad social.
+                </p>
+            </div>
+
+            <!-- ========== 2. Duración y Organización ========== -->
+            <div class="psc-box">
+                <h3>Duración y Organización por Trayectos</h3>
+                <p>
+                    El PST tiene una duración de <strong>todo el año académico</strong>. Cada trayecto incluye un proyecto distinto, es decir:
+                    si la carrera dura 4 años, se desarrollan <strong>4 proyectos diferentes</strong>, a menos que el equipo decida continuar y mejorar uno previo.
+                    La defensa del proyecto se realiza al finalizar cada trayecto.
+                </p>
+            </div>
+
+            <!-- ========== 3. Cómo se trabaja el proyecto ========== -->
+            <div class="psc-box full">
+                <h3>¿Cómo se trabaja el Proyecto?</h3>
+                <p>
+                    El PST se desarrolla en equipos de <strong>3 a 4 estudiantes</strong>, aunque puede ampliarse si el alcance lo requiere.
+                    Cada proyecto aplica una metodología adecuada según el tipo de propuesta, pudiendo ser:
+                    <strong>XP, Scrum, Kanban, Lean UX, Investigación-Acción</strong>, entre otras.
+                    La propuesta tecnológica o práctica depende del PNF; puede ser un sistema informático, un dispositivo electrónico, un producto alimenticio o una intervención veterinaria, según la especialidad.
+                </p>
+            </div>
+
+        </div> <!-- FIN DEL GRID -->
+
+        <!-- ========== SECCION PNF ========== -->
+        <details class="psc-details">
+            <summary>Proyecto por PNF</summary>
+
+            <div class="psc-details-content">
+
+                <div class="pnf-box">
+                    <h4>Ingeniería en Informatica e Sistemas</h4>
+                    <p>
+                        Elaboran proyectos tecnológicos como sistemas web, aplicaciones móviles, software de control, automatización, entre otros.
+                        Generalmente aplican metodologías ágiles como XP, Scrum o Kanban.
+                    </p>
+                </div>
+
+                <div class="pnf-box">
+                    <h4>Ingeniería Electrónica</h4>
+                    <p>
+                        Se orienta a la creación de prototipos, circuitos, automatización, robótica e IoT.
+                        También trabaja bajo metodologías ágiles y pruebas de ingeniería.
+                    </p>
+                </div>
+
+                <div class="pnf-box">
+                    <h4>Nutrición y Dietética</h4>
+                    <p>
+                        Su enfoque es alimentario: desarrollo de productos nutricionales, educación alimentaria, evaluación dietética y proyectos comunitarios vinculados a la salud y nutrición.
+                    </p>
+                </div>
+
+                <div class="pnf-box">
+                    <h4>Medicina Veterinaria</h4>
+                    <p>
+                        Desarrollan proyectos de bienestar animal, producción pecuaria, manejo sanitario y estudios de campo. 
+                        Aunque no suelen ser tecnológicos, sí aplican investigación científica aplicada.
+                    </p>
+                </div>
+
+            </div>
+        </details>
+
+        <!-- ========== ESTRATEGIAS DE EVALUACIÓN ========== -->
+        <details class="psc-details">
+            <summary>Estrategias de Evaluación</summary>
+            <div class="psc-details-content">
+                <ul>
+                    <li>Evaluaciones escritas y exámenes</li>
+                    <li>Defensas parciales y finales</li>
+                    <li>Mesas técnicas de revisión</li>
+                    <li>Tutorías guiadas</li>
+                    <li>Acompañamiento de docentes especialistas</li>
+                    <li>Observación del trabajo individual y grupal</li>
+                </ul>
+            </div>
+        </details>
+
+    </div>
+</section>
+
+{% endblock %}

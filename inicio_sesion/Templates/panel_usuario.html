@@ -1,0 +1,21 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+
+
+<section id="contenedor-principal">
+    <h1>{{ request.session.usuario_nombre }}</h1>
+
+    <ul>
+        {% for perfil in request.session.perfiles %}
+            <li>{{ perfil }}</li>
+        {% endfor %}
+    </ul>
+</section>
+
+
+
+{% endblock %}

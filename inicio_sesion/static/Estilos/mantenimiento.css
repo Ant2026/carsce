@@ -1,0 +1,87 @@
+/* Sección Principal de Mantenimiento */
+.mantenimiento-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 20px;
+    background: radial-gradient(circle, #edeeee 0%, #dadada 100%);
+}
+
+/* Tarjeta Estilo Glassmorphism */
+.contenedor-mantenimiento {
+    background: rgb(255, 255, 255);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.contenedor-mantenimiento:hover {
+    transform: translateY(-5px);
+}
+
+/* Icono con Animación de Giro Relajado */
+.icono-animado {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: inline-block;
+    animation: girar Motor 4s linear infinite;
+    filter: drop-shadow(0 0 15px rgba(255, 71, 87, 0.4));
+}
+
+/* Textos */
+.titulo-mantenimiento {
+    color: #000000;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.mantenimiento-section .subtitulo {
+    color: #000000;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Barra de carga de "Progreso/Ajuste" animada */
+.barra-progreso {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 6px;
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.linea-progreso {
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+    border-radius: 10px;
+    height: 100%;
+    width: 40%;
+    position: absolute;
+    animation: cargarMantenimiento 2s ease-in-out infinite;
+}
+
+/* Definición de Animaciones */
+@keyframes girarMotor {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes cargarMantenimiento {
+    0% { left: -40%; }
+    50% { left: 100%; }
+    100% { left: -40%; }
+}

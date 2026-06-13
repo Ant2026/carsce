@@ -1,0 +1,97 @@
+#inscripcion {
+    margin-top: 90px;  
+    margin-left: 280px;
+
+    padding: 25px;
+
+    max-width: 1000px;
+}
+
+#inscripcion h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    border-left: 4px solid #3b82f6;
+    padding-left: 10px;
+}
+
+#inscripcion form {
+    background: #ffffff;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#inscripcion label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#inscripcion input,
+#inscripcion select,
+#inscripcion textarea {
+    padding: 10px 12px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: 0.2s ease;
+}
+
+#inscripcion input:focus,
+#inscripcion select:focus,
+#inscripcion textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+#inscripcion textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+#inscripcion input[type="submit"] {
+    background: #2563eb;
+    color: white;
+
+    border: none;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+#inscripcion input[type="submit"]:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.grupo-inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.grupo-inline select {
+    width: 90px;
+}
+
+.grupo-inline input {
+    flex: 1;
+}

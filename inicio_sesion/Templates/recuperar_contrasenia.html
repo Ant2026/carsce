@@ -1,0 +1,34 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="recuperar_contrasenia">
+    <div class="tarjeta-contrasenia">
+        <img src="{% static 'Imagenes/nueva_contrasenia.png' %}" alt="imagen para recuperar nueva contraseña">
+        <h3>Cambiar Contraseña</h3>
+
+        <form method="post" id="formulario_contrasenia">
+            {% csrf_token %}
+            <div class="input-group password-group">
+                <input type="password" name="nueva_contrasenia" id="password" placeholder="Nueva contraseña">
+                <i class="icon-eye icon-password" id="mostrar_password"></i>
+                    <i class="icon-eye-off icon-password" id="ocultar_password"></i>
+            </div>
+
+            <div class="input-group password-group">
+                <input type="password" name="confirmar_contrasenia" id="confirmar_password" placeholder="Confirmar contraseña">
+                <i class="icon-eye icon-password" id="confirmar_mostrar_password"></i>
+                <i class="icon-eye-off icon-password" id="confirmar_ocultar_password"></i>
+            </div>
+            <button type="submit">Cambiar</button>
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/confirmar_contrasenia.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/actualizar_password.js' %}"></script>
+
+{% endblock %}

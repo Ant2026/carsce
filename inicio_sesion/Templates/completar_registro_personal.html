@@ -1,0 +1,39 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="completar_registro_personal">
+    <div class="contenedor_completar_regitro_personal">
+        <h3>Completar Registro</h3>
+
+        <form method="post" id="formulario_CRP">
+            <div id="contenedor_CRP_Personal">
+                <label for="nombres_usuario">Nombre:</label>
+                <input type="text" name="nombres" id="nombres_usuario" readonly>
+                
+                <label for="apellidos_usuario">Apellido:</label>
+                <input type="text" name="apellidos" id="apellidos_usuario" readonly>
+                
+                <label for="genero_personal">Genero:</label>
+                <select name="genero" id="genero_personal">
+                    <option value="">Seleccione</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
+                
+                <label for="CI">Cedula de Identidad:</label>
+                <input type="text" name="cedula_identidad" id="CI">
+                
+                <label for="estado_civil_personal">Estado Civil:</label>
+                <select name="estado_civil" id="estado_civil_personal">
+                    <option value="">Seleccione</option>
+                    <option value="Soltero">Seleccione</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
