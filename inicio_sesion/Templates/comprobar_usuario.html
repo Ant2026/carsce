@@ -8,12 +8,13 @@
     <div class="contenedor-comprobar">
         <h3>Verificar Código</h3>
         <p>Se ha enviado un código a su correo electrónico. Por favor, ingréselo a continuación para verificar su identidad.</p>
+        <p>Tiempo restante del código: <strong id="contador_codigo" data-expiracion="{{ fecha_expiracion }}"></strong></p>
 
         <form method="post" id="formulario_comprar_usuario">
             {% csrf_token %}
             <label for="password">Ingrese el código:</label>
             <div class="grupo-input">
-                <input type="password" name="codigo" id="password" placeholder="Debe ingresar el código" required>
+                <input type="password" name="codigo" autocomplete="off" maxlength="6" minlength="6" id="password" placeholder="Debe ingresar el código" required>
                 <i class="icon-eye icon-password" id="mostrar_password"></i>
                 <i class="icon-eye-off icon-password" id="ocultar_password"></i>
             </div>

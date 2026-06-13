@@ -21,6 +21,14 @@ class Usuario(models.Model):
     def __str__(self):
         return self.nombres
 
+class PadresEstudiante(models.Model):
+    id_representante = models.AutoField(primary_key=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    cedula_identidad = models.CharField(max_length=15, unique=True)
+    telefono = models.CharField(max_length=15)
+    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='padresEstudiante')
+
 class Residencia(models.Model):
     id_residencia = models.IntegerField(primary_key=True)
     condicion_residencia = models.CharField(max_length=20)
@@ -70,25 +78,17 @@ class Perfiles(models.Model):
 
 # Clases (Tablas) relacionadas usuario general
 
-class UsuarioPerfil(models.Model):
-    id_perfil_asignado = models.AutoField(primary_key=True)
-    id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE, db_column='id_perfil')
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
-
 class PNFNucleo(models.Model):
     id_pnf_nucleo = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, db_column='id_pnf')
 
-class PerfilesPnf(models.Model):
-    id_perfil_pnf = models.AutoField(primary_key=True)
-    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, db_column='id_pnf')
-    id_perfil_asignado = models.ForeignKey(UsuarioPerfil, on_delete=models.CASCADE, db_column='id_perfil_asignado')
-
-class UsuarioNucleo(models.Model):
-    id_usuario_nucleo = models.AutoField(primary_key=True)
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
-    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
+class UsuarioAsignacion(models.Model):
+    id_asignacion = models.AutoField(primary_key=True)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE)
+    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
+    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
 
 # Clases (Tablas) para Docentes, Coordinadores de PNFs, Directores Generales y Control de estudio
 
@@ -153,18 +153,19 @@ class SeccionAcademica(models.Model):
 class SeccionEstudiante(models.Model):
     id_seccion_estudiante = models.AutoField(primary_key=True)
     id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, db_column='id_seccion')
-    id_perfil_pnf = models.ForeignKey(PerfilesPnf, on_delete=models.CASCADE, db_column='id_perfil_pnf')
+    id_perfil_pnf = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, db_column='id_perfil_pnf')
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
     
 class EstudianteCorte(models.Model):
     id_estudiante_corte = models.AutoField(primary_key=True)
     id_corte_academico = models.ForeignKey(CorteAcademico, on_delete=models.CASCADE, db_column='id_corte_academico')
-    id_perfil_pnf = models.ForeignKey(PerfilesPnf, on_delete=models.CASCADE, db_column='id_perfil_pnf')
+    id_perfil_pnf = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, db_column='id_perfil_pnf')
 
 class VerificacionCodigo(models.Model):
     id_codigo = models.AutoField(primary_key=True)
     cedula_identidad = models.CharField(max_length=12)
+    token = models.CharField(null=True, blank=True)
     codigo = models.CharField(max_length=10)
     creado = models.DateTimeField()
     intentos = models.PositiveIntegerField(default=0)

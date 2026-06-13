@@ -7,12 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const datos_formulario = new FormData(formulario)
 
         try {
-            const respuesta = await fetch("", {
+            const respuesta = await fetch("/pre_inscripcion/", {
                 method: "POST",
                 body: datos_formulario
             });
             const resultado = await respuesta.json()
-
                 Swal.fire({
                     title: resultado.icon,
                     text: resultado.descripcion,
@@ -20,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
-
             formulario.reset()
         } catch (error) {
             console.error(error)

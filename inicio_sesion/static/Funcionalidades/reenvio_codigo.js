@@ -5,27 +5,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!btnReenviar || !contador) return;
 
-    let tiempo = 60;
+    const DURACION = 60;
 
-    btnReenviar.disabled = true;
+    function iniciarContador() {
 
-    const intervalo = setInterval(() => {
-        tiempo--;
+        const inicio = localStorage.getItem("inicio_reenvio");
 
-        contador.textContent = tiempo;
-
-        if (tiempo <= 0) {
-            clearInterval(intervalo);
+        if (!inicio) {
             btnReenviar.disabled = false;
-            contador.textContent = "";
-            btnReenviar.textContent = "Reenviar código";
+            return;
         }
-    }, 1000);
+
+        btnReenviar.disabled = true;
+
+        const intervalo = setInterval(() => {
+
+            const transcurrido = Math.floor(
+                (Date.now() - parseInt(inicio)) / 1000
+            );
+
+            const restante = DURACION - transcurrido;
+
+            if (restante <= 0) {
+
+                clearInterval(intervalo);
+
+                btnReenviar.disabled = false;
+                contador.textContent = "";
+
+                localStorage.removeItem("inicio_reenvio");
+
+                return;
+            }
+
+            contador.textContent = restante;
+
+        }, 1000);
+
+    }
+
+    iniciarContador();
 
     btnReenviar.addEventListener("click", async () => {
+
         btnReenviar.disabled = true;
 
         try {
+
             const resp = await fetch("/reenviar_codigo_btn/");
             const data = await resp.json();
 
@@ -33,16 +59,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 icon: data.icon || "info",
                 text: data.descripcion
             });
+
+            localStorage.setItem("inicio_reenvio", Date.now());
+
             location.reload();
 
         } catch (error) {
+
+            btnReenviar.disabled = false;
+
             Swal.fire({
                 icon: "error",
                 text: "Error al reenviar el código"
             });
-
-            btnReenviar.disabled = false;
         }
+
     });
 
 });

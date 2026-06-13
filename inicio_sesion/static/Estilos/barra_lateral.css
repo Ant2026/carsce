@@ -7,7 +7,7 @@
     height: calc(100vh - 70px);
 
     background: #ddddddc7;
-
+    color: #000;
     padding: 18px 14px;
 
     display: flex;

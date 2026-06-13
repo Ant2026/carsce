@@ -4,34 +4,33 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.db import transaction
 
-from .models import Usuario, Perfiles, Nucleos, Pnf, Contacto, VerificacionCodigo, PNFNucleo, GacetaOficial, UsuarioPerfil, PerfilesPnf, UsuarioNucleo
+from .models import Usuario, Perfiles, Nucleos, Pnf, Contacto, VerificacionCodigo, PNFNucleo, GacetaOficial, UsuarioAsignacion
 
 import secrets, string
 from math import ceil
 from datetime import timedelta
 import json
+import uuid
 
 # Create your views here.
-
 def foro(request):
     return render(request, 'Foro/foro.html')
 
 def inicio_sesion(request):
-
     if request.method == "POST":
         nombre_usuario = request.POST.get("usuario")
         contrasenia = request.POST.get("contrasenia")
 
         if nombre_usuario and contrasenia:
+            usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
 
-            try:
-                usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
-
+            if usuario:
                 if check_password(contrasenia, usuario.clave):
                     nombre_completo = usuario.nombres + " " + usuario.apellidos
 
-                    perfiles = Perfiles.objects.filter(usuarioperfil__id_usuario=usuario)
+                    perfiles = Perfiles.objects.filter(usuarioasignacion__id_usuario=usuario)
 
                     lista_perfiles = list(perfiles.values_list('perfil', flat=True))
 
@@ -42,28 +41,24 @@ def inicio_sesion(request):
                         "success": True,
                         "redirect_url": reverse("panel_usuario")
                     })
-
                 else:
                     return JsonResponse({
                         "success": False,
                         "icon": "error",
                         "descripcion": "Contraseña incorrecta"
                     })
-
-            except Usuario.DoesNotExist:
+            else:
                 return JsonResponse({
                     "success": False,
                     "icon": "error",
-                    "descripcion": "El usuario no existe"
+                    "descripcion": "El usuario no se encuentra registrado"
                 })
-
         else:
             return JsonResponse({
                 "success": False,
                 "icon": "warning",
                 "descripcion": "Debe completar todos los campos"
             })
-
     return render(request, 'inicio_sesion.html')
 
 def cerrar_sesion(request):
@@ -71,7 +66,7 @@ def cerrar_sesion(request):
     return redirect("inicio_sesion")
 
 # Esto son los modulos para recuperar o cambiar de credenciales con sus procesos de autenticación
-
+# Los modulos no tiene ninguna relación con el perfil ni mucho meno núcleo y pnf
 def buscar_usuario(request):
     if request.method == "POST":
         nacionalidad = request.POST.get("nacionalidad")
@@ -83,8 +78,13 @@ def buscar_usuario(request):
             existe = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
 
             if existe:
+                
                 request.session['CI_usuario'] = cedula_identidad
                 request.session['flujo_verificacion'] = True
+                
+                token = str(uuid.uuid4())
+                request.session['token_recuperacion'] = token
+
                 return JsonResponse({"estado": "exito"})
             else:
                 return JsonResponse({
@@ -101,52 +101,76 @@ def buscar_usuario(request):
     return render(request, 'buscar_usuario.html')
 
 def comprobar_usuario(request):
-    if not request.session.get('flujo_verificacion'):
+    if not request.session.get("flujo_verificacion"):
         return redirect("buscar_usuario")
 
     usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
+
+    if not usuario:
+        return redirect("buscar_usuario")
+
     contacto = Contacto.objects.filter(id_usuario_id=usuario.id_usuario).first()
-    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
+
+    verificacion = VerificacionCodigo.objects.filter(
+                                            cedula_identidad=usuario.cedula_identidad,
+                                            token=request.session.get("token_recuperacion")).first()
 
     if not verificacion:
         enviar_codigo_verificacion(
             usuario.nombres,
             usuario.apellidos,
             contacto.correo_electronico,
-            usuario.cedula_identidad)
+            usuario.cedula_identidad,
+            request.session["token_recuperacion"])
+        
+        verificacion = VerificacionCodigo.objects.filter(cedula_identidad=usuario.cedula_identidad).first()
 
-    if request.method == "POST":
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
         codigo_ingresado = request.POST.get("codigo")
 
         if not codigo_ingresado:
             return JsonResponse({
                 "estado": "fallo",
                 "icon": "warning",
-                "descripcion": "Debe ingresar el código de verificación"
+                "descripcion": "Debe ingresar el código de verificación",
+                "accion": "input_vacio"
+            })
+
+        if verificacion and verificacion.fecha_expiracion < timezone.now():
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "error",
+                "descripcion": "El código ha expirado, debe solicitar el código a través del botón de reenviar código",
+                "accion": "expirado"
             })
 
         respuesta = validar_codigo(
-                        codigo_ingresado,
-                        usuario.cedula_identidad,
-                        usuario.nombres,
-                        usuario.apellidos,
-                        contacto.correo_electronico
-                    )
+            codigo_ingresado,
+            usuario.cedula_identidad,
+            request.session["token_recuperacion"])
 
         datos = json.loads(respuesta.content)
-
-        if datos.get("estado") == "exito":
-            request.session["correo_verificado"] = True
+        request.session["correo_verificado"] = True
+        
+        if datos.get("estado") == "exito":    
+            verificacion.intentos = 0
+            verificacion.bloqueado_hasta = None
+            verificacion.activo = 0
+            verificacion.save()
 
         return respuesta
-    
-    return render(request, "comprobar_usuario.html")
 
-def validar_codigo(codigo, cedula_identidad, nombres, apellidos, correo_electronico):
+    fecha_expiracion_ts = int(verificacion.fecha_expiracion.timestamp())
 
+    return render(request, "comprobar_usuario.html", {
+        "fecha_expiracion": fecha_expiracion_ts
+    })
+
+def validar_codigo(codigo, cedula_identidad,token):
     verificacion = VerificacionCodigo.objects.filter(
-        cedula_identidad=cedula_identidad
-    ).first()
+                cedula_identidad=cedula_identidad,
+                token=token,
+                activo=1).first()
 
     if not verificacion:
         return JsonResponse({
@@ -154,24 +178,27 @@ def validar_codigo(codigo, cedula_identidad, nombres, apellidos, correo_electron
             "icon": "error",
             "descripcion": "No existe un código de verificación"
         })
+    
+    if (verificacion.bloqueado_hasta and timezone.now() >= verificacion.bloqueado_hasta):
+        verificacion.intentos = 0
+        verificacion.bloqueado_hasta = None
+        verificacion.save()
 
     if (verificacion.bloqueado_hasta and timezone.now() < verificacion.bloqueado_hasta):
         tiempo_restante = verificacion.bloqueado_hasta - timezone.now()
         minutos_restantes = ceil(tiempo_restante.total_seconds() / 60)
 
         return JsonResponse({
-            "estado": "fallo",
+            "estado": "bloqueado",
             "icon": "error",
             "descripcion": f"Demasiados intentos. Intente nuevamente en {minutos_restantes} minuto(s)"
         })
 
     if timezone.now() > verificacion.fecha_expiracion:
-        reenviar_codigo(nombres, apellidos, correo_electronico, cedula_identidad)
-
         return JsonResponse({
             "estado": "expirado",
             "icon": "warning",
-            "descripcion": "El código expiró. Se envió uno nuevo a su correo"
+            "descripcion": "El código expiró. Solicite uno nuevo."
         })
 
     if verificacion.codigo == codigo:
@@ -188,6 +215,13 @@ def validar_codigo(codigo, cedula_identidad, nombres, apellidos, correo_electron
 
     if verificacion.intentos >= 3:
         verificacion.bloqueado_hasta = timezone.now() + timedelta(minutes=5)
+        verificacion.save()
+
+        return JsonResponse({
+            "estado": "bloqueado",
+            "icon": "error",
+            "descripcion": "Ha superado el número máximo de intentos. Intente nuevamente en 5 minutos."
+        })
 
     verificacion.save()
 
@@ -214,27 +248,14 @@ def reenviar_codigo_btn(request):
             "descripcion": "Usuario no encontrado"
         })
 
-    contacto = Contacto.objects.filter(
-        id_usuario_id=usuario.id_usuario
-    ).first()
+    contacto = Contacto.objects.filter(id_usuario_id=usuario.id_usuario).first()
 
-    verificacion = VerificacionCodigo.objects.filter(
-        cedula_identidad=usuario.cedula_identidad
-    ).first()
+    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=usuario.cedula_identidad,
+                                                    token=request.session.get("token_recuperacion")).first()
 
-    if (
-        verificacion and
-        verificacion.bloqueado_hasta and
-        timezone.now() < verificacion.bloqueado_hasta
-    ):
-
-        tiempo_restante = (
-            verificacion.bloqueado_hasta - timezone.now()
-        )
-
-        minutos_restantes = ceil(
-            tiempo_restante.total_seconds() / 60
-        )
+    if (verificacion and verificacion.bloqueado_hasta and timezone.now() < verificacion.bloqueado_hasta):
+        tiempo_restante = (verificacion.bloqueado_hasta - timezone.now())
+        minutos_restantes = ceil(tiempo_restante.total_seconds() / 60)
 
         return JsonResponse({
             "estado": "fallo",
@@ -243,24 +264,19 @@ def reenviar_codigo_btn(request):
         })
 
     return reenviar_codigo(
-        usuario.nombres,
-        usuario.apellidos,
-        contacto.correo_electronico,
-        usuario.cedula_identidad
-    )
+            usuario.nombres,
+            usuario.apellidos,
+            contacto.correo_electronico,
+            usuario.cedula_identidad,
+            request.session.get("token_recuperacion"))
 
-def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad):
-
-    verificacion = VerificacionCodigo.objects.filter(
-        cedula_identidad=cedula_identidad
-    ).first()
+def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
+    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=cedula_identidad,
+                                                     token=token).first()
 
     # Bloqueo activo
-    if (
-        verificacion and
-        verificacion.bloqueado_hasta and
-        timezone.now() < verificacion.bloqueado_hasta
-    ):
+    if verificacion and verificacion.bloqueado_hasta and timezone.now() < verificacion.bloqueado_hasta:
+        
         tiempo_restante = verificacion.bloqueado_hasta - timezone.now()
         minutos_restantes = max(1, int(tiempo_restante.total_seconds() / 60))
 
@@ -275,22 +291,14 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
         for _ in range(6)
     )
 
-    fecha_expiracion = timezone.now() + timedelta(minutes=15)
+    fecha_expiracion = timezone.now() + timedelta(minutes=5)
 
     if verificacion:
-
         verificacion.codigo = codigo_generado
         verificacion.fecha_expiracion = fecha_expiracion
         verificacion.activo = 1
-        verificacion.intentos += 1
-
-        if verificacion.intentos >= 3:
-            verificacion.intentos = 0
-            verificacion.bloqueado_hasta = None
-
         verificacion.save()
     else:
-
         verificacion = VerificacionCodigo.objects.create(
             cedula_identidad=cedula_identidad,
             codigo=codigo_generado,
@@ -315,13 +323,13 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
         "descripcion": "Se ha enviado un nuevo código de verificación"
     })
 
-def enviar_codigo_verificacion(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad):
-    
+def enviar_codigo_verificacion(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
     codigo_generado = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
     fecha_expiracion = timezone.now() + timedelta(minutes=15)
 
     VerificacionCodigo.objects.create(
         cedula_identidad=cedula_identidad,
+        token=token,
         codigo=codigo_generado,
         creado=timezone.now(),
         intentos=0,
@@ -344,14 +352,32 @@ def enviar_codigo_verificacion(nombres_usuario, apellidos_usuario, correo_electr
             })
 
 def panel_recuperar_credenciales(request):
+    if not request.session.get("flujo_verificacion"):
+        return redirect("buscar_usuario")
+    
     if not request.session['correo_verificado']:
+        return redirect("comprobar_usuario")
+    
+    token = request.session.get("token_recuperacion")
+
+    verificacion = VerificacionCodigo.objects.filter(token=token, activo=0).first()
+
+    if not verificacion:
         return redirect("buscar_usuario")
     
     return render(request, 'panel_recuperar_credenciales.html')
 
 def recuperar_contrasenia(request):
-
+    if not request.session.get("flujo_verificacion"):
+        return redirect("buscar_usuario")
+    
     if not request.session.get("correo_verificado"):
+        return redirect("comprobar_usuario")
+    
+    token = request.session.get("token_recuperacion")
+    verificacion = VerificacionCodigo.objects.filter(token=token, activo=0).first()
+
+    if not verificacion:
         return redirect("buscar_usuario")
 
     if request.method == "POST":
@@ -372,9 +398,7 @@ def recuperar_contrasenia(request):
                 "descripcion": "Las contraseñas no coinciden"
             })
 
-        usuario = Usuario.objects.filter(
-            cedula_identidad=request.session.get("CI_usuario")
-        ).first()
+        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
 
         if not usuario:
             return JsonResponse({
@@ -386,7 +410,15 @@ def recuperar_contrasenia(request):
         usuario.clave = password
         usuario.save()
 
-        request.session.pop("correo_verificado", None)
+        verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session["CI_usuario"]).first()
+
+        if verificacion:
+            verificacion.token = ""
+            verificacion.save()
+
+        del request.session["correo_verificado"]
+        del request.session["CI_usuario"]
+        del request.session["token_recuperacion"]
 
         return JsonResponse({
             "estado": "exito",
@@ -397,22 +429,36 @@ def recuperar_contrasenia(request):
     return render(request, "recuperar_contrasenia.html")
 
 def recuperar_usuario(request):
+    if not request.session.get("flujo_verificacion"):
+        return redirect("buscar_usuario")
+    
+    if not request.session.get("correo_verificado"):
+        return redirect("comprobar_usuario")
 
-    if not request.session.get('correo_verificado'):
+    token = request.session.get("token_recuperacion")
+
+    verificacion = VerificacionCodigo.objects.filter(token=token, activo=0).first()
+    if not verificacion:
         return redirect("buscar_usuario")
 
-    usuario = Usuario.objects.filter(
-        cedula_identidad=request.session.get("CI_usuario")
-    ).first()
+    usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
 
-    if not usuario:
+    if not usuario: 
         return redirect("buscar_usuario")
 
-    contacto = Contacto.objects.filter(
-        id_usuario_id=usuario.id_usuario
-    ).first()
+    contacto = Contacto.objects.filter(id_usuario_id=usuario.id_usuario).first()
 
     correo = contacto.correo_electronico
+
+    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session["CI_usuario"]).first()
+
+    if verificacion:
+        verificacion.token = ""
+        verificacion.save()
+
+    del request.session["correo_verificado"]
+    del request.session["CI_usuario"]
+    del request.session["token_recuperacion"]
 
     send_mail(
         subject="Recuperación de usuario",
@@ -420,9 +466,6 @@ def recuperar_usuario(request):
         from_email="ejemplo@gmail.com",
         recipient_list=[correo],
     )
-
-    request.session.pop("correo_verificado", None)
-    request.session.pop("CI_usuario", None)
 
     return render(request, 'recuperar_usuario.html', {
         "usuario_enviado": True
@@ -435,9 +478,76 @@ def panel_registro(request):
     return render(request, 'panel_registro.html')
 
 def confirmar_registro_personal(request):
+    if request.method == "POST":
+        nacionalidad = request.POST.get("nacionalidad")
+        num_cedula_identidad = request.POST.get("usuario_ci")
+
+        if nacionalidad and num_cedula_identidad:
+            cedula_identidad = f"{nacionalidad}-{num_cedula_identidad}"
+
+            usuario = Usuario.objects.filter(cedula_identidad=cedula_identidad).first()
+
+            if not usuario:
+                return JsonResponse({
+                    "existe": "error",
+                    "icon": "error",
+                    "descripcion": "El usuario no se encuentra registrado"
+                })
+
+            # Verificar si ya tiene credenciales
+            if usuario.nombre_usuario and usuario.clave:
+                return JsonResponse({
+                    "existe": "error",
+                    "icon": "warning",
+                    "descripcion": "El usuario ya posee credenciales registradas"
+                })
+
+            request.session["cedula_personal"] = cedula_identidad
+
+            return JsonResponse({
+                "existe": "success"
+            })
+
+        return JsonResponse({
+            "existe": "error",
+            "icon": "warning",
+            "descripcion": "Complete todos los campos"
+        })
+
+    return render(request, "confirmar_registro_personal.html")
+
+def guardar_credenciales_personal(request):
+    if request.method == "POST":
+
+        cedula_identidad = request.session.get('cedula_personal')
+
+        nombre_usuario = request.POST.get("nombre_usuario")
+        password = request.POST.get("password_usuario")
+        print(nombre_usuario)
+        print(password)
+        if nombre_usuario and password:
+            usuario = Usuario.objects.get(cedula_identidad=cedula_identidad)
+
+            usuario.nombre_usuario = nombre_usuario
+            usuario.clave = make_password(password)
+            usuario.save()
+            del request.session["cedula_personal"]
+
+            return JsonResponse({
+                "existe": "success",
+                "icon": "success",
+                "descripcion": "Se registraron exitosamente las credenciales"
+            })
+        else:
+            return JsonResponse({
+                "existe": "error",
+                "icon": "warning",
+                "descripcion": "Complete todos los campos"
+            })
+
     return render(request, 'confirmar_registro_personal.html')
 
-def pre_inscripción(request):
+def pre_inscripcion(request):
     if request.method == "POST":
         nombres = request.POST.get("nombres")
         apellidos = request.POST.get("apellidos")
@@ -452,7 +562,7 @@ def pre_inscripción(request):
 
         if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono and usuario and password:
             correo_electronico = nombre_correo + dominio
-            cedula_identidad = nacionalidad + num_cedula
+            cedula_identidad = nacionalidad + "-" + num_cedula
             telefono = prefijo + num_telefono
 
             verificar_cedula = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
@@ -478,17 +588,22 @@ def pre_inscripción(request):
                 })
             
             nuevo_usuario = Usuario.objects.create(
-                nombres=nombres,
-                apellidos=apellidos,
-                cedula_identidad=cedula_identidad,
-                nombre_usuario=usuario,
-                clave=make_password(password)
-            )
+                            nombres=nombres,
+                            apellidos=apellidos,
+                            cedula_identidad=cedula_identidad,
+                            nombre_usuario=usuario,
+                            clave=make_password(password))
 
             Contacto.objects.create(
                 telefono_personal=telefono,
                 correo_electronico=correo_electronico,
-                id_usuario=nuevo_usuario
+                id_usuario=nuevo_usuario)
+
+            perfil = Perfiles.objects.get(pk=5)
+
+            UsuarioAsignacion.objects.create(
+                id_usuario=nuevo_usuario,
+                id_perfil=perfil
             )
 
             return JsonResponse({
@@ -501,38 +616,97 @@ def pre_inscripción(request):
             "descripcion": "Complete todos los campos"
         })
 
-    return render(request, "pre_inscripción.html")
+    return render(request, "pre_inscripcion.html")
 
-# Esto son los modulos del panel de usuarios
+# Esto son los modulos para realizar el pre registro por parte del Director General
 
 def panel_usuario(request):
     return render(request, 'panel_usuario.html')
 
 def datos_registro(request):
-    nucleos = list(Nucleos.objects.values("id_nucleo", "municipio"))
-    perfiles = list(Perfiles.objects.values("id_pefil", "perfil"))
+    perfiles = Perfiles.objects.exclude(perfil="Estudiante")
+
+    cantidad_directores = UsuarioAsignacion.objects.filter(id_perfil__perfil="Director General").count()
+
+    if cantidad_directores >= 2:
+        perfiles = perfiles.exclude(perfil="Director General")
+
+    nucleos = Nucleos.objects.all()
 
     return JsonResponse({
-                "nucleos": nucleos,
-                "perfiles": perfiles
+        "perfiles": list(
+            perfiles.values(
+                "id_pefil",
+                "perfil"
+            )
+        ),
+        "nucleos": list(
+            nucleos.values(
+                "id_nucleo",
+                "municipio"
+            )
+        )
+    })
+
+def validar_nucleos(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            perfil_id = data.get("id_perfil")
+
+            perfil = Perfiles.objects.get(
+                pk=perfil_id
+            )
+
+            nucleos = Nucleos.objects.all()
+
+            if perfil.perfil == "Encargado de Control de Estudio":
+
+                nucleos_ocupados = UsuarioAsignacion.objects.filter(
+                    id_perfil__perfil="Encargado de Control de Estudio"
+                ).values_list(
+                    "id_nucleo_id",
+                    flat=True
+                )
+
+                nucleos = nucleos.exclude(
+                    id_nucleo__in=nucleos_ocupados
+                )
+
+            resultado = list(
+                nucleos.values(
+                    "id_nucleo",
+                    "municipio"
+                )
+            )
+
+            return JsonResponse({
+                "nucleos": resultado
             })
+
+        except Exception as e:
+            return JsonResponse({
+                "error": str(e)
+            }, status=500)
 
 def pnfs_nucleos(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-
             nucleo_id = data.get("id_nucleo")
 
             if not nucleo_id:
                 return JsonResponse({"error": "Datos incompletos"}, status=400)
 
-            pnfs = PNFNucleo.objects.filter(
-                id_nucleo=nucleo_id
-            ).select_related("id_pnf")
+            pnfs_ocupados = UsuarioAsignacion.objects.filter(
+                id_perfil__perfil="Coordinador de PNF",
+                id_nucleo_id=nucleo_id
+            ).values_list("id_pnf_id", flat=True)
 
-            resultado = [
-                {
+            pnfs = PNFNucleo.objects.filter(id_nucleo=nucleo_id).exclude(id_pnf_id__in=pnfs_ocupados).select_related("id_pnf")
+
+            resultado = [ {
                     "id_pnf": item.id_pnf.id_pnf,
                     "pnf": item.id_pnf.pnf
                 }
@@ -560,15 +734,29 @@ def pre_registro_personal(request):
         gaceta_oficial = request.POST.get("gaceta_oficial")
         fecha_gaceta = request.POST.get("fecha_gaceta")
 
-        perfil = request.POST.get("perfiles")
-        nucleo = request.POST.get("nucleos")
-        pnf = request.POST.get("pnf")
+        perfiles_asignados = request.POST.getlist("perfil")
+
+        nucleos_control = request.POST.getlist("nucleo_encargado_control_estudios")
+        nucleos_coordinador = request.POST.getlist("nucleo_coordinador_pnf")
+        nucleos_docente = request.POST.getlist("nucleo_docente")
+
+        pnfs_coordinador = request.POST.getlist("pnf_coordinador_pnf")
+        pnfs_docente = request.POST.getlist("pnf_docente")
+
+        print("Perfiles:", perfiles_asignados)
+
+        print("Núcleos Control:", nucleos_control)
+        print("Núcleos Coordinador:", nucleos_coordinador)
+        print("Núcleos Docente:", nucleos_docente)
+
+        print("PNF Coordinador:", pnfs_coordinador)
+        print("PNF Docente:", pnfs_docente)
 
         if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono:
             
-            cedula_identidad = nacionalidad+"-"+num_cedula
-            correo_principal = nombre_correo+dominio
-            telefono_principal = prefijo+num_telefono
+            cedula_identidad = f"{nacionalidad}-{num_cedula}"
+            correo_principal = f"{nombre_correo}{dominio}"
+            telefono_principal = f"{prefijo}{num_telefono}"
             
             if Usuario.objects.filter(cedula_identidad=cedula_identidad).exists():
                 return JsonResponse({
@@ -576,42 +764,82 @@ def pre_registro_personal(request):
                     "descripcion": "Ya existe un usuario con esta cédula"
                 })
 
-            usuario = Usuario.objects.create(nombres=nombres, apellidos=apellidos, cedula_identidad=cedula_identidad)
-            Contacto.objects.create(correo_electronico=correo_principal, telefono_personal=telefono_principal, id_usuario=usuario)
-            
-            if gaceta_oficial and fecha_gaceta:
-                GacetaOficial.objects.create(numero_gaceta=gaceta_oficial, fecha_gaceta=fecha_gaceta, id_usuario=usuario.id_usuario)
-            
-            UsuarioPerfil.objects.create(id_usuario=usuario, id_perfil=perfil)
+            try:
+                with transaction.atomic():
+                    usuario = Usuario.objects.create(nombres=nombres, apellidos=apellidos, cedula_identidad=cedula_identidad)
+                    Contacto.objects.create(correo_electronico=correo_principal, telefono_personal=telefono_principal, id_usuario=usuario)
+                
+                    if gaceta_oficial and fecha_gaceta:
+                        GacetaOficial.objects.create(gaceta_oficial=gaceta_oficial, fecha_gaceta_oficial=fecha_gaceta, id_usuario=usuario)
+                    
+                    for perfil_id in perfiles_asignados:
+                        perfil = Perfiles.objects.get(pk=perfil_id)
 
-            if nucleo:
-                UsuarioNucleo.objects.create(id_usuario=usuario.id_usuario, id_nucleo=nucleo)
-            if pnf:
-                if pnf:
-                    perfilpnf = UsuarioPerfil.objects.filter(id_usuario=usuario).first()
+                        if perfil.perfil == "Director General":
+                            UsuarioAsignacion.objects.create(
+                                id_usuario=usuario,
+                                id_perfil=perfil
+                            )
 
-                    if perfilpnf is None:
-                        return JsonResponse({
-                            "icon": "error",
-                            "descripcion": "Debe seleccionar un perfil antes de asignar un PNF"
-                        })
+                        # CONTROL DE ESTUDIO
+                        if perfil.perfil == "Encargado de Control de Estudio":
+                            for nucleo_id in nucleos_control:
 
-                    PerfilesPnf.objects.create(
-                        id_perfil_asignado=perfilpnf.id_perfil_asignado,
-                        id_pnf_id=pnf
-                    )
+                                UsuarioAsignacion.objects.create(
+                                    id_usuario=usuario,
+                                    id_perfil=perfil,
+                                    id_nucleo_id=nucleo_id)
 
-            return JsonResponse({
-                    "icon": "success",
-                    "descripcion": "Se registró correctamente"
+                        # COORDINADOR PNF
+                        elif perfil.perfil == "Coordinador de PNF":
+                            for nucleo_id in nucleos_coordinador:
+                                for pnf_id in pnfs_coordinador:
+                                    existe = PNFNucleo.objects.filter(id_nucleo_id=nucleo_id, id_pnf_id=pnf_id).exists()
+
+                                    if existe:
+                                        UsuarioAsignacion.objects.create(
+                                            id_usuario=usuario,
+                                            id_perfil=perfil,
+                                            id_nucleo_id=nucleo_id,
+                                            id_pnf_id=pnf_id)
+                                        
+                        # DOCENTE
+                        elif perfil.perfil == "Docente":
+                            for nucleo_id in nucleos_docente:
+                                for pnf_id in pnfs_docente:
+                                    existe = PNFNucleo.objects.filter(id_nucleo_id=nucleo_id, id_pnf_id=pnf_id).exists()
+
+                                    if existe:
+                                        UsuarioAsignacion.objects.create(
+                                            id_usuario=usuario,
+                                            id_perfil=perfil,
+                                            id_nucleo_id=nucleo_id,
+                                            id_pnf_id=pnf_id)
+
+                    return JsonResponse({
+                        "icon": "success",
+                        "descripcion": "Se registró correctamente"
+                    })
+
+            except Exception as e:
+                return JsonResponse({
+                    "icon": "error",
+                    "descripcion": f"Error al registrar los datos: {str(e)}"
                 })
         else:
             return JsonResponse({
-                    "icon": "warning",
-                    "descripcion": "Se encuentra vacio los campos"
-                })
+                "icon": "warning",
+                "descripcion": "Se encuentran vacíos los campos obligatorios"
+            })
         
     return render(request, 'pre_registro_personal.html')
+
+# Formulario Completo del Personal
+def completar_registro_personal(request):
+    return render(request, "completar_registro_personal.html")
+
+
+# Formulario Completo de los Estudiantes
 
 def inscripcion_estudiante(request):
     return render(request, 'inscripcion_estudiante.html')
@@ -635,6 +863,3 @@ def trayectoria(request):
 
 def carreras_impartidas(request):
     return render(request, 'Foro/carreras_impartidas.html')
-
-def Planificacion_Docente(request):
-    return render(request, 'Foro/Planificacion_Docente.html')

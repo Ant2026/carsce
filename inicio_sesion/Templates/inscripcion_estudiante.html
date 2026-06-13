@@ -8,7 +8,7 @@
     <h3>Inscripción de Estudiante</h3>
 
     <form method="post">
-
+        {% csrf_token %}
         <label>Nombres:</label>
         <input type="text" name="nombres">
 
