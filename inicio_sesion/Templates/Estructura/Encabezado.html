@@ -67,13 +67,24 @@
                 </li>
 
                 <li class="nav-item">
-                    {% if request.path == '/' %}
-                    <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
-
-                    {% else %}
-                        <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar Sesión</a>
-                    {% endif %}
+                    <button id="mostrar_dialogo">
+                        {% if nucleo_seleccionado %}
+                            {{ nucleo_seleccionado }}
+                        {% else %}
+                            Seleccionar núcleo
+                        {% endif %}
+                    </button>
                 </li>
+
+                {% if request.session.usuario_nombre %}
+                    <li class="nav-item">
+                        <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar</a>
+                    </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
+                        </li>
+                {% endif %}
             </ul>
         </div> 
     </nav>

@@ -6,6 +6,7 @@
 
 @import url('formulario_inicio_sesion.css');
 @import url('formularios_recuperar_credenciales.css');
+@import url('completar_registro_estudiante.css');
 @import url('formularios_registros.css');
 
 @import url('inscripcion.css');
@@ -15,6 +16,207 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+#inscripcion {
+    width: 95%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#inscripcion h4 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+#inscripcion table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+#inscripcion thead {
+    background: #0d6efd;
+    color: #ffffff;
+}
+
+#inscripcion thead td {
+    padding: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#inscripcion tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.3s ease;
+}
+
+#inscripcion tbody tr:hover {
+    background: #f5f8ff;
+}
+
+#inscripcion tbody td {
+    padding: 12px;
+    text-align: center;
+    color: #444;
+}
+
+#inscripcion button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #198754;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#inscripcion button:hover {
+    background: #157347;
+    transform: translateY(-2px);
+}
+
+#inscripcion button:active {
+    transform: translateY(0);
+}
+
+.formulario_inscripcion {
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #inscripcion {
+        overflow-x: auto;
+    }
+
+    #inscripcion table {
+        min-width: 700px;
+    }
+
+    #inscripcion h4 {
+        font-size: 20px;
+    }
+
+    #inscripcion tbody td,
+    #inscripcion thead td {
+        padding: 10px;
+    }
+}
+
+#mostrar_dialogo {
+    margin: 0 10px;
+    padding: 6px 12px;
+
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+
+    background: white;
+    color: #333;
+
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#mostrar_dialogo:hover {
+    background: #f5f5f5;
+}
+
+#dialogo_nucleos {
+    border: none;
+    border-radius: 15px;
+    padding: 0;
+    overflow: hidden;
+    max-width: 450px;
+    width: 90%;
+
+    margin: auto; /* Centrado */
+    position: fixed;
+    inset: 0;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+#dialogo_nucleos::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.contenedor_nucleos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 30px;
+    text-align: center;
+    background: #ffffff;
+}
+
+.contenedor_nucleos img {
+    width: 120px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.contenedor_nucleos h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1f2937;
+}
+
+#formulario_nucleos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#formulario_nucleos label {
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+}
+
+#nucleos {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: .3s;
+}
+
+#nucleos:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .2);
+}
+
+#formulario_nucleos input[type="submit"] {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+#formulario_nucleos input[type="submit"]:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+#formulario_nucleos input[type="submit"]:active {
+    transform: translateY(0);
 }
 
 #contenedor-principal {

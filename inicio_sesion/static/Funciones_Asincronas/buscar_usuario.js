@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const resultado = await respuesta.json()
             
-           if (resultado.estado === "exito") {
+            if (resultado.estado === "exito") {
                 window.location.href = "/comprobar_usuario/";
 
             } else {

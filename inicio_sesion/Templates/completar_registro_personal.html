@@ -9,31 +9,176 @@
         <h3>Completar Registro</h3>
 
         <form method="post" id="formulario_CRP">
+            {% csrf_token %}
             <div id="contenedor_CRP_Personal">
-                <label for="nombres_usuario">Nombre:</label>
-                <input type="text" name="nombres" id="nombres_usuario" readonly>
+                <h4>Datos Básicos</h4>
+
+                <div class="campo">
+                    <label for="nombres_usuario">Nombre:</label>
+                    <input type="text" id="nombres_usuario" readonly>
+                </div>
                 
-                <label for="apellidos_usuario">Apellido:</label>
-                <input type="text" name="apellidos" id="apellidos_usuario" readonly>
+                <div class="campo">
+                    <label for="apellidos_usuario">Apellido:</label>
+                    <input type="text" id="apellidos_usuario" readonly>
+                </div>
+
+                <div class="campo">
+                    <label for="genero_personal">Genero:</label>
+                    <select name="genero" id="genero_personal">
+                        <option value="">Seleccione</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
                 
-                <label for="genero_personal">Genero:</label>
-                <select name="genero" id="genero_personal">
-                    <option value="">Seleccione</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                </select>
-                
-                <label for="CI">Cedula de Identidad:</label>
-                <input type="text" name="cedula_identidad" id="CI">
-                
-                <label for="estado_civil_personal">Estado Civil:</label>
-                <select name="estado_civil" id="estado_civil_personal">
-                    <option value="">Seleccione</option>
-                    <option value="Soltero">Seleccione</option>
-                </select>
+                <div class="campo">
+                    <label for="CI">Cedula de Identidad:</label>
+                    <input type="text" id="CI" readonly>
+                </div>
+
+                <div class="campo">
+                    <label for="estado_civil_personal">Estado Civil:</label>
+                    <select name="estado_civil" id="estado_civil_personal">
+                        <option value="">Seleccione</option>
+                        <option value="Soltero">Soltero</option>
+                        <option value="Casado">Casado</option>
+                        <option value="Divorsiado">Divorsiado</option>
+                        <option value="Viudo">Viudo</option>
+                    </select>
+                </div>
             </div>
+            
+            <div id="contenedor_CRP_Contacto">
+                <h4>Datos de Contacto</h4>
+
+                <div class="campo">
+                    <label for="telefono_principal_usuario">Telefono (Principal):</label>
+                    <input type="text" id="telefono_principal_usuario" readonly>
+                </div>
+
+                <div class="campo">
+                    <label for="numero_telefonico">Telefono (Secundaria):</label>
+                    <div class="controles_agrupado">
+                        <input type="text" name="num_telefono_secundaria" placeholder="Ejemplo: 1234567" id="numero_telefonico" autocomplete="off">
+                        <select name="prefijo_telefono_secundaria" id="prefijo_telefono"></select>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="correo_principal_usuario">Correo Electronico (Principal):</label>
+                    <input type="text" id="correo_principal_usuario" readonly>
+                </div>
+
+                <div class="campo">
+                    <label for="Correo">Correo Electronico (Secundaria):</label>
+                    <div class="controles_agrupado">
+                        <input type="text" name="correo_secundaria" id="Correo" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
+                        <select name="dominio_correo_secundaria" id="dominio">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contenedor_CRP_Nacimiento">
+                <h4>Datos de Nacimiento</h4>
+
+                <div class="campo">
+                    <label for="pais_nacimiento">País de Nacimiento:</label>
+                    <select name="pais_nacimiento_personal" id="pais_nacimiento"></select>
+                </div>
+
+                <div class="campo">
+                    <label for="estado_nacimiento">Estado/Provincia/Departamento de Nacimiento:</label>
+                    <select name="estado_nacimiento_personal" id="estado_nacimiento"></select>
+                    
+                    <input type="text" name="estado_novzla_personal" placeholder="Indica el estado o provincia donde naciste" id="estado_novzla" autocomplete="off" hidden>
+                </div>
+
+                <div class="campo">
+                    <label for="municipio_nacimiento">Municipio/Condado/Comuna de Nacimiento:</label>
+                    <select name="municipio_nacimiento_personal" id="municipio_nacimiento"></select>
+
+                    <input type="text" name="municipio_novzla_personal" placeholder="Indica el municipio o condado donde naciste" id="municipio_novzla" autocomplete="off" hidden>
+                </div>
+
+                <div class="campo">
+                    <label for="parroquia_nacimiento">Parroquia/Barrio/Distrito de Nacimiento:</label>
+                    <select name="parroquia_nacimiento_personal" id="parroquia_nacimiento"></select>
+
+                    <input type="text" name="parroquia_novzla_personal" id="parroquia_novzla" placeholder="Indica la parroquia o distrito donde naciste" autocomplete="off" hidden>
+                </div>
+
+                <div class="campo">
+                    <label for="direccion_nacimiento">Dirección de Nacimiento:</label>
+                    <textarea name="direccion_nacimiento_personal" id="direccion_nacimiento"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" name="fecha_nacimiento_personal" id="fecha_nacimiento" autocomplete="off">
+                </div>
+            </div>
+
+            <div id="contenedor_CRP_Residencia">
+                <h4>Datos de Residencia</h4>
+
+                <div class="campo">
+                    <label for="condicion_residencia">Condición de Residencia:</label>
+                    <select name="condicion_residencia_personal" id="condicion_residencia">
+                        <option value="">Selecciona</option>
+                        <option value="Residente">Residente</option>
+                        <option value="Foraneo">Foraneo</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="municipio_residencia">Municipio/Condado/Comuna de Residencia:</label>
+                    <select name="municipio_residencia_personal" id="municipio_residencia"></select>
+                </div>
+
+                <div class="campo">
+                    <label for="parroquia_residencia">Parroquia/Barrio/Distrito de Residencia:</label>
+                    <select name="parroquia_residencia_personal" id="parroquia_residencia"></select>
+                </div>
+
+                <div class="campo">
+                    <label for="direccion_domicilio">Dirección de Residencia:</label>
+                    <textarea name="direccion_domicilio_personal" id="direccion_domicilio"></textarea>
+                </div>
+            </div>
+
+            <div id="contenedor_CRP_Profesion">
+                <h4>Datos Profesionales</h4>
+                
+                <div class="campo">
+                    <label for="profesion_pregrado">Profesión de Pregrado:</label>
+                    <input type="text" name="profesion_pregrado_personal" placeholder="Especifica la profesión que posee" id="profesion_pregrado" autocomplete="off">
+                </div>
+
+                <div class="campo">
+                    <label for="universidad_pregrado">Universidad de Pregrado:</label>
+                    <input type="text" name="universidad_pregrado_personal" placeholder="¿Donde te formaste como profesional?" id="universidad_pregrado" autocomplete="off">
+                </div>
+
+                <div class="campo">
+                    <label for="pais_profesion">País de Profesión de Pregrado:</label>
+                    <select name="pais_profesion_personal" id="pais_profesion"></select>
+                </div>
+            </div>
+
+            <input type="submit" value="Completar el Registro">
         </form>
     </div>
 </section>
+
+<script src="{% static 'Funcionalidades/fecha_nacimiento.js' %}"></script>
+<script src="{% static 'Funcionalidades/pais.js' %}"></script>
+<script src="{% static 'Funcionalidades/telefono.js' %}"></script>
+<script src="{% static 'Funcionalidades/correo_electronico.js' %}"></script>
+<script src="{% static 'Funcionalidades/nacimiento.js' %}"></script>
+<script src="{% static 'Funcionalidades/residencia.js' %}"></script>
+
+<script src="{% static 'Funciones_Asincronas/completar_registro_personal.js' %}"></script>
 
 {% endblock %}

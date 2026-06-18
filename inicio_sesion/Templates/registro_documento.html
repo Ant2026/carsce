@@ -1,0 +1,33 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="registrar_documento_estudiante">
+    <div class="contenedor_registrar_documento">
+        <h3>Registrar Documentos</h3>
+
+        <form method="post" id="formulario_documento_estudiante" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="documentoCI_estudiante">Cedula de Identidad:</label>
+            <input type="file" name="CI_estudiante" id="documentoCI_estudiante">
+            
+            <label for="documentoTB_estudiante">Titulo de Bachiller:</label>
+            <input type="file" name="TBachiller_estudiante" id="documentoTB_estudiante">
+            
+            <label for="documentoSN_estudiante">Sabana de Notas:</label>
+            <input type="file" name="SNotas_estudiante" id="documentoSN_estudiante">
+            
+            <label for="documentoOPSU_estudiante">Certificado SNI OPSU:</label>
+            <input type="file" name="OPSU_estudiante" id="documentoOPSU_estudiante">
+
+            <input type="submit" value="Registrar Documentos">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/registrar_documentos.js' %}"></script>
+
+{% endblock %}

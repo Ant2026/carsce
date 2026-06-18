@@ -23,10 +23,16 @@ urlpatterns = [
     path('datos_registro/', views.datos_registro, name="datos_registro"),
 
     path('completar_registro_personal/', views.completar_registro_personal, name="completar_registro_personal"),
+    path('completar_registro_estudiante/', views.completar_registro_estudiante, name="completar_registro_estudiante"),
+    path('datos_registrado/', views.datos_registrado, name="datos_registrado"),
+    path('mostrar_pnfs_cursar/', views.mostrar_pnfs_cursar, name="mostrar_pnfs_cursar"),
+    path('registrar_pnfs_cursar/', views.registrar_pnfs_cursar, name="registrar_pnfs_cursar"),
+    path('registro_documento/', views.registro_documento, name="registro_documento"),
     
     path('panel_usuario/', views.panel_usuario, name="panel_usuario"),
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
+    path('obtener_pre_inscripto/', views.obtener_pre_inscripto, name="obtener_pre_inscripto"),
     path('inscripcion_estudiante/', views.inscripcion_estudiante, name="inscripcion_estudiante"),
 
     #FORO
