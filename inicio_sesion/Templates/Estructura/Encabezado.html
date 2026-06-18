@@ -1,64 +1,57 @@
 {% load static %}
 
+
 <header>
     <nav id="navegacion">
-        <div class="contenedor_cintillo">
+        <div class="contenedor">
+            <div class="GBV">
+                <img src="{% static 'Imagenes/MPPE.png' %}" alt="GBV">
+                <h1>Gobierno Bolivariano <br>de Venezuela</h1>
+                <p>|</p>                  
+            </div>
+            
 
-            <article class="bloque-logo">
-                <img src="{% static 'Imagenes/bandera-cintillo.png' %}" alt="Bandera de Venezuela">
-            </article>
-
-            <div class="bloque-texto">
-                <h6>Gobierno Bolivariano de Venezuela</h6>
-                <span class="separador">|</span>
-                <h6>Ministerio del Poder Popular para la Educación Universitaria</h6>
-                <span class="separador">|</span>
+            <div class="MPPE">
+                <h1>Ministerio del Poder Popular<br>para la Educación Universitaria</h1>
+                <p>|</p>
             </div>
 
-            <article class="bloque-logo">
-                <img src="{% static 'Imagenes/UPT_LOGO.png' %}" alt="Logo UPT">
-            </article>
-
-            <div class="bloque-texto bloque-universidad">
-                <h6>Universidad Politécnica Territorial del Estado Barinas</h6>
-                <h6>“José Félix Ribas”</h6>
-            </div>
+            <div class="UPT">
+                <img src="{% static 'Imagenes/UPT_LOGO.png' %}" alt="UPT">
+                <h1>Universidad Politénica Territorial del<br>Estado Barinas José Félix Ribas</h1>
+            </div> 
         </div>
 
+        {% if not request.session.usuario_nombre %}
         <div class="contenedor_barra">
-            <ul class="nav p-4 align-items-center d-flex justify-content-center">
-                
+            <ul class="navbar">
                 <li class="nav-item">
-                    <a class="nav-link" href="" >Inicio</a>
+                    <a class="nav-link" href="{% url 'foro'%}" >Inicio</a>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Institución
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="nav-link" href="#">Institución</a>
+
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'Historia' %}">Nuestra Historia</a></li>
                         <li><a class="dropdown-item" href="{% url 'mision_vision' %}">Mision y Vision</a></li>
                     </ul>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Formación Estudiantil
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'pst' %}">Proyecto Socio-Tecnologico</a></li>
-                        <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario</a></li>
+                    <a class="nav-link" href="#">Formación Estudiantil</a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'pst' %}">Proyecto Socio-Tecnologico (PST)</a></li>
+                        <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario (PSC)</a></li>
                     </ul>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Guia Estudiantil/Docente
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="nav-link" href="#">Guia Estudiantil/Docente</a>
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Trayectoria Academica</a></li>
-                        <li><a class="dropdown-item" href="#">Planificación Docente</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Planificacion_Docente'%}">Planificación Docente</a></li>
                     </ul>
                 </li>
 
@@ -66,15 +59,7 @@
                     <a class="nav-link" href="{% url 'carreras_impartidas' %}" >Carreras Impartidas</a>
                 </li>
 
-                <li class="nav-item">
-                    <button id="mostrar_dialogo">
-                        {% if nucleo_seleccionado %}
-                            {{ nucleo_seleccionado }}
-                        {% else %}
-                            Seleccionar núcleo
-                        {% endif %}
-                    </button>
-                </li>
+             
 
                 {% if request.session.usuario_nombre %}
                     <li class="nav-item">
@@ -82,10 +67,24 @@
                     </li>
                     {% else %}
                         <li class="nav-item">
+                            <button id="mostrar_dialogo">
+                                {% if nucleo_seleccionado %}
+                                    {{ nucleo_seleccionado }}
+                                {% else %}
+                                    Seleccionar núcleo
+                                {% endif %}
+                            </button>
                             <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
                         </li>
                 {% endif %}
             </ul>
-        </div> 
+        </div>
+        {% endif %}   
     </nav>
 </header>
+
+
+<!-- {% if request.path == '/' %} -->
+                    <!-- {% else %}
+                        <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar Sesión</a>
+                    {% endif %} -->

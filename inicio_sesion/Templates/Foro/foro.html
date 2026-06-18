@@ -5,7 +5,7 @@
 {% load static %}
 
 <section class="carrusel">
-    <div class="slides" id="slides"></div>
+    <div class="slides" id="slides" ></div>
 </section>
 
 <section id="Contenido" class="reveal mantenimiento-section">
@@ -46,6 +46,6 @@
     const nucleoActual = "{{ nucleo_seleccionado|default:'' }}";
 </script>
 <script src="{% static 'Funcionalidades/info_sedes.js' %}"></script>
-<script src="{% static 'Funcionalidades/registrar_nucleo.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/nucleo_seleccionado.js' %}"></script>
 
 {% endblock %}

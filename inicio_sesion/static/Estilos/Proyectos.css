@@ -1,0 +1,227 @@
+#PSC,
+#PST{
+    padding: 80px 20px;
+    margin-top: 120px;
+}
+
+/* CONTENEDOR PRINCIPAL */
+#PSC .contenedor,
+#PST .contenedor{
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    gap: 30px;  
+}
+
+/* LAYOUTS */
+#PSC .layout-1,
+#PST .layout-1{
+    grid-template-columns: 1fr;
+}
+
+#PSC .layout-2,
+#PST .layout-2{
+    grid-template-columns: repeat(2, 1fr);
+}
+
+#PSC .layout-3,
+#PST .layout-3{
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* TAMAÑOS DE TARJETAS */
+#PSC .col-1,
+#PST .col-1{
+    grid-column: span 1;
+}
+
+#PSC .col-2,
+#PST .col-2{
+    grid-column: span 2;
+}
+
+#PSC .col-3,
+#PST .col-3{
+    grid-column: span 3;
+}
+
+#PSC .col-full,
+#PST .col-full{
+    grid-column: 1 / -1;
+}
+
+/* TARJETAS */
+#PSC .contenedor-info,
+#PST .contenedor-info{
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    border-left: 5px solid #8C1007;
+    transition: all .3s ease;
+}
+
+#PSC .contenedor-info:hover,
+#PST .contenedor-info:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
+}
+
+/* TITULOS */
+#PSC .contenedor-info h2, 
+#PST .contenedor-info h2{
+    color: #8C1007;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+#PSC .contenedor-info h2::after, 
+#PST .contenedor-info h2::after{
+    content: "";
+    display: block;
+    width: 70px;
+    height: 3px;
+    background: #8C1007;
+    margin-top: 8px;
+    border-radius: 10px;
+}
+
+/* TEXTO */
+
+#PSC .contenedor-info p,
+#PST .contenedor-info p{
+    text-align: justify;
+    line-height: 1.8;
+    color: #444;
+    font-size: 1rem;
+}
+
+/* DETAILS */
+#PSC .psc-details,
+#PST .psc-details{
+    margin-top: 15px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid rgba(140,16,7,.15);
+    overflow: hidden;
+}
+
+#PSC .psc-details summary,
+#PST .psc-details summary{
+    padding: 20px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #8C1007;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    user-select: none;
+    transition: .3s ease;
+}
+
+#PSC .psc-details summary:hover,
+#PST .psc-details summary:hover{
+    background: rgba(140,16,7,.05);
+}
+
+#PSC .psc-details summary::-webkit-details-marker,
+#PST .psc-details summary::-webkit-details-marker{
+    display: none;
+}
+
+#PSC .psc-details summary::after,
+#PST .psc-details summary::after{
+    content: "+";
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #8C1007;
+    transition: .3s ease;
+}
+
+#PSC .psc-details[open] summary::after,
+#PST .psc-details[open] summary::after{
+    content: "−";
+}
+
+#PSC .psc-details-content,
+#PST .psc-details-content{
+    padding: 0 25px 25px;
+    color: #444;
+}
+
+#PSC .psc-details-content ul,
+#PST .psc-details-content ul{
+    margin: 0;
+    padding-left: 20px;
+}
+
+#PSC .psc-details-content li,
+#PST .psc-details-content li{
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+
+#PSC .psc-details-content li::marker,
+#PST .psc-details-content li::marker{
+    color: #8C1007;
+}
+
+#PSC .contenedor img{
+    width: 600px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px){
+
+    #PSC .layout-3,
+    #PST .layout-3{
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #PSC .col-3,
+    #PST .col-3{
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px){
+
+    #PSC .layout-1,
+    #PSC .layout-2,
+    #PSC .layout-3,
+
+    #PST .layout-1,
+    #PST .layout-2,
+    #PST .layout-3{
+        grid-template-columns: 1fr;
+    }
+
+    #PSC .col-1,
+    #PSC .col-2,
+    #PSC .col-3,
+    #PSC .col-full
+
+    #PST .col-1,
+    #PST .col-2,
+    #PST .col-3,
+    #PST .col-full{
+        grid-column: span 1;
+    }
+
+    #PSC .contenedor-info,
+    #PST .contenedor-info{
+        padding: 20px;
+    }
+
+    #PSC .contenedor-info h2,
+    #PST .contenedor-info h2{
+        font-size: 1.3rem;
+    }
+}

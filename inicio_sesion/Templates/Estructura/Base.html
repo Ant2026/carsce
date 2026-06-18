@@ -8,9 +8,9 @@
     <link rel="shortcut icon" href="{% static 'Imagenes/UPT_LOGO.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'Estilos/fontello.css' %}">
     <link rel="stylesheet" href="{% static 'Estilos/estilos.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+    
     <title>UPT José Félix Ribas</title>
 </head>
 <body>
@@ -41,20 +41,22 @@
 
         </aside>
     {% endif %}
+    
+    {% include 'Estructura/Encabezado.html' %}
 
-    <main>
-        {% block content %}
+    {% if request.session.usuario_nombre %}
 
-        {% endblock %}   
-    </main>
-
-    {% if request.path == '/' %}
-     
-        {% include 'Estructura/Pie_Pagina.html' %} 
+        {% include 'Estructura/Barra_Laterial.html' %}
 
     {% endif %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <main>
+        {% block content %}
+            
+        {% endblock %}   
+    </main>
+     
+        {% include 'Estructura/Pie_Pagina.html' %} 
 
 </body>
 </html>

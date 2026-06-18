@@ -1,11 +1,11 @@
-.footer{
-    background: #ddd;
+#footer{
+    background: rgb(255, 255, 255);
     color: #222;
     padding: 20px 0;
-    margin-top: 50px;
+    border-top: 20px solid #211C84;
 }
 
-.footer-contenedor{
+#footer .footer-contenedor{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,12 +15,12 @@
     padding: 0 20px;
 }
 
-.footer-logo img{
+#footer .footer-logo img{
     width: 80px;
     height: auto;
 }
 
-.footer-texto{
+#footer .footer-texto{
     flex: 1;
     text-align: center;
     font-size: 16px;
@@ -29,18 +29,18 @@
     color: #222;
 }
 
-.footer-redes{
+#footer .footer-redes{
     display: flex;
     gap: 15px;
     font-size: 22px;
 }
 
-.footer-redes a{
+#footer .footer-redes a{
     color: #222;
     transition: 0.3s;
 }
 
-.footer-redes a:hover{
+#footer .footer-redes a:hover{
     color: #0d6efd;
     transform: scale(1.2);
 }
