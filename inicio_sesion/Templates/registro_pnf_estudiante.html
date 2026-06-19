@@ -1,0 +1,22 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="registrar_pnfs">
+    <div class="contenedor_registrar_pnf">
+        <h3>Registrar PNFs a cursar</h3>
+
+        <form method="post" id="formulario_PNF_estudiante">
+            {% csrf_token %}
+            <div id="contenedor_pnfs"></div>
+            <input type="submit" value="Registrar PNF">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/nucleos_seleccionar.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/registrar_pnf_estudiante.js' %}"></script>
+
+{% endblock %}

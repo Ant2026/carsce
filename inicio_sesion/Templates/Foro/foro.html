@@ -18,6 +18,34 @@
     </div>
 </section>
 
+<dialog id="dialogo_nucleos">
+    <div class="contenedor_nucleos">
+        
+        <img src="{% static 'Imagenes/mapa.png' %}" alt="Imagen de ubicación">
+
+        <h3>Seleccione el Núcleo</h3>
+
+        <form method="post" id="formulario_nucleos">
+            {% csrf_token %}
+            <label for="nucleos">Nucleos</label>
+            <select name="nucleos_seleccionado" id="nucleos">
+                <option value="">Selecciona</option>
+                <option value="Barinas">Barinas</option>
+                <option value="Barinitas">Barinitas</option>
+                <option value="Pedraza">Pedraza</option>
+                <option value="Socopo">Socopo</option>
+            </select>
+
+            <input type="submit" value="Registrar núcleo">
+        </form>
+    </div>
+</dialog>
+
+<script>
+    const mostrarDialogo = "{{ mostrar_dialogo }}" === "True";
+    const nucleoActual = "{{ nucleo_seleccionado|default:'' }}";
+</script>
 <script src="{% static 'Funcionalidades/info_sedes.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/nucleo_seleccionado.js' %}"></script>
 
 {% endblock %}

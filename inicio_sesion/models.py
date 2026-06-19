@@ -27,14 +27,15 @@ class PadresEstudiante(models.Model):
     apellidos = models.CharField(max_length=100)
     cedula_identidad = models.CharField(max_length=15, unique=True)
     telefono = models.CharField(max_length=15)
-    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='padresEstudiante')
+    parentesco = models.CharField(max_length=25, blank=True, null=True)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='padresEstudiante')
 
 class Residencia(models.Model):
-    id_residencia = models.IntegerField(primary_key=True)
-    condicion_residencia = models.CharField(max_length=20)
-    municipio = models.CharField(max_length=40)
-    parroquia = models.CharField(max_length=40)
-    direccion_residencia = models.CharField(max_length=40)
+    id_residencia = models.AutoField(primary_key=True)
+    condicion_residencia = models.CharField(max_length=100)
+    municipio = models.CharField(max_length=100)
+    parroquia = models.CharField(max_length=100)
+    direccion_residencia = models.CharField(max_length=100)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='residencia')
 
 class Contacto(models.Model):
@@ -46,11 +47,12 @@ class Contacto(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='contacto')
 
 class Nacimiento(models.Model):
-    id_nacimiento = models.IntegerField(primary_key=True)
-    pais = models.CharField(max_length=50)
-    estado = models.CharField(max_length=50)
-    parroquia = models.CharField(max_length=50)
-    direccion_nacimiento = models.CharField(max_length=50)
+    id_nacimiento = models.AutoField(primary_key=True)
+    pais = models.CharField(max_length=100)
+    estado = models.CharField(max_length=100)
+    municipio = models.CharField(max_length=100, blank=True, null=True)
+    parroquia = models.CharField(max_length=100)
+    direccion_nacimiento = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='nacimiento')
 
@@ -94,14 +96,14 @@ class UsuarioAsignacion(models.Model):
 
 class DatosPreofesion(models.Model):
     id_dato_academico = models.AutoField(primary_key=True)
-    profesion_pregrado = models.CharField(max_length=30)
-    universidad_egreso_pregrado = models.CharField(max_length=30)
-    pais_profesion_pregrado = models.CharField(max_length=10)
+    profesion_pregrado = models.CharField(max_length=150)
+    universidad_egreso_pregrado = models.CharField(max_length=150)
+    pais_profesion_pregrado = models.CharField(max_length=150)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='profesional')
 
 class GacetaOficial(models.Model):
     id_gaceta = models.AutoField(primary_key=True)
-    gaceta_oficial = models.CharField(max_length=10)
+    gaceta_oficial = models.CharField(max_length=150)
     fecha_gaceta_oficial = models.DateField()
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='gaceta')
 
@@ -128,15 +130,16 @@ class EstatusEstudiante(models.Model):
 
 class DocumentosEstudiante(models.Model):
     id_documento = models.AutoField(primary_key=True)
-    nombre_documento = models.CharField(max_length=50)
+    nombre_documento = models.CharField(max_length=50, null=True, blank=True)
+    archivo = models.FileField(upload_to="documentos_estudiante/", null=True, blank=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='documentos')
 
 class InformacionSecundaria(models.Model):
     id_secundaria = models.AutoField(primary_key=True)
-    tipo_institucion = models.CharField(max_length=10)
-    nombre_institucion = models.CharField(max_length=20)
+    tipo_institucion = models.CharField(max_length=100)
+    nombre_institucion = models.CharField(max_length=100)
     fecha_grado = models.DateField()
-    codigo_sni_opsu = models.CharField(max_length=10, unique=True)
+    codigo_sni_opsu = models.CharField(max_length=100, unique=True)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='secundaria')
 
 class CorteAcademico(models.Model):

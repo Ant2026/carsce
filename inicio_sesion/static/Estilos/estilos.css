@@ -11,6 +11,7 @@
 
 @import url('formulario_inicio_sesion.css');
 @import url('formularios_recuperar_credenciales.css');
+@import url('completar_registro_estudiante.css');
 @import url('formularios_registros.css');
 
 @import url('inscripcion.css');
@@ -24,5 +25,134 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+    font-family: "Poppins";
+}
+
+#contenedor-principal {
+    margin-left: 260px;
+    margin-top: 70px;
+    padding: 20px;
+}
+
+#pre_registro_personal {
+    margin-left: 50px;
+    margin-top: 100px;
+    padding: 40px 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.contenedor_pre_registro_personal {
+    width: 100%;
+    max-width: 700px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+#formulario_pre_registro_personal {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#formulario_pre_registro_personal label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: -6px;
+}
+
+#formulario_pre_registro_personal input:not([type="checkbox"]),
+#formulario_pre_registro_personal select {
+    width: 100%;
+    height: 45px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+#formulario_pre_registro_personal input:not([type="checkbox"]):focus,
+#formulario_pre_registro_personal select:focus {
+    outline: none;
+    border-color: #1f3c88;
+    box-shadow: 0 0 0 3px rgba(31, 60, 136, 0.15);
+}
+
+#contenedor_perfiles,
+#contenedor_pnfs,
+#contenedor_nucleos {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 0;
+}
+
+#contenedor_perfiles label,
+#contenedor_pnfs label,
+#contenedor_nucleos label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 12px;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    background: #fff;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#contenedor_perfiles label:hover,
+#contenedor_pnfs label:hover,
+#contenedor_nucleos label:hover {
+    background: #f2f5ff;
+    border-color: #cdd8ff;
+}
+
+#contenedor_perfiles input[type="checkbox"],
+#contenedor_pnfs input[type="checkbox"],
+#contenedor_nucleos input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+#formulario_pre_registro_personal button {
+    margin-top: 10px;
+    height: 48px;
+    border: none;
+    border-radius: 8px;
+    background: #1f3c88;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#formulario_pre_registro_personal button:hover {
+    background: #162d66;
+}
+
+#formulario_pre_registro_personal button:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+
+    .contenedor_pre_registro_personal {
+        padding: 20px;
+    }
+
+    #contenedor_perfiles label,
+    #contenedor_pnfs label,
+    #contenedor_nucleos label {
+        font-size: 0.95rem;
+    }
 }

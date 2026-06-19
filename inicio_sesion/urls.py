@@ -18,10 +18,13 @@ urlpatterns = [
     path('pre_registro_personal/', views.pre_registro_personal, name="pre_registro_personal"),
     path('pnfs_nucleos/', views.pnfs_nucleos, name="pnfs_nucleos"),
     path('datos_registro/', views.datos_registro, name="datos_registro"),
+
+    path('completar_registro_personal/', views.completar_registro_personal, name="completar_registro_personal"),
     
     path('panel_usuario/', views.panel_usuario, name="panel_usuario"),
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
+    path('obtener_pre_inscripto/', views.obtener_pre_inscripto, name="obtener_pre_inscripto"),
     path('inscripcion_estudiante/', views.inscripcion_estudiante, name="inscripcion_estudiante"),
 
     #FORO

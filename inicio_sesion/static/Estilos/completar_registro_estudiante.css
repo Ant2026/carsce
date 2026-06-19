@@ -1,0 +1,452 @@
+/* Contenedor general */
+#completar_registro_personal {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    background: #f4f6f9;
+    font-family: Arial, sans-serif;
+}
+
+/* Caja principal */
+.contenedor_completar_regitro_personal {
+    width: 100%;
+    max-width: 900px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Título */
+.contenedor_completar_regitro_personal h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Secciones internas */
+#contenedor_CRP_Personal,
+#contenedor_CRP_Contacto,
+#contenedor_CRP_Nacimiento,
+#contenedor_CRP_Residencia,
+#contenedor_CRP_Profesion {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+/* Subtítulos */
+h4 {
+    margin-bottom: 15px;
+    color: #333;
+    border-left: 4px solid #4a90e2;
+    padding-left: 10px;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Inputs y selects */
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+    box-sizing: border-box;
+}
+
+/* Focus */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+}
+
+/* Agrupación de controles (telefono / correo) */
+.controles_agrupado {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.controles_agrupado input {
+    flex: 2;
+}
+
+.controles_agrupado select {
+    flex: 1;
+}
+
+/* Botón submit */
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    background: #357abd;
+}
+
+
+/* Estudiante */
+
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+
+#completar_registro_estudiante{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #f4f6f9;
+}
+
+.contenedor_completar_regitro_estudiante{
+    width: 90%;
+    max-width: 1100px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   TITULOS
+========================= */
+
+h3{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h4{
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* =========================
+   SECCIONES
+========================= */
+
+#contenedor_CRE_Estudiante,
+#contenedor_CRR_Representante,
+#contenedor_CRE_Contacto,
+#contenedor_CRE_Nacimiento,
+#contenedor_CRE_Residencia,
+.contenedor_CRE_Secundaria,
+#contenedor_CRE_Discapacidad{
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+/* =========================
+   CAMPOS FORMULARIO
+========================= */
+
+.campo{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.campo label{
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.campo input,
+.campo select,
+.campo textarea{
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus{
+    border-color: #2d6cdf;
+    box-shadow: 0 0 3px rgba(45,108,223,0.4);
+}
+
+/* =========================
+   CAMPOS HORIZONTALES (TELÉFONO / EMAIL)
+========================= */
+
+.campo_horizontal{
+    display: flex;
+    gap: 10px;
+}
+
+.campo_horizontal select{
+    width: 80px;
+}
+
+.campo_horizontal input{
+    flex: 1;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+button,
+input[type="submit"]{
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+/* botón principal submit */
+input[type="submit"]{
+    width: 100%;
+    margin-top: 20px;
+    background: #28a745;
+    color: white;
+}
+
+input[type="submit"]:hover{
+    background: #218838;
+}
+
+button{
+    background: #2d6cdf;
+    color: white;
+}
+
+button:hover{
+    background: #1f4fb3;
+}
+
+.contenedor_boton{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.encabezado_discapacidad{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#campos_discapacidad{
+    display: none;
+}
+
+#campos_discapacidad.activo{
+    display: block;
+}
+
+@media (max-width: 768px){
+
+    .campo_horizontal{
+        flex-direction: column;
+    }
+
+    .campo_horizontal select{
+        width: 100%;
+    }
+
+}
+
+/* Fondo general */
+#registrar_pnfs {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    background: #f4f6f9;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal */
+.contenedor_registrar_pnf {
+    width: 100%;
+    max-width: 800px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Título */
+.contenedor_registrar_pnf h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedor dinámico de PNFs */
+#contenedor_pnfs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Cada opción (label dinámico) */
+#contenedor_pnfs label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+}
+
+/* Hover */
+#contenedor_pnfs label:hover {
+    border-color: #4a90e2;
+    background: #f0f7ff;
+}
+
+/* Checkbox */
+#contenedor_pnfs input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4a90e2;
+    cursor: pointer;
+}
+
+/* Estado seleccionado (cuando el checkbox está activo) */
+#contenedor_pnfs label:has(input[type="checkbox"]:checked) {
+    border-color: #4a90e2;
+    background: #eaf3ff;
+    box-shadow: 0 0 5px rgba(74,144,226,0.2);
+}
+
+/* Botón */
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    background: #357abd;
+}
+
+
+
+/* Fondo general */
+#registrar_documento_estudiante {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    background: #f4f6f9;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal */
+.contenedor_registrar_documento {
+    width: 100%;
+    max-width: 700px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Título */
+.contenedor_registrar_documento h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+/* File inputs (ocultamos estilo feo por defecto) */
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed #bbb;
+    border-radius: 8px;
+    background: #fafafa;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Hover */
+input[type="file"]:hover {
+    border-color: #4a90e2;
+    background: #f0f7ff;
+}
+
+/* Focus */
+input[type="file"]:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+}
+
+/* Botón submit */
+input[type="submit"] {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    background: #357abd;
+}
