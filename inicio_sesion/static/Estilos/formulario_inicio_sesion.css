@@ -8,6 +8,7 @@
 }
 
 .login-card-horizontal {
+    margin-top: 120px;
     display: flex;
     width: 850px;
     max-width: 100%;

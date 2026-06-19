@@ -7,13 +7,13 @@
     <div class="login-card-horizontal">
 
         <div class="login-left">
-            <img src="{% static 'Imagenes/autenticacion.png' %}" alt="imagen para el formulario de autenticación">
+            <img src="{% static 'Imagenes/LOGO_UPT.png' %}" alt="imagen para el formulario de autenticación">
         </div>
 
         <div class="login-right">
             
             <form method="post" id="formulario_login">
-                <h3 class="titulo">Inicio de Sesión</h3>
+                <h3 class="titulo">INICIO DE SESIÓN</h3>
                 {% csrf_token %}
 
                 <div class="input-group">
@@ -27,8 +27,8 @@
                     <div class="password-wrapper">
                         <input type="password" name="contrasenia" autocomplete="off" id="password" class="input-control password-input" placeholder="Contraseña" required>
 
-                        <i class="icon-eye icon-password" id="mostrar_password"></i>
-                        <i class="icon-eye-off icon-password" id="ocultar_password"></i>
+                        <label class="icon-eye icon-password" id="mostrar_password"></label>
+                        <label class="icon-eye-off icon-password" id="ocultar_password"></label>
                     </div>
                 </div>
 

@@ -844,6 +844,9 @@ def completar_registro_personal(request):
 def inscripcion_estudiante(request):
     return render(request, 'inscripcion_estudiante.html')
 
+def panel_registro(request):
+    return render(request, 'panel_registro.html')
+
 """FORO"""
 
 def Historia(request):
