@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const contenedor_fecha_gaceta = document.getElementById("contenedor_fecha_gaceta");
 
     function ocultar_elementos() {
-
         contenedor_gaceta.style.display = "none";
         contenedor_fecha_gaceta.style.display = "none";
 
@@ -125,103 +124,135 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
 
-    async function cargarPnfs(nombreNucleo, contenedorPnf, nombrePnf) {
-
-        const nucleos = document.querySelectorAll(
-            `input[name="${nombreNucleo}"]:checked`
-        );
-
-        contenedorPnf.innerHTML = "";
+    async function cargarPnfs(idNucleo, textoNucleo, contenedorPnf, nombrePnf, perfilId) {
 
         const csrftoken = getCookie("csrftoken");
 
-        for (const nucleo of nucleos) {
+        const idBloque = `pnf-${nombrePnf}-${idNucleo}`;
 
-            const response = await fetch("/pnfs_nucleos/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken,
-                },
-                body: JSON.stringify({
-                    id_nucleo: nucleo.value
-                }),
-            });
-
-            const data = await response.json();
-
-            // Contenedor del núcleo
-            const bloqueNucleo = document.createElement("div");
-            bloqueNucleo.classList.add("bloque-nucleo");
-
-            const titulo = document.createElement("h4");
-            titulo.textContent = nucleo.parentElement.textContent.trim();
-
-            bloqueNucleo.appendChild(titulo);
-
-            data.pnfs.forEach(pnf => {
-
-                const label = document.createElement("label");
-                label.style.display = "block";
-
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.name = nombrePnf;
-                checkbox.value = pnf.id_pnf;
-
-                label.appendChild(checkbox);
-                label.append(" " + pnf.pnf);
-
-                bloqueNucleo.appendChild(label);
-            });
-
-            contenedorPnf.appendChild(bloqueNucleo);
-        }
-    }
-
-    function manejarContenedorPnf(nombreNucleo, contenedor, contenedorCheckbox, nombrePnf) {
-
-        const seleccionados = document.querySelectorAll(
-            `input[name="${nombreNucleo}"]:checked`
-        );
-
-        if (seleccionados.length === 0) {
-            contenedor.style.display = "none";
-            contenedorCheckbox.innerHTML = "";
+        // Si ya existe no volver a crearlo
+        if (document.getElementById(idBloque))
             return;
-        }
 
-        contenedor.style.display = "block";
+        const response = await fetch("/pnfs_nucleos/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({
+                id_nucleo: idNucleo,
+                id_perfil: perfilId
+            })
+        });
 
-        cargarPnfs(
-            nombreNucleo,
-            contenedorCheckbox,
-            nombrePnf
-        );
+        const data = await response.json();
+
+        const bloque = document.createElement("div");
+        bloque.className = "bloque-nucleo";
+        bloque.id = idBloque;
+
+        const titulo = document.createElement("h4");
+        titulo.textContent = textoNucleo;
+
+        bloque.appendChild(titulo);
+
+        data.pnfs.forEach(pnf => {
+
+            const label = document.createElement("label");
+            label.style.display = "block";
+
+            const check = document.createElement("input");
+
+            check.type = "checkbox";
+            check.name = nombrePnf;
+            check.value = pnf.id_pnf;
+
+            label.appendChild(check);
+            label.append(" " + pnf.pnf);
+
+            bloque.appendChild(label);
+
+        });
+
+        contenedorPnf.appendChild(bloque);
+
     }
 
-    document.addEventListener("change", function (e) {
-        if (e.target.name === "perfil") {
-            validarPerfiles();
+    async function manejarContenedorPnf(evento, nombrePnf, contenedorPnfs, perfilId) {
+
+        const checkbox = evento.target;
+
+        const idNucleo = checkbox.value;
+
+        const textoNucleo =
+            checkbox.parentElement.textContent.trim();
+
+        if (checkbox.checked) {
+
+            contenedorPnfs.parentElement.style.display = "block";
+
+            await cargarPnfs(
+                idNucleo,
+                textoNucleo,
+                contenedorPnfs,
+                nombrePnf,
+                perfilId
+            );
+
+        } else {
+
+            const bloque = document.getElementById(
+                `pnf-${nombrePnf}-${idNucleo}`
+            );
+
+            if (bloque)
+                bloque.remove();
+
+            if (contenedorPnfs.children.length === 0)
+                contenedorPnfs.parentElement.style.display = "none";
         }
 
-        if (e.target.name === "nucleo_coordinador_pnf") {
+    }
+
+    document.addEventListener("change", async function(e){
+
+        if(e.target.name==="nucleo_coordinador_pnf"){
+
+            const perfil=document.querySelectorAll("input[name='perfil']:checked");
+
+            const coordinador=[...perfil].find(x=>
+                x.parentElement.textContent.trim()=="Coordinador de PNF"
+            );
+
+            if(!coordinador) return;
+
             manejarContenedorPnf(
-                "nucleo_coordinador_pnf",
-                contenedorPnfsCoordinador,
+                e,
+                "pnf_coordinador_pnf",
                 contenedorCheckboxPNFsCoordinador,
-                "pnf_coordinador_pnf"
+                coordinador.value
             );
         }
 
-        if (e.target.name === "nucleo_docente") {
+        if(e.target.name==="nucleo_docente"){
+
+            const perfil=document.querySelectorAll("input[name='perfil']:checked");
+
+            const docente=[...perfil].find(x=>
+                x.parentElement.textContent.trim()=="Docente"
+            );
+
+            if(!docente) return;
+
             manejarContenedorPnf(
-                "nucleo_docente",
-                contenedorPnfsDocente,
+                e,
+                "pnf_docente",
                 contenedorCheckboxPNFsDocente,
-                "pnf_docente"
+                docente.value
             );
         }
+
     });
 
     async function cargarNucleosPorPerfil(perfilId,contenedor,nombreCampo) {
@@ -265,28 +296,59 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function validarPerfiles() {
+
         const perfiles = Array.from(
             document.querySelectorAll('input[name="perfil"]:checked')
         ).map(cb => cb.parentElement.textContent.trim());
 
-        ocultar_elementos();
+        contenedor_gaceta.style.display = perfiles.includes("Director General") ? "block" : "none";
 
-        if (perfiles.includes("Director General")) {
-            contenedor_gaceta.style.display = "block";
-            contenedor_fecha_gaceta.style.display = "block";
-        }
+        contenedor_fecha_gaceta.style.display = perfiles.includes("Director General") ? "block" : "none";
+
         if (perfiles.includes("Encargado de Control de Estudio")) {
+
             contenedorNucleosControl.style.display = "block";
+
+        } else {
+
+            contenedorNucleosControl.style.display = "none";
+
+            document.querySelectorAll(
+                'input[name="nucleo_encargado_control_estudios"]'
+            ).forEach(cb => cb.checked = false);
         }
+
+        // Coordinador
         if (perfiles.includes("Coordinador de PNF")) {
+
             contenedorNucleosCoordinador.style.display = "block";
+
+        } else {
+
+            contenedorNucleosCoordinador.style.display = "none";
             contenedorPnfsCoordinador.style.display = "none";
+            contenedorCheckboxPNFsCoordinador.innerHTML = "";
+
+            document.querySelectorAll(
+                'input[name="nucleo_coordinador_pnf"]'
+            ).forEach(cb => cb.checked = false);
         }
+
+        // Docente
         if (perfiles.includes("Docente")) {
+
             contenedorNucleosDocente.style.display = "block";
+
+        } else {
+
+            contenedorNucleosDocente.style.display = "none";
             contenedorPnfsDocente.style.display = "none";
+            contenedorCheckboxPNFsDocente.innerHTML = "";
+
+            document.querySelectorAll(
+                'input[name="nucleo_docente"]'
+            ).forEach(cb => cb.checked = false);
         }
     }
-
     cargarDatos();
 });

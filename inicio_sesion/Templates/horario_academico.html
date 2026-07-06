@@ -1,0 +1,50 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_horario_academico">
+    <div class="contenedor_horario_academico">
+        <h3>Horario Académico</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="pnfs_registrados">P.N.F:</label>
+            <select name="pnf" id="pnfs_registrados"></select>
+
+            <label for="trayectos">Trayecto:</label>
+            <select name="trayecto" id="trayectos"></select>
+
+            <label for="tramos">Tramo/Semestre:</label>
+            <select name="tramo" id="tramos"></select>
+
+            <label for="cantidad_fila">Cantidad de Filas:</label>
+            <input type="number" name="filas" id="cantidad_fila">
+
+            <button id="generar_pdf">Generar PDF</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Hora Inicio</th>
+                    <th>Hora Final</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                </tr>
+            </thead>
+
+            <tbody id="contenedor_horario">
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/horario_academico.js' %}"></script>
+
+{% endblock %}

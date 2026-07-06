@@ -29,6 +29,7 @@
         </form>
         
         <form method="post" id="formulario_registrar_credenciales">
+            {% csrf_token %}
             <label for="nombre_usuario" id="label_nombre_usuario" hidden>Ingrese el nombre de usuario:</label>
             <input type="text" name="nombre_usuario" autocomplete="off" id="nombre_usuario" hidden>
 

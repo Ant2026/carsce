@@ -1,0 +1,286 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_actualizar_datos_usuarios">
+    <div class="contenedor_actualizar_datos_usuarios">
+        <h3>Actualizar Datos Usuarios</h3>
+
+        <div id="contenedor_buscar_usuario">
+            <h4>Buscar Usuario</h4>
+
+            <form method="post" id="formulario_busqueda_usuario">
+                {% csrf_token %}
+                <label for="cedula_identidad">Cedula Identidad:</label>
+                <div class="grupo-campo">
+                    <select name="nacionalidad_busqueda" id="nacionalidad_busqueda">
+                        <option value="">N</option>
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                    </select>
+                    <input type="text" name="cedula_busqueda" id="cedula_identidad_busqueda" autocomplete="off" required>
+                </div>
+
+                <input type="submit" value="Buscar">
+            </form>
+        </div>
+
+        <div id="contenedor_datos_usuario">
+            <h4>Datos Usuario</h4>
+            
+            <form method="post" id="formulario_actualizar_usuario">
+                {% csrf_token %}
+
+                <div id="datos_basicos">
+                    <h5>Datos Básica</h5>   
+                    <input type="hidden" name="perfilusuario" id="perfil_usuario">
+
+                    <label for="nombres_actualizar_usuario">Nombres:</label>
+                    <input type="text" name="nombres_actualizar" id="nombres_actualizar_usuario" autocomplete="off">
+
+                    <label for="apellidos_actualizar_usuario">Apellidos:</label>
+                    <input type="text" name="apellidos_actualizar" id="apellidos_actualizar_usuario" autocomplete="off">
+
+                    <label for="genero_actualizar_usuario">Genero:</label>
+                    <select name="genero_actualizar" id="genero_actualizar_usuario">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+
+                    <label for="cedula_identidad">Cedula Identidad:</label>
+                    <div class="grupo-campo">
+                        <select name="nacionalidad_actualizar" id="nacionalidad_actualizar_usuario">
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                        </select>
+                        <input type="text" name="cedula_actualizar" id="cedula_identidad_actualizar_usuario" autocomplete="off" required>
+                    </div>
+
+                    <label for="estado_civil_actualizar_usuario">Estado Civil:</label>
+                    <select name="estado_civil_actualizar" id="estado_civil_actualizar_usuario">
+                        <option value="Soltero">Soltero</option>
+                        <option value="Casado">Casado</option>
+                        <option value="Divorsiado">Divorsiado</option>
+                        <option value="Viudo">Viudo</option>
+                    </select>
+                </div>
+
+                <div id="contactos">
+                    <h5>Contacto</h5>
+
+                    <label for="num_telefono_principal">Telefono (Principal):</label>
+                    <div class="controles_agrupado">
+                        <select name="prefijo_principal" id="prefijo_telefono_principal_actualizar"></select>
+                        <input type="text" name="telefono_principal" id="num_telefono_principal_actualizar" placeholder="Ejemplo: 1234567" autocomplete="off">
+                    </div>
+
+                    <label for="num_telefonico_secundaria">Telefono (Secundaria):</label>
+                    <div class="controles_agrupado">
+                        <select name="prefijo_secundaria" id="prefijo_telefono_secundaria_actualizar"></select>
+                        <input type="text" name="telefono_secundaria" id="num_telefonico_secundaria_actualizar" placeholder="Ejemplo: 1234567" autocomplete="off">
+                    </div>
+
+                    <label for="correo_principal">Correo Electronico (Principal):</label>
+                    <div class="controles_agrupado">
+                        <input type="text" name="nombre_correo_principal" id="correo_principal_actualizar" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
+                        <select name="dominio_correo_principal" id="dominio_principal_actualizar">
+                        </select>
+                    </div>
+
+                    <label for="correo_secundaria">Correo Electronico (Secundaria):</label>
+                    <div class="controles_agrupado">
+                        <input type="text" name="nombre_correo_secundaria" id="correo_secundaria_actualizar" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
+                        <select name="dominio_correo_secundaria" id="dominio_secundaria_actualizar">
+                        </select>
+                    </div>
+                </div>
+
+                <div id="nacimiento">
+                    <h5>Nacimiento</h5>
+
+                    <label for="pais_nacimiento">País:</label>
+                    <select name="paisnacimiento" id="pais_nacimiento"></select>
+
+                    <label for="estado_nacimiento">Estado:</label>
+                    <select name="estadonacimiento" id="estado_nacimiento"></select>
+                    <input type="text" name="estado_novzla_personal" id="estado_novzla" placeholder="Indica el estado o provincia donde naciste" autocomplete="off" hidden>
+
+                    <label for="municipio_nacimiento">Municipio:</label>
+                    <select name="municipionacimiento" id="municipio_nacimiento"></select>
+                    <input type="text" name="municipio_novzla_personal" id="municipio_novzla" placeholder="Indica el municipio o condado donde naciste" autocomplete="off" hidden>
+
+                    <label for="parroquia_nacimiento">Parroquia:</label>
+                    <select name="parroquianacimiento" id="parroquia_nacimiento"></select>
+                    <input type="text" name="parroquia_novzla_personal" id="parroquia_novzla" placeholder="Indica la parroquia o distrito donde naciste" autocomplete="off" hidden>
+
+                    <label for="direccion_nacimiento">Dirección:</label>
+                    <textarea name="direccionnacimiento" id="direccion_nacimiento"></textarea>
+                    
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" name="fechanacimiento" id="fecha_nacimiento">
+                </div>
+
+                <div id="residencia">
+                    <h5>Residencia</h5>
+
+                    <label for="condicion_residencia">Condición de Residencia:</label>
+                    <select name="condicionresidencia" id="condicion_residencia">
+                        <option value="">Elije una opción</option>
+                        <option value="Residente">Residente</option>
+                        <option value="Foraneo">Foraneo</option>
+                    </select>
+
+                    <label for="municipio_residencia">Municipio/Condado/Comuna:</label>
+                    <select name="municipioresidencia" id="municipio_residencia"></select>
+    
+                    <label for="parroquia_residencia">Parroquia/Barrio/Distrito:</label>
+                    <select name="parroquiaresidencia" id="parroquia_residencia"></select>
+    
+                    <label for="direccion_domicilio">Dirección:</label>
+                    <textarea name="direcciondomicilio" id="direccion_domicilio"></textarea>
+                </div>
+
+                <div id="datos_profesion" class="bloque-formulario bloque-profesion">
+                    <h5>Profesión</h5>
+
+                    <label for="profesion_usuario">Profesión de Pregrado:</label>
+                    <input type="text" name="profesion" id="profesion_usuario" autocomplete="off">
+
+                    <label for="universidad_usuario">Universidad de Pregrado:</label>
+                    <input type="text" name="universidad" id="universidad_usuario" autocomplete="off">
+
+                    <label for="pais_profesion">País de Profesión de Pregrado:</label>
+                    <select name="paisprofesion" id="pais_profesion"></select>
+                </div>
+
+                <div id="secundaria" class="bloque-formulario bloque-secundaria">
+                    <h5>Secundaria</h5>
+
+                    <label for="tipos_secundaria">Tipo de Liceo:</label>
+                    <select name="tipossecundaria" id="tipos_secundaria">
+                        <option value="Público">Público</option>
+                        <option value="Privado">Privado</option>
+                    </select>
+        
+                    <label for="nombre_liceo">Nombre del Liceo:</label>
+                    <input type="text" name="nombreliceo" id="nombre_liceo" autocomplete="off">
+        
+                    <label for="fecha_grado">Fecha de Grado:</label>
+                    <input type="date" name="fecha_graduacion" id="fecha_grado">
+
+                    <label for="codigo_sin_opsu">Código SNI OPSU:</label>
+                    <input type="text" name="codigo_opsu" id="codigo_sin_opsu" autocomplete="off">
+                </div>
+
+                <div id="representante" class="bloque-formulario bloque-representante">
+                    <h5>Representante(s)</h5>
+
+                    <label for="nombres_representante">Nombres del Representante:</label>
+                    <input type="text" name="nombresrepresentante" id="nombres_representante" autocomplete="off">
+            
+                    <label for="apellidos_representante">Apellidos del Representante:</label>
+                    <input type="text" name="apellidosrepresentante" id="apellidos_representante" autocomplete="off">
+
+                    <label for="cedula_identidad_representante">Cédula de Identidad:</label>
+                    <div class="campo_horizontal">
+                        <select name="nacionalidadrepresentante" id="nacionalidad_representante">
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                        </select>
+                        <input type="text" name="ci_representante" id="cedula_identidad_representante" autocomplete="off">
+                    </div>
+        
+                    <label for="numero_telefono_representante">Teléfono:</label>
+                    <div class="campo_horizontal">
+                        <select name="prefijo_num_representante" id="prefijo_telefono_representante"></select>
+                        <input type="text" name="telefono_representante" id="numero_telefono_representante" maxlength="7" minlength="7" placeholder="Número telefónico debe llevar 7 dígitos" autocomplete="off">
+                    </div>
+         
+                    <label for="parestenco_representante">Parentesco:</label>
+                    <select name="parestenco" id="parestenco_representante"></select>
+
+                    <button type="button" id="btn_otro_representante">Agregar segundo representante</button>
+
+                    <div id="subcontenedor_representante" style="display:none;">
+
+                        <label for="nombres_otrorepresentante">Nombres Segundo Representante:</label>
+                        <input type="text" name="nombresotrorepresentante" id="nombres_otrorepresentante" autocomplete="off">
+            
+                        <label for="apellidos_otrorepresentante">Apellidos Segundo Representante:</label>
+                        <input type="text" name="apellidosotrorepresentante" id="apellidos_otrorepresentante" autocomplete="off">
+            
+                        <label for="cedula_identidad_otrorepresentante">Cédula Segundo Representante:</label>
+                        <div class="campo_horizontal">    
+                            <select name="nacionalidad_otrorepresentante" id="nacionalidad_otrorepresentante">
+                                <option value="V">V</option>
+                                <option value="E">E</option>
+                            </select>
+                            <input type="text" name="ci_otrorepresentante" id="cedula_identidad_otrorepresentante" autocomplete="off">
+                        </div>
+                
+                        <label for="numero_telefono_otrorepresentante">Teléfono:</label>
+                        <div class="campo_horizontal">
+                            <select name="prefijo_num_otrorepresentante" id="prefijo_telefono_otrorepresentante"></select>
+                            <input type="text" name="telefono_otrorepresentante" id="numero_telefono_otrorepresentante" maxlength="7" minlength="7"  placeholder="Número telefónico debe llevar 7 dígitos" autocomplete="off">
+                        </div>
+        
+                        <label for="otroparestenco">Parentesco:</label>
+                        <select name="parestencootrorepresentante" id="otroparestenco"></select>
+                    </div>
+                </div>
+
+                <div id="discapacidad" class="bloque-formulario bloque-discapacidad">
+                    <div class="encabezado_discapacidad">
+                        <h5>Datos de Discapacidad (Opcional)</h5>
+                        <button type="button" id="btn_discapacidad">Mostrar</button>
+                    </div>
+
+                    <div id="campos_discapacidad">
+                        <label for="codigo_carnet_dispacidad">Carnet de Discapacidad:</label>
+                        <input type="text" name="carnet_dispacidad" id="codigo_carnet_dispacidad" autocomplete="off">
+
+                        <label for="nro_registro_medico">Nro de Registro Médico:</label>
+                        <input type="text" name="registro_medico" id="nro_registro_medico" autocomplete="off">
+            
+                        <label for="tipos_discapacidad">Tipo de Discapacidad:</label>
+                        <select name="tipos_discapacidad" id="tipos_discapacidad">
+                            <option value="Visual">Visual</option>
+                            <option value="Auditiva">Auditiva</option>
+                            <option value="Lengauje">Lengauje</option>
+                            <option value="Intelectual">Intelectual</option>
+                            <option value="Autista">Autista</option>
+                            <option value="Fisica y Motora">Fisica y Motora</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+        
+                        <label for="grado_discapacidad">Grado de Discapacidad:</label>
+                        <select name="grado_discapacidad" id="grado_discapacidad">
+                            <option value="Leve">Leve</option>
+                            <option value="Moderada">Moderada</option>
+                            <option value="Grave">Grave</option>
+                        </select>
+
+                        <label for="causa_discapacidad">Causa de Discapacidad:</label>
+                        <select name="causa_discapacidad" id="causa_discapacidad">
+                            <option value="Congenita">Congenita</option>
+                            <option value="Adquirida">Adquirida</option>
+                        </select>
+                    </div>
+                </div>  
+
+                <input type="submit" value="Actualizar">
+            </form>
+        </div>
+
+        
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/pais.js' %}"></script>
+<script src="{% static 'Funcionalidades/nacimiento.js' %}"></script>
+<script src="{% static 'Funcionalidades/residencia.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/actualizar_datos.js' %}"></script>
+
+{% endblock %}

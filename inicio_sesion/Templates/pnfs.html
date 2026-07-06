@@ -1,0 +1,75 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="pnfs_registrado">
+    <div class="contenedor_pnfs_registrado">
+        <h3>Programa Nacional de Formación</h3>
+
+        <div class="contenedor_registrar_pnf">
+            <h4>Registrar PNF</h4>
+
+            <form method="post" id="registrarpnf">
+                {% csrf_token %}
+                <label for="registrar_nombre_pnf">Nombre del Programa Nacional de Formación:</label>
+                <input type="text" name="nombrepnf" id="registrar_nombre_pnf" autocomplete="off" required>
+
+                <label for="registrar_codigo_pnf">Código del Programa Nacional de Formación:</label>
+                <input type="text" name="codigopnf" id="registrar_codigo_pnf" maxlength="8" minlength="8" autocomplete="off" required>
+
+                <label for="registrar_periodo_academico">Periodo Académico:</label>
+                <select name="periodoacademico" id="registrar_periodo_academico">
+                    <option value="">Elije el Periodo Académico</option>
+                    <option value="Trimestre">Trimestre</option>
+                    <option value="Semestre">Semestre</option>
+                </select>
+
+                <label for="contenedor_registrar_nucleos">Núcleo que Pertenece:</label>
+                <div id="contenedor_registrar_nucleos"></div>
+
+                <input type="submit" value="Registrar PNF">
+            </form>
+        </div>
+
+        <div id="tabla_pnfs">
+
+        </div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar_pnfs">
+    <div class="contenedor_actualizar_pnf">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+
+        <h4>Modificar PNF</h4>
+
+        <form method="post" id="modificarpnf">
+            {% csrf_token %}
+            <input type="hidden" name="pnfseleccionado" id="pnf_seleccionado">
+
+            <label for="actualizar_nombre_pnf">Nombre del Programa Nacional de Formación:</label>
+            <input type="text" name="nombrepnf" id="actualizar_nombre_pnf" autocomplete="off" required>
+
+            <label for="actualizar_codigo_pnf">Código del Programa Nacional de Formación:</label>
+            <input type="text" name="codigopnf" id="actualizar_codigo_pnf" autocomplete="off" required>
+
+            <label for="actualizar_periodo_academico">Periodo Académico:</label>
+            <select name="periodoacademico" id="actualizar_periodo_academico">
+                <option value="">Elije el Periodo Académico</option>
+                <option value="Trimestre">Trimestre</option>
+                <option value="Semestre">Semestre</option>
+            </select>
+
+            <label for="contenedor_actualizar_nucleos">Núcleo que Pertenece:</label>
+            <div id="contenedor_actualizar_nucleos"></div>
+
+            <input type="submit" value="Actualizar PNF">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/modulo_pnfs.js' %}"></script>
+
+{% endblock %}

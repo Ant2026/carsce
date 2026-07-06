@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
         campo_cedula.removeAttribute("minLength");
         campo_cedula.removeAttribute("maxLength");
 
-
         switch (nacionalidad) {
             case "V":
                 campo_cedula.disabled = false;

@@ -32,9 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 formulario.reset();
             }
-
         } catch (error) {
-
             Swal.fire({
                 title: "Error",
                 text: error.message,
@@ -42,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             });
-
         }
     });
 });

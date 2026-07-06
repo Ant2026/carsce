@@ -41,11 +41,6 @@
     </div>
 </dialog>
 
-<script>
-    const mostrarDialogo = "{{ mostrar_dialogo }}" === "True";
-    const nucleoActual = "{{ nucleo_seleccionado|default:'' }}";
-</script>
 <script src="{% static 'Funcionalidades/info_sedes.js' %}"></script>
-<script src="{% static 'Funciones_Asincronas/nucleo_seleccionado.js' %}"></script>
 
 {% endblock %}

@@ -8,7 +8,7 @@
     <div class="contenedor_completar_regitro_estudiante">
         <h3>Completar Registro</h3>
 
-        <form method="post" id="formulario_CRE">
+        <form method="post" id="formulario_CRE" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="contenedor_CRE_Estudiante">
                 <h4>Datos Básicos</h4>
@@ -300,6 +300,43 @@
                     </div>
                 </div>
             </div>  
+
+            <div id="contenedor_CRE_Cursar">
+                <h4>Datos de Núcleo y PNF</h4>
+
+                <label for="nucleo_Barinas">Núcleo Barinas<input type="checkbox" name="nucleoBarinas" id="nucleo_Barinas" value="Barinas"></label>
+                <div id="contenedor_pnfs_Barinas"></div>
+
+                <label for="nucleo_Barinitas">Núcleo Barinitas<input type="checkbox" name="nucleoBarinitas" id="nucleo_Barinitas" value="Barinitas"></label>
+                <div id="contenedor_pnfs_Barinitas"></div>
+
+                <label for="nucleo_Sopoco">Núcleo Sopoco<input type="checkbox" name="nucleoSopoco" id="nucleo_Sopoco" value="Sopoco"></label>
+                <div id="contenedor_pnfs_Sopoco"></div>
+
+                <label for="nucleo_Pedraza">Núcleo Pedraza<input type="checkbox" name="nucleoPedraza" id="nucleo_Pedraza" value="Pedraza"></label>
+                <div id="contenedor_pnfs_Pedraza"></div>
+            </div>
+
+            <div class="contenedor_registrar_documento">
+                <h4>Documentos</h4>
+
+                <div class="campo">
+                    <label for="documentoCI_estudiante">Cedula de Identidad:</label>
+                    <input type="file" name="CI_estudiante" id="documentoCI_estudiante">
+                </div>
+                <div class="campo">
+                    <label for="documentoTB_estudiante">Titulo de Bachiller:</label>
+                    <input type="file" name="TBachiller_estudiante" id="documentoTB_estudiante">
+                </div>
+                <div class="campo">
+                    <label for="documentoSN_estudiante">Sabana de Notas:</label>
+                    <input type="file" name="SNotas_estudiante" id="documentoSN_estudiante">
+                </div>
+                <div class="campo">
+                    <label for="documentoOPSU_estudiante">Certificado SNI OPSU:</label>
+                    <input type="file" name="OPSU_estudiante" id="documentoOPSU_estudiante">
+                </div>
+            </div>
 
             <input type="submit" value="Completar el Registro">
         </form>

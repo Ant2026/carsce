@@ -1,0 +1,54 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="nucleos_registrado">
+    <div class="contenedor_nucleos_registrado">
+        <h3>Núcleos U.P.T "José Félix Ribas"</h3>
+
+        <div class="contenedor_registrar_nucleo">
+            <h4>Registrar Núcleo</h4>
+
+            <form method="post" id="registrarnucleo">
+                {% csrf_token %}
+                <label for="registrar_municipio">Municipio del Núcleo:</label>
+                <select name="municipio" id="registrar_municipio"></select>
+
+                <label for="registrar_direccion">Dirección del Núcleo:</label>
+                <textarea name="direccion" id="registrar_direccion"></textarea>
+
+                <input type="submit" value="Registrar Núcleo">
+            </form>
+        </div>
+
+        <div id="tabla_nucleo">
+
+        </div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar_nucleos">
+    <div class="contenedor_actualizar_nucleo">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        <h4>Modificar Núcleo</h4>
+
+        <form method="post" id="modificarnucleo">
+            {% csrf_token %}
+            <input type="hidden" name="nucleoseleccionado" id="nucleo_seleccionado">
+
+            <label for="actualizar_municipio">Municipio del Núcleo:</label>
+            <select name="municipio" id="actualizar_municipio"></select>
+
+            <label for="actualizar_direccion_nucleo">Dirección del Núcleo:</label>
+            <textarea name="direccionnucleo" id="actualizar_direccion_nucleo"></textarea>
+
+            <input type="submit" value="Actualizar Núcleo">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/modulo_nucleos.js' %}"></script>
+
+{% endblock %}

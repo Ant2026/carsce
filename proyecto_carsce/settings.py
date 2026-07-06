@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,6 +52,8 @@ JAZZMIN_SETTINGS = {
         "inicio_sesion.PNF": "fas fa-graduation-cap",
         "inicio_sesion.PNFNucleo": "fas fa-project-diagram",
         "inicio_sesion.UsuarioAsignacion": "fas fas fa-sitemap",
+        "inicio_sesion.GacetaOficial": "fas fa-file-alt",
+        "inicio_sesion.CredencialesUsuario": "fas fa-user-lock",
         
         "auth.User": "fas fa-user-shield",
         "auth.Group": "fas fa-users",
@@ -132,11 +135,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "saboresgourmet199@gmail.com"
-EMAIL_HOST_PASSWORD = "cubbxeqbuflqeoak"
+EMAIL_HOST_USER = "uptjfr2025@gmail.com"
+EMAIL_HOST_PASSWORD = "xejo gpsk pgdp wxqp"

@@ -47,11 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     iniciarContador();
 
     btnReenviar.addEventListener("click", async () => {
-
         btnReenviar.disabled = true;
-
         try {
-
             const resp = await fetch("/reenviar_codigo_btn/");
             const data = await resp.json();
 
@@ -63,11 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("inicio_reenvio", Date.now());
 
             location.reload();
-
         } catch (error) {
-
             btnReenviar.disabled = false;
-
             Swal.fire({
                 icon: "error",
                 text: "Error al reenviar el código"

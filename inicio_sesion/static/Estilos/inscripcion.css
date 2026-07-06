@@ -1,97 +1,188 @@
-#inscripcion {
-    margin-top: 90px;  
-    margin-left: 280px;
+#inscripcion{
+    margin-left: 250px;
+    margin-top: 90px;
 
-    padding: 25px;
+    width: calc(100% - 250px);
+    min-height: calc(100vh - 90px);
 
-    max-width: 1000px;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-#inscripcion h3 {
-    font-size: 22px;
+.contenedor_pre_inscrito{
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* Título centrado */
+.contenedor_pre_inscrito h4{
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+/* Formulario a la izquierda */
+.contenedor_formulario{
+    width: 100%;
     margin-bottom: 20px;
-    border-left: 4px solid #3b82f6;
-    padding-left: 10px;
 }
 
-#inscripcion form {
-    background: #ffffff;
+#pnfs_coordinador{
+    display: flex;
+    align-items: end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
 
-    padding: 25px;
-
-    border-radius: 12px;
-
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-
+.grupos{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    min-width: 250px;
 }
 
-#inscripcion label {
+.grupos label{
+    margin-bottom: 5px;
     font-weight: 600;
-    font-size: 14px;
 }
 
-#inscripcion input,
-#inscripcion select,
-#inscripcion textarea {
-    padding: 10px 12px;
-
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-
-    font-size: 14px;
-
-    outline: none;
-
-    transition: 0.2s ease;
+.grupos select{
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-width: 250px;
 }
 
-#inscripcion input:focus,
-#inscripcion select:focus,
-#inscripcion textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+/* Tabla abajo ocupando todo el ancho */
+table{
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
 }
 
-#inscripcion textarea {
-    min-height: 90px;
-    resize: vertical;
-}
-
-#inscripcion input[type="submit"] {
-    background: #2563eb;
+table thead{
+    background: #1f4e79;
     color: white;
+}
 
-    border: none;
-
+table td,
+table th{
     padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
 
-    border-radius: 8px;
+table tbody tr:nth-child(even){
+    background: #f8f9fa;
+}
 
-    font-weight: 600;
+table tbody tr:hover{
+    background: #e9ecef;
+}
 
+/* ===== DIALOG CENTRADO ===== */
+#datos_estudiantes {
+    border: none;
+    padding: 0;
+    width: 90%;
+    max-width: 1100px;
+    border-radius: 12px;
+
+    /* centrado real */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+/* Fondo oscuro del modal */
+#datos_estudiantes::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.contenedor_datos_estudiante {
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+}
+
+/* ===== TÍTULO ===== */
+.contenedor_datos_estudiante h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+/* ===== ICONO CERRAR ===== */
+#cerrar_dialogo {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
     cursor: pointer;
-
-    transition: 0.3s;
+    color: #444;
 }
 
-#inscripcion input[type="submit"]:hover {
-    background: #1d4ed8;
-    transform: translateY(-2px);
+#cerrar_dialogo:hover {
+    color: red;
 }
 
-.grupo-inline {
+/* ===== SECCIONES ===== */
+form > div {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+}
+
+/* títulos de sección */
+form h4 {
+    margin-bottom: 10px;
+    color: #333;
+    border-left: 4px solid #4a90e2;
+    padding-left: 8px;
+}
+
+/* ===== LABELS ===== */
+label {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* ===== INPUTS ===== */
+input[type="text"] {
+    width: 100%;
+    padding: 7px;
+    margin-top: 3px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #eee;
+}
+
+/* ===== BOTONES ===== */
+.botones_navegacion {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
 }
 
-.grupo-inline select {
-    width: 90px;
+.botones_navegacion button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #4a90e2;
+    color: white;
 }
 
-.grupo-inline input {
-    flex: 1;
+.botones_navegacion button:hover {
+    background: #357bd8;
 }

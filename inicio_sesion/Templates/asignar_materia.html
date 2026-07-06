@@ -1,0 +1,51 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="asignar_materia">
+    <div class="contenedor_asignar_materia">
+        <h3>Asignar Materia a Docente</h3>
+
+        <form method="post" id="formulario_asignar_materia">
+            {% csrf_token %}
+
+            <label for="nucleos_registrados">Nucleos:</label>
+            <select id="nucleos_registrados" name="nucleos"></select>    
+            
+            <label for="pnfs_registrados">P.N.F:</label>
+            <select id="pnfs_registrados" name="pnfs" disabled></select>
+
+            <label for="docentes_registrados">Docentes:</label>
+            <select id="docentes_registrados" name="docentes" disabled></select>
+
+            <div id="contenedor_materias">
+                <h4>Materias Disponibles</h4>
+            </div>
+
+            <input type="submit" value="Asignar Materia">
+        </form>
+    </div>
+</section>
+
+<dialog id="dialogo_docente_asignado_materia">
+    <div class="contenedor_docente_asignado_materia">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        <h4>Docentes Asignado a Materia</h4>
+
+        <form method="post" id="formulario_docente_asignado_materia">
+            {% csrf_token %}
+            <input type="hidden" name="materia_seleccionada" id="materia_seleccionada">
+
+            <label for="docentes_asignados">Docentes Asignados:</label>
+            <select id="docentes_asignados" name="docentes_asignados"></select>
+
+            <input type="submit" value="Actualizar Docente Asignado">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/asignar_materia.js' %}"></script>
+
+{% endblock %}

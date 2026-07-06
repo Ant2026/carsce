@@ -1,0 +1,87 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_calendario">
+    <div class="contenedor_modulo_calendario">
+        <h3>Calendario Académico UPT "José Félix Ribas""</h3>
+
+        <div class="contenedor_registrar_calendario">
+            <h4>Registrar Calendario Académico</h4>
+
+            <form method="post" id="registrar_calendario">
+                {% csrf_token %}
+                <label for="fecha_Inicial">Inicial:</label>
+                <input type="date" name="fechainicial" id="fecha_Inicial">
+                
+                <label for="fecha_Reparacion">Reparación:</label>
+                <input type="date" name="fechareparacion" id="fecha_Reparacion">
+                
+                <label for="fecha_TramoI">Tramo I:</label>
+                <input type="date" name="fechatramoI" id="fecha_TramoI">
+                
+                <label for="fecha_TramoII">Tramos II:</label>
+                <input type="date" name="fechatramoII" id="fecha_TramoII">
+                
+                <label for="fecha_TramoIII">Tramos III:</label>
+                <input type="date" name="fechatramoIII" id="fecha_TramoIII">
+                
+                <label for="fecha_SemestreI">Semestre I:</label>
+                <input type="date" name="fechasemestreI" id="fecha_SemestreI">
+                
+                <label for="fecha_SemestreII">Semestre II:</label>
+                <input type="date" name="fechasemestreII" id="fecha_SemestreII">
+
+                <input type="submit" value="Registrar Calendario Académcia">
+            </form>
+        </div>
+
+        <div id="contenedor_calendarios">
+            <h4>Vista de Calendario Académico</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Periodo Académico</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Final</th>
+                    </tr>
+                </thead>
+
+                <tbody id="contenedor_registrado">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar_calendario">
+    <div class="contenedor_actualizar_calendario">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        <h4>Actualizar Calendario Académico</h4>
+
+        <form method="post" id="actualizar_calendario">
+            {% csrf_token %}
+            <input type="hidden" name="fechaseleccionado" id="fecha_seleccionado">
+
+            <label for="actualizar_fechaacademica">Periodo Académico:</label>
+            <select name="actualizar_fecha_academica" id="actualizar_fechaacademica">
+                <option value="" selected disabled>Seleccione una opción</option>
+            </select>
+
+            <label for="fecha_inicial_academica">Fecha Académica (Inicial):</label>
+            <input type="date" name="nueva_fecha" id="fecha_inicial_academica">
+
+            <label for="fecha_final_academica">Fecha Académica (Final):</label>
+            <input type="date" id="fecha_final_academica" readonly>
+
+            <input type="submit" value="Actualizar Fecha">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/modulo_calendario_academico.js' %}"></script>
+
+{% endblock %}

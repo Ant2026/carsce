@@ -1,0 +1,65 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="credenciales_estudiante">
+    <div class="contenedor_credenciales_estudiante">
+        <div id="contenedor_texto">
+            <p>El presente modulo es para los Usuario que tenga asignado el perfil de Director General, Encargado de Control de Estudiante y Docente que valla a cursar una o varios P.N.F en la presente institución.
+            Los estudiante que tenga credenciales no pierda el tiempo en insitir en el presente modulo, se le agradece.</p>
+        </div>
+
+        <div id="contenedor_credenciales">
+            <h3>Credenciales Estudiante</h3>
+
+            <div id="grupo_buscar" class="mostrar">
+                <form method="post" id="formulario_buscar_estudiante">
+                    {% csrf_token %}
+                    <div class="campo">
+                        <label for="cedula_identidad">Buscar Estudiante:</label>
+                        <div class="campo_horizontal">
+                            <select name="nacionalidad" id="nacionalidad">
+                                <option value="">N</option>
+                                <option value="V">V</option>
+                                <option value="E">E</option>
+                            </select>
+                            <input type="text" name="cedula" id="cedula_identidad" disabled autocomplete="off" required>
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Buscar">
+                </form>
+            </div>
+            
+            <div id="grupo_credenciales" class="oculto">
+                <form method="post" id="formulario_credenciales_estudiante">
+                    {% csrf_token %}
+                    <div class="campo">
+                        <label for="nombre_usuario">Nombre del Estudiante:</label>
+                        <input type="text" name="nombreusuario" id="nombre_usuario" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="password">Contraseña del Estudiante:</label>
+
+                        <div class="input-group password-group">
+                            <input type="password" name="passwordusuario" id="password" autocomplete="off" required>
+                            <i class="icon-eye icon-password" id="mostrar_password"></i>
+                            <i class="icon-eye-off icon-password" id="ocultar_password"></i>
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Guardar Credenciales">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/credenciales_estudiante.js' %}"></script>
+
+{% endblock %}

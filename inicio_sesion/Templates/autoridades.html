@@ -1,0 +1,127 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_autoridades">
+    <div class="contenedor_modulo_autoridades">
+        <h3>Gestión de Autoridades</h3>
+
+        <div class="contenedor_registrar_autoridades">
+            <h4>Registrar Autoridades</h4>
+
+            <form method="post" id="formulario_registrar_autoridades">
+                {% csrf_token %}
+                <label for="nombres_registrar_autoridades">Nombres:</label>
+                <input type="text" name="nombres_registrarautoridades" id="nombres_registrar_autoridades" autocomplete="off" required>
+                
+                <label for="apellidos_registrar_autoridades">Apellidos:</label>
+                <input type="text" name="apellidos_registrarautoridades" id="apellidos_registrar_autoridades" autocomplete="off" required>
+                
+                <label for="cedula_identidad">Cedula Identidad:</label>
+                <div class="grupo-campo">
+                    <select name="nacionalidad_registrarautoridades" id="nacionalidad">
+                        <option value="">N</option>
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                    </select>
+                    <input type="text" name="cedula_registrarautoridades" id="cedula_identidad" autocomplete="off" required>
+                </div>
+                
+                <label for="genero_registrar_autoridades">Genero:</label>
+                <select name="genero_registrarautoridades" id="genero_registrar_autoridades">
+                    <option value="">Seleccione</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
+        
+                <label for="cargo_registrar_autoridades">Cargo:</label>
+                <select name="cargo_registrarautoridades" id="cargo_registrar_autoridades">
+                    <option value="">Seleccione</option>
+                    <option value="Rector">Rector</option>
+                    <option value="Vicerrector">Vicerrector</option>
+                    <option value="Decano">Decano</option>
+                    <option value="Coordinador">Coordinador</option>
+                </select>
+
+                <label for="resolucion_registrar_autoridades">Resolución:</label>
+                <input type="text" name="resolucion_registrarautoridadess" id="resolucion_registrar_autoridades" autocomplete="off" required>
+           
+                <input type="submit" value="Registrar Autoridades">
+            </form>
+        </div>
+
+         <div class="contenedor_autoridades">
+            <h4>Buscar Autoridades</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Cédula de Identidad</th>
+                        <th>Cargo</th>
+                        <th>Resolución</th>
+                    </tr>
+                </thead>
+                <tbody id="contenedor_autoridades">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar_autoridades">
+    <div class="contenedor_actualizar_autoridades">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        <h4>Actualizar Autoridades</h4>
+
+        <form method="post" id="formulario_actualizar_autoridades">
+            {% csrf_token %}
+            <input type="hidden" name="usuarioseleccionado" id="usuario_seleccionado">
+
+            <label for="nombres_actualizar_autoridades">Nombres:</label>
+            <input type="text" name="nombres_actualizarautoridades" id="nombres_actualizar_autoridades" autocomplete="off" required>
+            
+            <label for="apellidos_actualizar_autoridades">Apellidos:</label>
+            <input type="text" name="apellidos_actualizarautoridades" id="apellidos_actualizar_autoridades" autocomplete="off" required>
+            
+            <label for="cedula_actualizar_autoridades">Cedula Identidad:</label>
+            <div class="grupo-campo">
+                <select name="nacionalidad_actualizarautoridades" id="nacionalidad_actualizar_autoridades">
+                    <option value="">N</option>
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                </select>
+                <input type="text" name="cedula_actualizarautoridades" id="cedula_actualizar_autoridades" autocomplete="off" required>
+            </div>
+            
+            <label for="genero_actualizar_autoridades">Genero:</label>
+            <select name="genero_actualizarautoridades" id="genero_actualizar_autoridades">
+                <option value="">Seleccione</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+            </select>
+    
+            <label for="cargo_actualizar_autoridades">Cargo:</label>
+            <select name="cargo_actualizarautoridades" id="cargo_actualizar_autoridades">
+                <option value="">Seleccione</option>
+                <option value="Rector">Rector</option>
+                <option value="Secretario General">Secretario General</option>
+                <option value="Responsable Académico">Responsable Académico</option>
+            </select>
+
+            <label for="resolucion_actualizar_autoridades">Resolución:</label>
+            <input type="text" name="resolucion_actualizarautoridades" id="resolucion_actualizar_autoridades" autocomplete="off" required>
+           
+            <input type="submit" value="Actualizar Autoridades">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/modulo_autoridades.js' %}"></script>
+
+{% endblock %}

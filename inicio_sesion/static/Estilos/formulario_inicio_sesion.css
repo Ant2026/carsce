@@ -106,6 +106,10 @@
     margin-top: 5px;
 }
 
+.d-none {
+    display: none;
+}
+
 .login-button {
     width: 100%;
     padding: 12px;

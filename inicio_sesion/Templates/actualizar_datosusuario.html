@@ -1,0 +1,158 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="actualizar_datosusuario">
+    <div class="contenedor_actualizar_datos">
+        <h3>Actualizar Datos Básicos</h3>
+
+        <form method="post" id="formulario_actualizar">
+            {% csrf_token %}
+
+            <div id="contenedor_actualizar_Contacto">
+                <h4>Datos de Contacto</h4>
+
+                <label for="prefijo_telefono2">Telefono (Principal):</label>
+                <div class="campo_horizontal">
+                    <select name="prefijo_telefono_principal" id="prefijo_telefono2"></select>
+                    <input type="text" name="num_telefono_principal" id="numero_telefonico2" autocomplete="off">                        
+                </div>
+
+                <label for="prefijo_telefono3">Telefono (Secundaria):</label>
+                <div class="campo_horizontal">
+                    <select name="prefijo_telefono_secundaria" id="prefijo_telefono3"></select>
+                    <input type="text" name="num_telefono_secundaria" id="numero_telefonico3" autocomplete="off">                        
+                </div>
+
+                <label for="Correo_num2">Correo Electronico (Principal) Opcional:</label>
+                <div class="campo_horizontal">
+                    <input type="text" name="correo_principal" id="Correo_num2" autocomplete="off">
+                    <select name="dominio_correo_principal" id="dominio_num2"></select>
+                </div>
+
+                <label for="Correo_num3">Correo Electronico (Secundaria):</label>
+                <div class="campo_horizontal">
+                    <input type="text" name="correo_secundaria" id="Correo_num3" autocomplete="off">
+                    <select name="dominio_correo_secundaria" id="dominio_num3"></select>
+                </div>
+            </div>
+
+            <div id="contenedor_actualizar_Residencia">
+                <h4>Datos de Residencia</h4>
+
+                <label for="condicion_residencia">Condición de Residencia:</label>
+                <select name="condicionresidencia" id="condicion_residencia">
+                    <option value="">Elije la condición de residencia</option>
+                    <option value="Residente">Residente</option>
+                    <option value="Foraneo">Foraneo</option>
+                </select>
+
+                <label for="municipio_residencia">Municipio de Residencia:</label>
+                <select name="municipioresidencia" id="municipio_residencia"></select>
+
+                <label for="parroquia_residencia">Parroquia de Residencia:</label>
+                <select name="parroquiaresidencia" id="parroquia_residencia"></select>
+
+                <label for="direccion_domicilio">Dirección de Residencia:</label>
+                <textarea name="direcciondomicilio" id="direccion_domicilio"></textarea>
+            </div>
+
+            {% if request.session.perfil == 'Estudiante' %}
+                <div id="contenedor_actualizar_Discapacidad">
+                    <h4>Datos de Discapacidad</h4>
+
+                    <label for="codigo_carnet_dispacidad">Carnet de Discapacidad:</label>
+                    <input type="text" name="carnet_dispacidad" id="codigo_carnet_dispacidad" autocomplete="off">
+
+                    <label for="nro_registro_medico">Nro de Registro Médico:</label>
+                    <input type="text" name="registro_medico" id="nro_registro_medico" autocomplete="off">
+
+                    <label for="tipos_discapacidad">Tipo de Discapacidad:</label>
+                    <select name="tipos_discapacidad" id="tipos_discapacidad">
+                        <option value="">Elije una opción</option>
+                        <option value="Visual">Visual</option>
+                        <option value="Auditiva">Auditiva</option>
+                        <option value="Lengauje">Lengauje</option>
+                        <option value="Intelectual">Intelectual</option>
+                        <option value="Autista">Autista</option>
+                        <option value="Fisica y Motora">Fisica y Motora</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+        
+                    <label for="grado_discapacidad">Grado de Discapacidad:</label>
+                    <select name="grado_discapacidad" id="grado_discapacidad">
+                        <option value="">Elije una opción</option>
+                        <option value="Leve">Leve</option>
+                        <option value="Moderada">Moderada</option>
+                        <option value="Grave">Grave</option>
+                    </select>
+                
+                    <label for="causa_discapacidad">Causa de Discapacidad:</label>
+                    <select name="causa_discapacidad" id="causa_discapacidad">
+                        <option value="">Elije una opción</option>
+                        <option value="Congenita">Congenita</option>
+                        <option value="Adquirida">Adquirida</option>
+                    </select>
+                </div>
+            {% endif %}
+
+            <input type="submit" value="Actualizar Datos">
+        </form>
+    </div>
+</section>
+
+<dialog id="menu_actualizar_correo">
+    <div class="contenedor_menu_actualizar_correo">
+        <i id="cerrar_dialogo_correo" class="icon-cancel-circled"></i>
+        <h4>Verificación de Correo Electrónico</h4>
+
+        <p>Seleccione el correo electrónico al que desea enviar el código de verificación.</p>
+
+        <form method="post" id="formulario_correos">
+            {% csrf_token %}
+
+            <div class="opcion_correo">
+                <label for="correo_principal" id="label_correo_principal"></label>
+                <input type="radio" name="correo_verificacion" id="correo_principal" value="principal" checked>
+            </div>
+
+            <div class="opcion_correo">
+                <label for="correo_secundario" id="label_correo_secundario"></label>
+                <input type="radio" name="correo_verificacion" id="correo_secundario" value="secundario">
+            </div>
+
+            <input type="submit" value="Enviar Código">
+        </form>
+    </div>
+</dialog>
+
+<dialog id="autenticacion_correo">
+    <div class="contenedor_autenticacion_correo">
+        <h4>Verificar Código</h4>
+
+        <p>Se le envio un código al correo seleccionado, verifique e ingrese el código.</p>
+
+        <form method="post" id="formulario_autenticacion">
+            {% csrf_token %}
+
+            <label for="codigo_correo">Ingrese el código:</label>
+            <input type="text" name="codigocorreo" id="codigo_correo" autocomplete="off" required>
+
+            <button id="reenviar_codigo">Reenviar Código</button>
+
+            <input type="submit" value="Verificar">
+        </form>
+
+        <button type="button" id="btn_reenviar_codigo" disabled>Reenviar código (<span id="contador_reenvio">60</span>s)</button>
+    </div>
+</dialog>
+
+<script src="{% static 'Funcionalidades/residencia.js' %}"></script>
+<script src="{% static 'Funcionalidades/correo_electronico_num2.js' %}"></script>
+<script src="{% static 'Funcionalidades/telefono_num2.js' %}"></script>
+
+<script src="{% static 'Funciones_Asincronas/actualizar_datosusuario.js' %}"></script>
+
+{% endblock %}

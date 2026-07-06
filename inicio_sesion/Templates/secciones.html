@@ -1,0 +1,48 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="secciones_registrado">
+    <div class="contenedor_secciones_registrado">
+        <h3>Sección U.P.T "José Félix Ribas"</h3>
+
+        <div class="contenedor_registrar_secciones">
+            <h4>Registrar Sección</h4>
+
+            <form method="post" id="registrarsecciones">
+                {% csrf_token %}
+                <label for="registrar_seccion">Sección Académica:</label>
+                <input type="text" name="seccion" id="registrar_seccion">
+
+                <input type="submit" value="Registrar Sección">
+            </form>
+        </div>
+
+        <div id="tabla_secciones">
+
+        </div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar_secciones">
+    <div class="contenedor_actualizar_secciones">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        <h4>Modificar Núcleo</h4>
+
+        <form method="post" id="modificarnsecciones">
+            {% csrf_token %}
+            <input type="hidden" name="seccionesseleccionado" id="secciones_seleccionado">
+
+            <label for="actualizar_seccion">Sección Académica:</label>
+            <input type="text" name="seccion" id="actualizar_seccion">
+            
+            <input type="submit" value="Actualizar Sección">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/modulo_seccion.js' %}"></script>
+
+{% endblock %}

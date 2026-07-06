@@ -8,18 +8,11 @@ class Usuario(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     genero = models.CharField(max_length=50)
-    cedula_identidad = models.CharField(max_length=15, unique=True)
+    cedula_identidad = models.CharField(max_length=15)
     estado_civil = models.CharField(max_length=50)
-    nombre_usuario = models.CharField(max_length=160)
-    clave = models.CharField(max_length=160)
-
-    def save(self, *args, **kwargs):
-        if self.clave and not self.clave.startswith('pbkdf2_'):
-            self.clave = make_password(self.clave)
-        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.nombres
+        return f"{self.nombres} {self.apellidos}"
 
 class PadresEstudiante(models.Model):
     id_representante = models.AutoField(primary_key=True)
@@ -27,7 +20,7 @@ class PadresEstudiante(models.Model):
     apellidos = models.CharField(max_length=100)
     cedula_identidad = models.CharField(max_length=15, unique=True)
     telefono = models.CharField(max_length=15)
-    parentesco = models.CharField(max_length=25, blank=True, null=True)
+    parentesco = models.CharField(max_length=25)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='padresEstudiante')
 
 class Residencia(models.Model):
@@ -40,17 +33,17 @@ class Residencia(models.Model):
 
 class Contacto(models.Model):
     id_usuario = models.AutoField(primary_key=True)
-    telefono_suplete = models.CharField(max_length=15, blank=True, null=True)
-    telefono_personal = models.CharField(max_length=15, blank=True, null=True)
+    telefono_suplete = models.CharField(max_length=15, null=True, blank=True)
+    telefono_personal = models.CharField(max_length=15, null=True, blank=True)
     correo_electronico = models.EmailField(max_length=100, unique=True)
-    correo_alternativo = models.EmailField(max_length=100, blank=True, null=True)
+    correo_alternativo = models.EmailField(max_length=100, unique=True, null=True, blank=True)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='contacto')
 
 class Nacimiento(models.Model):
     id_nacimiento = models.AutoField(primary_key=True)
     pais = models.CharField(max_length=100)
     estado = models.CharField(max_length=100)
-    municipio = models.CharField(max_length=100, blank=True, null=True)
+    municipio = models.CharField(max_length=100)
     parroquia = models.CharField(max_length=100)
     direccion_nacimiento = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
@@ -60,13 +53,15 @@ class Pnf(models.Model):
     id_pnf = models.AutoField(primary_key=True)
     pnf = models.CharField(max_length=50)
     codigo = models.CharField(max_length=40)
-
+    periodo_academico = models.CharField(max_length=40, null=True, blank=True)
+    
     def __str__(self):
         return self.pnf
 
 class Nucleos(models.Model):
     id_nucleo = models.AutoField(primary_key=True)
     municipio = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=100)
 
     def __str__(self):
         return self.municipio
@@ -91,6 +86,16 @@ class UsuarioAsignacion(models.Model):
     id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
+
+class CredencialesUsuario(models.Model):
+    nombre_usuario = models.CharField(max_length=160)
+    clave = models.CharField(max_length=160)
+    id_asignacion = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, related_name='perfil')
+
+    def save(self, *args, **kwargs):
+        if self.clave and not self.clave.startswith('pbkdf2_'):
+            self.clave = make_password(self.clave)
+        super().save(*args, **kwargs)
 
 # Clases (Tablas) para Docentes, Coordinadores de PNFs, Directores Generales y Control de estudio
 
@@ -126,12 +131,12 @@ class EstatusEstudiante(models.Model):
     descripcion_ingreso = models.CharField(max_length=30)
     trayecto = models.CharField(max_length=50)
     fecha_ingreso = models.DateField()
-    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='estatus')
+    id_asignacion = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, related_name='estatus')
 
 class DocumentosEstudiante(models.Model):
     id_documento = models.AutoField(primary_key=True)
-    nombre_documento = models.CharField(max_length=50, null=True, blank=True)
-    archivo = models.FileField(upload_to="documentos_estudiante/", null=True, blank=True)
+    nombre_documento = models.CharField(max_length=50)
+    archivo = models.FileField(upload_to="documentos_estudiante/")
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='documentos')
 
 class InformacionSecundaria(models.Model):
@@ -156,9 +161,9 @@ class SeccionAcademica(models.Model):
 class SeccionEstudiante(models.Model):
     id_seccion_estudiante = models.AutoField(primary_key=True)
     id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, db_column='id_seccion')
-    id_perfil_pnf = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, db_column='id_perfil_pnf')
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
     fecha_inicio = models.DateField()
-    fecha_final = models.DateField()
+    fecha_final = models.DateField(null=True, blank=True)
     
 class EstudianteCorte(models.Model):
     id_estudiante_corte = models.AutoField(primary_key=True)
@@ -176,3 +181,69 @@ class VerificacionCodigo(models.Model):
     activo = models.IntegerField()
     descripcion = models.CharField(max_length=100)
     fecha_expiracion = models.DateTimeField(null=True, blank=True)
+
+#
+
+class PlanEspecial(models.Model):
+    id_plan_especial = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=20)
+
+class Autoridades(models.Model):
+    id_autoridad = models.AutoField(primary_key=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    cedula_identidad = models.CharField(max_length=15, unique=True)
+    genero = models.CharField(max_length=50)
+    cargo = models.CharField(max_length=100)
+    resolucion = models.CharField(max_length=100, unique=True)
+
+class Bitacora(models.Model):
+    id_bitacora = models.AutoField(primary_key=True)
+    nombre_usuario = models.CharField(max_length=50)
+    fecha_hora = models.DateTimeField()
+    accion = models.CharField(max_length=100)
+
+class Materia(models.Model):
+    id_materia = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=100)
+    tipo_materia = models.CharField(max_length=100)
+    trayecto = models.CharField(max_length=100)
+    recuperacion = models.CharField(max_length=100)
+    id_pnf = models.ForeignKey(Pnf, models.CASCADE, db_column='id_pnf')
+
+class MateriaAsignada(models.Model):
+    id_materia_asignada = models.AutoField(primary_key=True)
+    id_materia = models.ForeignKey(Materia, models.CASCADE, db_column='id_materia')
+    id_asignacion = models.ForeignKey(UsuarioAsignacion, models.CASCADE, db_column='id_usuario')
+
+class PeriodoAcademico(models.Model):
+    id_periodo_academico = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+    
+class CalendarioAcademico(models.Model):
+    id_fecha_academica = models.AutoField(primary_key=True)
+    periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.PROTECT)
+    fecha_inicio = models.DateField()
+    fecha_final = models.DateField()
+    activo = models.BooleanField(default=True) 
+
+class PeriodoMateria(models.Model):
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
+    periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.CASCADE)
+
+class CalendarioMateria(models.Model):
+    calendario = models.ForeignKey(CalendarioAcademico, on_delete=models.CASCADE)
+    periodo_materia = models.ForeignKey(PeriodoMateria, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["calendario", "periodo_materia"],
+                name="uq_calendario_periodo_materia"
+            )
+        ]
+    

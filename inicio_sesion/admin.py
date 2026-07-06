@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import Usuario, Contacto, Pnf, Nucleos, Perfiles, PNFNucleo, GacetaOficial, UsuarioAsignacion
+from .models import Usuario, Contacto, CredencialesUsuario, Pnf, Nucleos, Perfiles, PNFNucleo, GacetaOficial, UsuarioAsignacion
 from django import forms
 from django.contrib.auth.hashers import make_password
 from django.forms import PasswordInput
+from django.core.exceptions import ValidationError
+import re
 
 class UsuarioAdminForm(forms.ModelForm):
     GENERO_CHOICES = [
@@ -35,12 +37,8 @@ class UsuarioAdminForm(forms.ModelForm):
     cedula_identidad = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'inline-input',
-            'maxlength': '9'
+            'maxlength': '11'
         })
-    )
-
-    clave = forms.CharField(
-        widget=forms.PasswordInput(render_value=True)
     )
 
     genero = forms.ChoiceField(
@@ -51,6 +49,71 @@ class UsuarioAdminForm(forms.ModelForm):
         choices=ESTADO_CIVIL_CHOICES
     )
 
+    def clean_nombres(self):
+        nombres = self.cleaned_data['nombres'].strip()
+
+        if len(nombres) < 3:
+            raise ValidationError(
+                "El nombre debe tener al menos 3 caracteres."
+            )
+
+        if len(nombres) > 100:
+            raise ValidationError(
+                "El nombre no puede superar los 100 caracteres."
+            )
+
+        if not re.match(r'^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$', nombres):
+            raise ValidationError(
+                "El nombre solo puede contener letras."
+            )
+
+        return nombres
+
+    def clean_apellidos(self):
+        apellidos = self.cleaned_data['apellidos'].strip()
+
+        if len(apellidos) < 3:
+            raise ValidationError(
+                "El apellido debe tener al menos 3 caracteres."
+            )
+
+        if len(apellidos) > 100:
+            raise ValidationError(
+                "El apellido no puede superar los 100 caracteres."
+            )
+
+        if not re.match(r'^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$', apellidos):
+            raise ValidationError(
+                "El apellido solo puede contener letras."
+            )
+
+        return apellidos
+
+    def clean_cedula_identidad(self):
+        cedula = self.cleaned_data['cedula_identidad'].strip()
+        nacionalidad = self.cleaned_data.get('nacionalidad')
+
+        if not cedula.isdigit():
+            raise ValidationError(
+                "La cédula solo puede contener números."
+            )
+
+        if nacionalidad == "V":
+
+            if len(cedula) < 7 or len(cedula) > 8:
+                raise ValidationError(
+                    "La cédula venezolana debe tener entre 7 y 8 dígitos."
+                )
+
+        elif nacionalidad == "E":
+
+            if len(cedula) < 10 or len(cedula) > 11:
+                raise ValidationError(
+                    "La cédula de extranjero debe tener entre 10 y 11 dígitos."
+                )
+
+        return cedula
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -61,7 +124,68 @@ class UsuarioAdminForm(forms.ModelForm):
                 nacionalidad, cedula = self.instance.cedula_identidad.split("-", 1)
 
                 self.fields['nacionalidad'].initial = nacionalidad
-                self.fields['cedula_identidad'].initial = cedula  
+                self.fields['cedula_identidad'].initial = cedula 
+
+class CredencialesUsuarioAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = CredencialesUsuario
+        fields = "__all__"
+
+    def clean_nombre_usuario(self):
+
+        usuario = self.cleaned_data['nombre_usuario'].strip()
+
+        if len(usuario) < 4:
+            raise forms.ValidationError(
+                "El nombre de usuario debe tener al menos 4 caracteres."
+            )
+
+        if len(usuario) > 160:
+            raise forms.ValidationError(
+                "El nombre de usuario es demasiado largo."
+            )
+
+        existe = CredencialesUsuario.objects.filter(
+            nombre_usuario=usuario
+        )
+
+        if self.instance.pk:
+            existe = existe.exclude(pk=self.instance.pk)
+
+        if existe.exists():
+            raise forms.ValidationError(
+                "Este nombre de usuario ya existe."
+            )
+
+        return usuario
+
+    def clean_clave(self):
+
+        clave = self.cleaned_data['clave']
+
+        # Solo validar cuando no esté hasheada
+        if not clave.startswith('pbkdf2_'):
+
+            if len(clave) < 8:
+                raise forms.ValidationError(
+                    "La contraseña debe tener al menos 8 caracteres."
+                )
+
+        return clave
+    
+class CredencialesUsuarioAdmin(admin.ModelAdmin):
+
+    form = CredencialesUsuarioAdminForm
+
+    list_display = (
+        'nombre_usuario',
+        'id_asignacion',
+    )
+
+    search_fields = (
+        'nombre_usuario',
+    )
 
 class ContactoInline(admin.StackedInline):
     model = Contacto
@@ -69,15 +193,13 @@ class ContactoInline(admin.StackedInline):
     extra = 1
     exclude = ('id_contacto',)
 
-
 class PNFNucleoAdminForm(forms.ModelForm):
+    id_pnf = forms.ModelChoiceField(queryset=Pnf.objects.all(), label='PNF')
+    id_nucleo = forms.ModelChoiceField(queryset=Nucleos.objects.all(), label='Núcleo')
 
     class Meta:
         model = PNFNucleo
         fields = '__all__'
-
-    id_pnf = forms.ModelChoiceField(queryset=Pnf.objects.all(), label='PNF')
-    id_nucleo = forms.ModelChoiceField(queryset=Nucleos.objects.all(), label='Núcleo')
 
 class PNFNucleoAdmin(admin.ModelAdmin):
     form = PNFNucleoAdminForm
@@ -95,8 +217,6 @@ class UsuarioAdmin(admin.ModelAdmin):
                 ('nacionalidad', 'cedula_identidad'),
                 'genero',
                 'estado_civil',
-                'nombre_usuario',
-                'clave',
             )
         }),
     )
@@ -105,7 +225,6 @@ class UsuarioAdmin(admin.ModelAdmin):
         'nombres',
         'apellidos',
         'cedula_identidad',
-        'nombre_usuario'
     )
 
     class Media:
@@ -128,9 +247,6 @@ class UsuarioAdmin(admin.ModelAdmin):
 
         if nacionalidad and cedula:
             obj.cedula_identidad = f"{nacionalidad}-{cedula}"
-
-        if obj.clave and not obj.clave.startswith('pbkdf2_'):
-            obj.clave = make_password(obj.clave)
 
         super().save_model(request, obj, form, change)
     
@@ -211,17 +327,79 @@ class UsuarioAsignacionAdminForm(forms.ModelForm):
 
         return cleaned_data
 
+class PnfAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Pnf
+        fields = "__all__"
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre'].strip()
+
+        if len(nombre) < 5:
+            raise forms.ValidationError(
+                "El nombre del PNF debe tener al menos 5 caracteres."
+            )
+
+        return nombre
+    
+class NucleoAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Nucleos
+        fields = "__all__"
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre'].strip()
+
+        if len(nombre) < 3:
+            raise forms.ValidationError(
+                "El nombre del núcleo debe tener al menos 3 caracteres."
+            )
+
+        return nombre
+
+class PerfilAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Perfiles
+        fields = "__all__"
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre'].strip()
+
+        if len(nombre) < 3:
+            raise forms.ValidationError(
+                "El nombre del perfil debe tener al menos 3 caracteres."
+            )
+
+        return nombre
+    
+@admin.register(GacetaOficial)
+class GacetaOficialAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'gaceta_oficial',
+        'fecha_gaceta_oficial',
+        'id_usuario'
+    )
+
 admin.site.register(Usuario, UsuarioAdmin)
-admin.site.register(Pnf)
-admin.site.register(Nucleos)
-admin.site.register(Perfiles)
 
-admin.site.register(
-    PNFNucleo,
-    PNFNucleoAdmin
-)
+class PnfAdmin(admin.ModelAdmin):
+    form = PnfAdminForm
 
-admin.site.register(
-    UsuarioAsignacion,
-    UsuarioAsignacionAdmin
-)
+class NucleoAdmin(admin.ModelAdmin):
+    form = NucleoAdminForm
+
+class PerfilAdmin(admin.ModelAdmin):
+    form = PerfilAdminForm
+
+
+admin.site.register(Pnf, PnfAdmin)
+admin.site.register(Nucleos, NucleoAdmin)
+admin.site.register(Perfiles, PerfilAdmin)
+
+admin.site.register(CredencialesUsuario, CredencialesUsuarioAdmin)
+admin.site.register(PNFNucleo, PNFNucleoAdmin)
+admin.site.register(UsuarioAsignacion, UsuarioAsignacionAdmin)

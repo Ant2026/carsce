@@ -1,0 +1,648 @@
+/* ============================
+   MÓDULO HORARIO ACADÉMICO
+============================ */
+
+#modulo_horario_academico{
+    margin-top: 90px;          /* Espacio para el nav */
+    margin-left: 270px;        /* 250px del aside + 20px de separación */
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.contenedor_horario_academico{
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.contenedor_horario_academico h3{
+    margin: 0 0 25px;
+    text-align: center;
+    color: #1f4e79;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* ============================
+   FORMULARIO
+============================ */
+
+.contenedor_horario_academico form{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.contenedor_horario_academico label{
+    font-weight: 600;
+    color: #444;
+}
+
+#cantidad_fila{
+    width: 90px;
+    height: 40px;
+    border: 1px solid #c8c8c8;
+    border-radius: 6px;
+    outline: none;
+    text-align: center;
+    font-size: 16px;
+    transition: .3s;
+}
+
+#cantidad_fila:focus{
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(13,110,253,.25);
+}
+
+/* ============================
+   TABLA
+============================ */
+
+.contenedor_horario_academico table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.contenedor_horario_academico thead th{
+    background: #0d6efd;
+    color: white;
+    padding: 14px;
+    border: 1px solid #dcdcdc;
+    text-align: center;
+    font-weight: 600;
+}
+
+.contenedor_horario_academico tbody td{
+    border: 1px solid #dcdcdc;
+    padding: 8px;
+    height: 60px;
+    text-align: center;
+}
+
+.contenedor_horario_academico tbody tr:nth-child(even){
+    background: #f8f9fa;
+}
+
+.contenedor_horario_academico tbody tr:hover{
+    background: #edf5ff;
+}
+
+/* ============================
+   INPUTS DE LA TABLA
+============================ */
+
+.contenedor_horario_academico tbody input{
+    width: 95%;
+    height: 36px;
+    border: 1px solid #cfcfcf;
+    border-radius: 5px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 14px;
+    outline: none;
+    transition: .2s;
+}
+
+.contenedor_horario_academico tbody input:focus{
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13,110,253,.25);
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 900px){
+
+    #modulo_horario_academico{
+        margin: 80px 10px 10px 10px;
+    }
+
+    .contenedor_horario_academico{
+        overflow-x: auto;
+    }
+
+    .contenedor_horario_academico table{
+        min-width: 900px;
+    }
+
+}
+
+
+
+
+#asignar_materia{
+    width: calc(100% - 260px);
+    margin: 80px 0 30px 260px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.contenedor_asignar_materia{
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.contenedor_asignar_materia h3{
+    text-align: center;
+    margin-bottom: 25px;
+    color: #0f3c69;
+    font-size: 26px;
+}
+
+#formulario_asignar_materia{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Núcleo */
+#formulario_asignar_materia label[for="nucleos_registrados"]{
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#nucleos_registrados{
+    grid-column: 1;
+    grid-row: 2;
+}
+
+/* PNF */
+#formulario_asignar_materia label[for="pnfs_registrados"]{
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#pnfs_registrados{
+    grid-column: 2;
+    grid-row: 2;
+}
+
+/* Docente ocupa toda la fila */
+#formulario_asignar_materia label[for="docentes_registrados"]{
+    grid-column: 1 / 3;
+    grid-row: 3;
+}
+
+#docentes_registrados{
+    grid-column: 1 / 3;
+    grid-row: 4;
+}
+
+/* Materias */
+.contenedor_materias{
+    grid-column: 1 / 3;
+    grid-row: 5;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 250px;
+}
+
+/* Botón */
+#formulario_asignar_materia input[type="submit"]{
+    grid-column: 1 / 3;
+    grid-row: 6;
+
+    width: 220px;
+    justify-self: center;
+
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    background: #0d6efd;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Selects */
+#formulario_asignar_materia select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdbdbd;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+#formulario_asignar_materia label{
+    font-weight: bold;
+}
+
+
+
+
+#modulo_autoridades{
+    width: calc(100% - 260px);
+    margin: 80px 0 30px 260px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.contenedor_modulo_autoridades{
+    background:#fff;
+    border:1px solid #d9d9d9;
+    border-radius:10px;
+    padding:25px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.contenedor_modulo_autoridades h3{
+    text-align:center;
+    color:#0f3c69;
+    font-size:26px;
+    margin-bottom:25px;
+}
+
+/*==========================
+    REGISTRAR AUTORIDADES
+===========================*/
+
+.contenedor_registrar_autoridades{
+    border:1px solid #dcdcdc;
+    border-radius:8px;
+    background:#fafafa;
+    padding:20px;
+    margin-bottom:30px;
+}
+
+.contenedor_registrar_autoridades h4{
+    margin-bottom:20px;
+    color:#0f3c69;
+}
+
+#formulario_registrar_autoridades{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+#formulario_registrar_autoridades label{
+    font-weight:600;
+}
+
+#formulario_registrar_autoridades input[type="text"],
+#formulario_registrar_autoridades select{
+    width:100%;
+    padding:10px;
+    border:1px solid #cfcfcf;
+    border-radius:6px;
+    font-size:15px;
+    box-sizing:border-box;
+    outline:none;
+}
+
+.grupo-campo{
+    display:flex;
+    gap:10px;
+}
+
+.grupo-campo select{
+    width:80px;
+}
+
+.grupo-campo input{
+    flex:1;
+}
+
+#formulario_registrar_autoridades input[type="submit"]{
+    margin-top:15px;
+    align-self:flex-end;
+    background:#0f5ea8;
+    color:#fff;
+    border:none;
+    padding:10px 22px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+#formulario_registrar_autoridades input[type="submit"]:hover{
+    background:#0c4d89;
+}
+
+/*==========================
+    BUSCAR AUTORIDADES
+===========================*/
+
+.contenedor_autoridades{
+    border:1px solid #dcdcdc;
+    border-radius:8px;
+    background:#fafafa;
+    padding:20px;
+}
+
+.contenedor_autoridades h4{
+    margin-bottom:20px;
+    color:#0f3c69;
+}
+
+.contenedor_autoridades table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.contenedor_autoridades thead{
+    background:#0f5ea8;
+    color:#fff;
+}
+
+.contenedor_autoridades th,
+.contenedor_autoridades td{
+    padding:12px;
+    border:1px solid #d9d9d9;
+    text-align:center;
+}
+
+.contenedor_autoridades tbody tr:nth-child(even){
+    background:#f4f7fb;
+}
+
+.contenedor_autoridades tbody tr:hover{
+    background:#e8f1fb;
+}
+
+/*==========================
+    DIALOG
+===========================*/
+
+#dialogo_actualizar_autoridades{
+    border:none;
+    border-radius:10px;
+    width:550px;
+    max-width:90%;
+    padding:0;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+#dialogo_actualizar_autoridades::backdrop{
+    background:rgba(0,0,0,.45);
+}
+
+.contenedor_actualizar_autoridades{
+    position:relative;
+    padding:25px;
+}
+
+.contenedor_actualizar_autoridades h4{
+    text-align:center;
+    color:#0f3c69;
+    margin-bottom:20px;
+}
+
+#cerrar_dialogo{
+    position:absolute;
+    top:15px;
+    right:15px;
+    font-size:24px;
+    cursor:pointer;
+    color:#c62828;
+}
+
+#formulario_actualizar_autoridades{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+#formulario_actualizar_autoridades label{
+    font-weight:600;
+}
+
+#formulario_actualizar_autoridades input[type="text"],
+#formulario_actualizar_autoridades select{
+    width:100%;
+    padding:10px;
+    border:1px solid #cfcfcf;
+    border-radius:6px;
+    font-size:15px;
+    box-sizing:border-box;
+}
+
+#formulario_actualizar_autoridades input[type="submit"]{
+    margin-top:15px;
+    align-self:flex-end;
+    background:#0f5ea8;
+    color:#fff;
+    border:none;
+    padding:10px 22px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+#formulario_actualizar_autoridades input[type="submit"]:hover{
+    background:#0c4d89;
+}
+
+/*=====================================
+    ACTUALIZAR DATOS USUARIOS
+======================================*/
+
+#modulo_actualizar_datos_usuarios{
+    width: calc(100% - 260px);
+    margin: 80px 0 30px 260px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.contenedor_actualizar_datos_usuarios{
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    padding: 25px;
+}
+
+.contenedor_actualizar_datos_usuarios h3{
+    text-align: center;
+    color: #0f3c69;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+/*=====================================
+    BLOQUES
+======================================*/
+
+#contenedor_buscar_usuario,
+#contenedor_datos_usuario{
+    border:1px solid #dcdcdc;
+    border-radius:8px;
+    background:#fafafa;
+    padding:20px;
+    margin-bottom:30px;
+}
+
+#contenedor_buscar_usuario h4,
+#contenedor_datos_usuario h4{
+    color:#0f3c69;
+    margin-bottom:20px;
+}
+
+/*=====================================
+    FORMULARIOS
+======================================*/
+
+#formulario_busqueda_usuario,
+#formulario_actualizar_usuario{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+#formulario_busqueda_usuario label,
+#formulario_actualizar_usuario label{
+    font-weight:600;
+    color:#333;
+}
+
+#formulario_busqueda_usuario input,
+#formulario_busqueda_usuario select,
+#formulario_actualizar_usuario input,
+#formulario_actualizar_usuario select,
+#formulario_actualizar_usuario textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #cfcfcf;
+    border-radius:6px;
+    font-size:15px;
+    box-sizing:border-box;
+    outline:none;
+}
+
+#formulario_actualizar_usuario textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+#formulario_busqueda_usuario input:focus,
+#formulario_busqueda_usuario select:focus,
+#formulario_actualizar_usuario input:focus,
+#formulario_actualizar_usuario select:focus,
+#formulario_actualizar_usuario textarea:focus{
+    border-color:#0f5ea8;
+}
+
+/*=====================================
+    SECCIONES DEL FORMULARIO
+======================================*/
+
+#datos_basicos,
+#contactos,
+#nacimiento,
+#residencia,
+#datos_profesion,
+#secundaria,
+#representante,
+#discapacidad{
+    background:#fff;
+    border:1px solid #dcdcdc;
+    border-radius:8px;
+    padding:20px;
+    margin-bottom:25px;
+}
+
+#datos_basicos h5,
+#contactos h5,
+#nacimiento h5,
+#residencia h5,
+#datos_profesion h5,
+#secundaria h5,
+#representante h5,
+#discapacidad h5{
+    color:#0f3c69;
+    font-size:18px;
+    margin-bottom:18px;
+    border-bottom:2px solid #e8e8e8;
+    padding-bottom:8px;
+}
+
+/*=====================================
+    CAMPOS HORIZONTALES
+======================================*/
+
+.grupo-campo,
+.controles_agrupado,
+.campo_horizontal{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.grupo-campo select,
+.controles_agrupado select,
+.campo_horizontal select{
+    flex: 0 0 90px;   /* ancho fijo */
+    width: 90px;
+}
+
+.grupo-campo input,
+.controles_agrupado input,
+.campo_horizontal input{
+    flex: 1;          /* ocupa todo el espacio restante */
+    min-width: 0;
+}
+
+/*=====================================
+    BOTONES
+======================================*/
+
+#formulario_busqueda_usuario input[type="submit"],
+#formulario_actualizar_usuario input[type="submit"]{
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: #0f5ea8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s;
+}
+
+#formulario_busqueda_usuario input[type="submit"]:hover,
+#formulario_actualizar_usuario input[type="submit"]:hover{
+    background: #0c4d89;
+}
+
+#btn_otro_representante,
+#btn_discapacidad{
+    background:#0f5ea8;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:8px 16px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+#btn_otro_representante:hover,
+#btn_discapacidad:hover{
+    background:#0c4d89;
+}
+
+/*=====================================
+    ENCABEZADO DISCAPACIDAD
+======================================*/
+
+.encabezado_discapacidad{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}

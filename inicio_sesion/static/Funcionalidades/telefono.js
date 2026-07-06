@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const prefijos = ["0414", "0424", "0416", "0426", "0412", "0422"];
 
     function prefijos_select() {
-        select_prefijo_telefonico.innerHTML = "<option disabled selected hidden>TLF</option>";
+        select_prefijo_telefonico.innerHTML = "<option selected>TLF</option>";
         input_numerico_telefonico.placeholder = "Número telefonico debe llevar 7 digitos";
 
         prefijos.forEach(prefijo => {

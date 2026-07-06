@@ -112,10 +112,6 @@ input[type="submit"]:hover {
 
 /* Estudiante */
 
-/* =========================
-   CONTENEDOR GENERAL
-========================= */
-
 #completar_registro_estudiante{
     width: 100%;
     display: flex;
@@ -134,10 +130,6 @@ input[type="submit"]:hover {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* =========================
-   TITULOS
-========================= */
-
 h3{
     text-align: center;
     margin-bottom: 20px;
@@ -148,10 +140,6 @@ h4{
     padding-bottom: 5px;
     border-bottom: 2px solid #e0e0e0;
 }
-
-/* =========================
-   SECCIONES
-========================= */
 
 #contenedor_CRE_Estudiante,
 #contenedor_CRR_Representante,
@@ -166,10 +154,6 @@ h4{
     border-radius: 8px;
     background: #fafafa;
 }
-
-/* =========================
-   CAMPOS FORMULARIO
-========================= */
 
 .campo{
     display: flex;
@@ -201,10 +185,6 @@ h4{
     box-shadow: 0 0 3px rgba(45,108,223,0.4);
 }
 
-/* =========================
-   CAMPOS HORIZONTALES (TELÉFONO / EMAIL)
-========================= */
-
 .campo_horizontal{
     display: flex;
     gap: 10px;
@@ -218,10 +198,6 @@ h4{
     flex: 1;
 }
 
-/* =========================
-   BOTONES
-========================= */
-
 button,
 input[type="submit"]{
     padding: 10px 18px;
@@ -232,7 +208,7 @@ input[type="submit"]{
     transition: 0.2s ease;
 }
 
-/* botón principal submit */
+
 input[type="submit"]{
     width: 100%;
     margin-top: 20px;
@@ -276,7 +252,6 @@ button:hover{
 }
 
 @media (max-width: 768px){
-
     .campo_horizontal{
         flex-direction: column;
     }
@@ -284,169 +259,201 @@ button:hover{
     .campo_horizontal select{
         width: 100%;
     }
-
 }
 
-/* Fondo general */
-#registrar_pnfs {
-    display: flex;
-    justify-content: center;
-    padding: 30px;
-    background: #f4f6f9;
-    font-family: Arial, sans-serif;
-}
-
-/* Contenedor principal */
-.contenedor_registrar_pnf {
+#contenedor_CRE_Cursar{
     width: 100%;
-    max-width: 800px;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-/* Título */
-.contenedor_registrar_pnf h3 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Contenedor dinámico de PNFs */
-#contenedor_pnfs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-/* Cada opción (label dinámico) */
-#contenedor_pnfs label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    border: 1px solid #ddd;
+    padding: 20px;
+    border: 1px solid #dcdcdc;
     border-radius: 10px;
-    background: #fafafa;
+    background: #f8f9fa;
+    box-sizing: border-box;
+}
+
+#contenedor_CRE_Cursar h4{
+    margin: 0 0 20px 0;
+    text-align: center;
+    color: #2c3e50;
+    font-size: 20px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+#contenedor_CRE_Cursar > label{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-top: 10px;
+    background: white;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.2s;
-    user-select: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-/* Hover */
-#contenedor_pnfs label:hover {
-    border-color: #4a90e2;
-    background: #f0f7ff;
+#contenedor_CRE_Cursar > label:hover{
+    background: #eef7ff;
+    border-color: #3498db;
 }
 
-/* Checkbox */
-#contenedor_pnfs input[type="checkbox"] {
+#contenedor_CRE_Cursar input[type="checkbox"]{
     width: 18px;
     height: 18px;
-    accent-color: #4a90e2;
     cursor: pointer;
 }
 
-/* Estado seleccionado (cuando el checkbox está activo) */
-#contenedor_pnfs label:has(input[type="checkbox"]:checked) {
-    border-color: #4a90e2;
-    background: #eaf3ff;
-    box-shadow: 0 0 5px rgba(74,144,226,0.2);
-}
-
-/* Botón */
-input[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-input[type="submit"]:hover {
-    background: #357abd;
-}
-
-
-
-/* Fondo general */
-#registrar_documento_estudiante {
-    display: flex;
-    justify-content: center;
-    padding: 30px;
-    background: #f4f6f9;
-    font-family: Arial, sans-serif;
-}
-
-/* Contenedor principal */
-.contenedor_registrar_documento {
-    width: 100%;
-    max-width: 700px;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-/* Título */
-.contenedor_registrar_documento h3 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Labels */
-label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 6px;
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
-}
-
-/* File inputs (ocultamos estilo feo por defecto) */
-input[type="file"] {
-    width: 100%;
+[id^="contenedor_pnfs_"]{
+    margin-left: 25px;
+    margin-bottom: 10px;
     padding: 10px;
-    border: 1px dashed #bbb;
-    border-radius: 8px;
-    background: #fafafa;
+    border-left: 3px solid #3498db;
+    background: #ffffff;
+    border-radius: 0 8px 8px 0;
+}
+
+[id^="contenedor_pnfs_"] label{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    margin: 5px 0;
+    background: #f7f7f7;
+    border-radius: 5px;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-/* Hover */
-input[type="file"]:hover {
-    border-color: #4a90e2;
-    background: #f0f7ff;
+[id^="contenedor_pnfs_"] label:hover{
+    background: #eaf4ff;
 }
 
-/* Focus */
-input[type="file"]:focus {
-    outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+[id^="contenedor_pnfs_"] input[type="checkbox"]{
+    width: 16px;
+    height: 16px;
 }
 
-/* Botón submit */
-input[type="submit"] {
+.contenedor_registrar_documento{
     width: 100%;
+    padding: 25px;
     margin-top: 20px;
-    padding: 12px;
-    background: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
+    background: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    box-sizing: border-box;
 }
 
-input[type="submit"]:hover {
-    background: #357abd;
+.contenedor_registrar_documento h4{
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    text-align: center;
+    color: #2c3e50;
+    font-size: 22px;
+    border-bottom: 2px solid #0d6efd;
+}
+
+.contenedor_registrar_documento .campo{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.contenedor_registrar_documento label{
+    font-weight: 600;
+    color: #34495e;
+}
+
+.contenedor_registrar_documento input[type="file"]{
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.contenedor_registrar_documento input[type="file"]:hover{
+    border-color: #0d6efd;
+    background: #eef5ff;
+}
+
+.contenedor_registrar_documento input[type="file"]:focus{
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13,110,253,.3);
+}
+
+
+
+#completar_registro_pe{
+    width: 100%;
+    padding: 15px;
+    background: #f4f6f9;
+}
+
+.contenedor_completar_regitro_pe{
+    max-width: 1100px;
+    margin: auto;
+}
+
+.contenedor_completar_regitro_pe h3{
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+#formulario_pe{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#contenedor_PE_Representante,
+.contenedor_PE_Secundaria,
+#contenedor_PE_Discapacidad,
+#contenedor_PE_Cursar,
+.contenedor_registrar_documento{
+    padding: 15px;
+    border-radius: 8px;
+}
+
+h4{
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    font-size: 18px;
+}
+
+.campo{
+    margin-bottom: 8px;
+}
+
+.campo label{
+    margin-bottom: 3px;
+    font-size: 14px;
+}
+
+.campo input,
+.campo select{
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+#contenedor_PE_Representante,
+.contenedor_PE_Secundaria,
+.contenedor_registrar_documento{
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+}
+
+#campos_discapacidad{
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+}
+
+#contenedor_PE_Representante,
+.contenedor_PE_Secundaria{
+    grid-template-columns: repeat(3, 1fr);
 }

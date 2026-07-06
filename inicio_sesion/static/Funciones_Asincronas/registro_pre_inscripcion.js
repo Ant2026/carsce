@@ -3,10 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     formulario.addEventListener("submit", async function(e) {
         e.preventDefault()
-
-        const datos_formulario = new FormData(formulario)
-
         try {
+            const datos_formulario = new FormData(formulario)
             const respuesta = await fetch("/pre_inscripcion/", {
                 method: "POST",
                 body: datos_formulario

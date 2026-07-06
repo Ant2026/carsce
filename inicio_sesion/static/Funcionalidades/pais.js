@@ -15,6 +15,5 @@ document.addEventListener("DOMContentLoaded", function () {
             pais_profesion.appendChild(option);
         });
     }
-
     pais_proefesion_personal();
 });

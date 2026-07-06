@@ -21,14 +21,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        /* Permitir solo un punto */
         if (caracter === "." && input_correo.value.includes(".")) {
 
             e.preventDefault();
             return;
         }
 
-        /* Evitar punto al inicio */
         if (caracter === "." && input_correo.value.length === 0) {
 
             e.preventDefault();

@@ -5,26 +5,187 @@
 {% load static %}
 
 <section id="inscripcion">
-    <h4>Inscripción de Estudiante</h4>
+    <div class="contenedor_pre_inscrito">
 
-    <table>
-        <thead>
-            <tr>
-                <td>ID</td>
-                <td>Nombres</td>
-                <td>Apellidos</td>
-                <td>CI</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody id="contenedor_pre_inscripcion">
+        <h4>Inscripción de Estudiante</h4>
 
-        </tbody>
-    </table>
+        <div class="contenedor_formulario">
+            <form method="post" id="pnfs_coordinador">
+                {% csrf_token %}
+                <div class="grupos">
+                    <label for="selects_nucleos">Núcleos Asignados:</label>
+                    <select name="nucleos" id="selects_nucleos"></select>
+                </div>
+                
+                <div class="grupos">
+                    <label for="selects_pnfs">PNFs Asignados:</label>
+                    <select name="pnfs" id="selects_pnfs" disabled>
+                        <option disabled selected hidden>Elije primero el núcleo</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>Nombres</td>
+                    <td>Apellidos</td>
+                    <td>CI</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody id="contenedor_pre_inscripcion">
+
+            </tbody>
+        </table>
+
+    </div>
 </section>
 
-<script src="{% static 'Funcionalidades/estudiante_pre_inscrito.js' %}"></script>
+<dialog id="datos_estudiantes">
+    <div class="contenedor_datos_estudiante">
+        <h3>Datos del Estudiantes</h3>
+        
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+
+        <form method="post">
+            <div id="contenedor_datos_basicos">
+                <h4>Datos Básicos</h4>
+
+                <label for="nombres_estudiante">Nombres:</label>
+                <input type="text" name="nombreEstudiante" id="nombres_estudiante" readonly>
+
+                <label for="apellidos_estudiante">Apellidos:</label>
+                <input type="text" name="apellidosEstudiante" id="apellidos_estudiante" readonly>
+                                
+                <label for="ci_estudiante">Cedula de Identidad:</label>
+                <input type="text" name="ciEstudiante" id="ci_estudiante" readonly>
+                
+                <label for="genero_estudiante">Genero:</label>
+                <input type="text" name="generoEstudiante" id="genero_estudiante" readonly>
+                
+                <label for="estado_civil_estudiante">Estado Civil:</label>
+                <input type="text" name="estado_civilEstudiante" id="estado_civil_estudiante" readonly>
+            </div>
+
+            <div id="contacto_estudiante">
+                <h4>Datos de Contacto</h4>
+
+                <label for="telefono_principal">Telefono Principal:</label>
+                <input type="text" name="telefonoprincipal" id="telefono_principal" readonly>
+                
+                <label for="telefono_secundario">Telefono Secundario:</label>
+                <input type="text" name="telefonosecundario" id="telefono_secundario" readonly>
+                
+                <label for="correo_principal">Correo Electronico Principal:</label>
+                <input type="text" name="correoprincipal" id="correo_principal" readonly>
+                
+                <label for="correo_secundario">Correo Electronico Secundario:</label>
+                <input type="text" name="correosecundario" id="correo_secundario" readonly>
+            </div>
+
+            <div id="contenedor_representante">
+                <h4>Datos del Representante</h4>
+
+                <label for="nombres_representante">Nombres del Representante:</label>
+                <input type="text" name="nombresrepresentante" id="nombres_representante" readonly>
+                
+                <label for="apellidos_representante">Apellidos del Representante:</label>
+                <input type="text" name="apellidosrepresentante" id="apellidos_representante" readonly>
+                
+                <label for="ci_representante">Cedula de Identidad del Representante:</label>
+                <input type="text" name="cirepresentante" id="ci_representante" readonly>
+                
+                <label for="telefono_representante">Telefono del Representante:</label>
+                <input type="text" name="telefonorepresentante" id="telefono_representante" readonly>
+                
+                <label for="parentesco_representante">Parentesco del Representante:</label>
+                <input type="text" name="parentescorepresentante" id="parentesco_representante" readonly>
+            </div>
+
+            <div id="contenedor_nacimiento">
+                <h4>Datos de Nacimiento</h4>
+
+                <label for="pais_nacimiento">Pais de nacimiento:</label>
+                <input type="text" name="paisnacimiento" id="pais_nacimiento" readonly>
+                
+                <label for="estado_nacimiento">Estado de nacimiento:</label>
+                <input type="text" name="estadonacimiento" id="estado_nacimiento" readonly>
+                
+                <label for="municipio_nacimiento">Municipio de nacimiento:</label>
+                <input type="text" name="municipionacimiento" id="municipio_nacimiento" readonly>
+                
+                <label for="parroquia_nacimiento">Parroquia de nacimiento:</label>
+                <input type="text" name="parroquianacimiento" id="parroquia_nacimiento" readonly>
+                
+                <label for="direccion_nacimiento">Dirección de nacimiento:</label>
+                <input type="text" name="direccionnacimiento" id="direccion_nacimiento" readonly>
+                
+                <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                <input type="text" name="fechanacimiento" id="fecha_nacimiento" readonly>
+            </div>
+
+            <div id="contenedor_residencia">
+                <h4>Datos de Residencia</h4>
+                
+                <label for="condicion_residencia">Condición de Residencia:</label>
+                <input type="text" name="condicionresidencia" id="condicion_residencia" readonly>
+
+                <label for="municipio_residencia">Municipio de Residencia:</label>
+                <input type="text" name="municipioresidencia" id="municipio_residencia" readonly>
+
+                <label for="parroquia_residencia">Parroquia de Residencia:</label>
+                <input type="text" name="parroquiaresidencia" id="parroquia_residencia" readonly>
+                
+                <label for="direccion_residencia">Dirección de Residencia:</label>
+                <input type="text" name="direccionresidencia" id="direccion_residencia" readonly>
+            </div>
+
+            <div id="contenedor_discapacidad">
+                <h4>Datos de Discapacidad</h4>
+
+                <label for="codigo_carnet">Código de Carnet de Discapacidad:</label>
+                <input type="text" name="codigocarnet" id="codigo_carnet" readonly>
+                
+                <label for="nro_registro">Nro de Registro Medico:</label>
+                <input type="text" name="nroregistro" id="nro_registro" readonly>
+                
+                <label for="tipos_discapacidad">Tipos de Discapacidad:</label>
+                <input type="text" name="tiposdiscapacidad" id="tipos_discapacidad" readonly>
+                
+                <label for="grados_discapacidad">Grados de Discapacidad:</label>
+                <input type="text" name="gradosdiscapacidad" id="grados_discapacidad" readonly>
+                
+                <label for="causa_discapacidad">Causa de Discapacidad:</label>
+                <input type="text" name="causasdiscapacidad" id="causa_discapacidad" readonly>
+            </div>
+
+            <div id="contenedor_ci_estudiante">
+                <h4>Cedula de Identidad</h4>
+            </div>
+            <div id="contenedor_titulo_bachiller_estudiante">
+                <h4>Titulo de Bachiller</h4>
+            </div>
+            <div id="contenedor_sabana_nota_estudiante">
+                <h4>Sabana de Notas</h4>
+            </div>
+            <div id="contenedor_opsu_estudiante">
+                <h4>Certificado SNI OPSU</h4>
+            </div>
+        </form>
+
+        <div class="botones_navegacion">
+            <button type="button" id="retroceder">Retroceder</button>
+            <button type="button" id="avanzar">Avanzar</button>
+        </div>
+    </div>
+</dialog>
+
+<script src="{% static 'Funcionalidades/datos_coordinador_pnf.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/inscripcion_estudiante.js' %}"></script>
 
 {% endblock %}

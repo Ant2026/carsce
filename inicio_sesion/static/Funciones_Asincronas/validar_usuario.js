@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             });
-
         }
     });
 });

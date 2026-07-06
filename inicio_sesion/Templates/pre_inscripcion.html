@@ -6,10 +6,8 @@
 
 <section id="pre_inscripcion">
     <h3>Pre Inscripción</h3>
-
     <form method="post" id="formulario_pre_inscripcion">
         {% csrf_token %}
-        
         <label for="nombre">Nombres:</label>
         <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese los nombres" required>
 

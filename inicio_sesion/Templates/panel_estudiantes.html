@@ -1,0 +1,23 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="panel_registro">
+    <div class="registro_personal">
+        <a href="{% url 'credenciales_estudiante' %}">
+            <img src="{% static 'Imagenes/credenciales_estudiante.png' %}" alt="imagen para recuperar el nombre usuario">
+            <p>Inscripción de Personal Institucional</p>
+        </a>
+    </div>
+
+    <div class="registro_personal">
+        <a href="{% url 'pre_inscripcion' %}">
+            <img src="{% static 'Imagenes/inscripcion.png' %}" alt="imagen para recuperar el nombre usuario">
+            <p>Inscripción de Nuevo Estudiante</p>
+        </a>
+    </div>                          
+</section>
+
+{% endblock %}

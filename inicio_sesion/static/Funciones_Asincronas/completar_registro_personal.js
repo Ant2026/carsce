@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nombres_registrado.value = resultado.usuario.nombres
             apellidos_registrado.value = resultado.usuario.apellidos
             cedula_identidad_registrado.value = resultado.usuario.cedula_identidad
-
+            
             telefono_principal_registrado.value = resultado.contacto.telefono_personal
             correo_principal_registrado.value = resultado.contacto.correo_electronico
         } catch (error) {
@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowEscapeKey: false
                 });
             }
-            formulario_personal.reset()
         } catch (error) {
             console.error(error)
         }
