@@ -5,12 +5,12 @@
     align-items: center;
     min-height: 70vh;
     padding: 20px;
-    background: #ffffff;    
+    background: var(--color-base);    
 }
 
 /* Tarjeta Estilo Glassmorphism */
 .contenedor-mantenimiento {
-    background: rgb(255, 255, 255);
+    background: var(--color-base);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -32,13 +32,13 @@
     font-size: 64px;
     margin-bottom: 20px;
     display: inline-block;
-    animation: girar Motor 4s linear infinite;
+    animation: girarMotor 4s linear infinite;
     filter: drop-shadow(0 0 15px rgba(255, 71, 87, 0.4));
 }
 
 /* Textos */
 .titulo-mantenimiento {
-    color: #000000;
+    color: var(--color-neutro);
     font-size: 24px;
     font-weight: 800;
     letter-spacing: 2px;
@@ -47,7 +47,7 @@
 }
 
 .mantenimiento-section .subtitulo {
-    color: #000000;
+    color: var(--color-neutro);
     font-size: 15px;
     font-weight: 400;
     line-height: 1.6;

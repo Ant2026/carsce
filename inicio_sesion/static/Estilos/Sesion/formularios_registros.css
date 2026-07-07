@@ -1,0 +1,67 @@
+#panel_registro{
+    min-height: 100vh;
+    margin-top: 120px;
+    padding: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-base);
+}
+
+#panel_registro .contenedor_registro{
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+#panel_registro .contenedor_registro a{
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--color-base);
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    box-shadow: var(--shadows);
+    transition: all 0.5s ease;
+}
+
+#panel_registro .contenedor_registro a:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+}
+
+#panel_registro .contenedor_registro a{
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    color: var(--color-neutro);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#panel_registro .contenedor_registro img{
+    width: 100%;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+#panel_registro .btn-regresar{
+    background: var(--color-azulE);
+    color: var(--color-base);
+    display: inline-block;
+    border-bottom-right-radius: 2rem;
+    border-top-left-radius: 2rem;
+}
+
+#panel_registro .btn-regresar:hover{
+    background: var(--color-neutro);
+    color: var(--color-base);
+}

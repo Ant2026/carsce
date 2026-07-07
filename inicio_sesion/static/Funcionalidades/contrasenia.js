@@ -1,28 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("JS cargado");
-    const password = document.getElementById("password");
+    const eyeOff = document.querySelector(".eye_off");
+    const eyeOn = document.querySelector(".eye_on");
+    const toggleCheck = document.getElementById("oculta_aparecer");
+    const inputPassword = document.getElementById("password");
 
-    const icon_eye = document.getElementById("mostrar_password");
-    const icon_eye_off = document.getElementById("ocultar_password");
+    function actualizarIconoYPassword() {
+        if (toggleCheck.checked) {
+            inputPassword.type = "text";   // mostrar contraseña
+            eyeOff.classList.add("ocultar");
+            eyeOn.classList.remove("ocultar");
+        } else {
+            inputPassword.type = "password"; // ocultar contraseña
+            eyeOn.classList.add("ocultar");
+            eyeOff.classList.remove("ocultar");
+        }
+    }
 
-console.log(password);
-console.log(icon_eye);
-console.log(icon_eye_off);
+    toggleCheck.addEventListener("change", actualizarIconoYPassword);
 
-    icon_eye.addEventListener("click", function () {
-        password.type = "text";
-
-        icon_eye.classList.add("d-none");
-        icon_eye_off.classList.remove("d-none");
-        console.log("Encendido");
-    });
-
-    icon_eye_off.addEventListener("click", function () {
-        password.type = "password";
-
-        icon_eye_off.classList.add("d-none");
-        icon_eye.classList.remove("d-none");
-    });
-
-    icon_eye_off.classList.add("d-none");
+    // Estado inicial
+    actualizarIconoYPassword();
 });

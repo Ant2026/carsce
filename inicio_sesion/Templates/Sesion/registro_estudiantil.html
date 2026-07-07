@@ -1,0 +1,86 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="registro_estudiantil">
+    <div class="tarjeta_principal">
+        <div class="lado_izquierdo">
+            <div class="separador">
+                <a href="{% url 'panel_registro' %}" class="btn-regresar icon-left-open">Regresar</a>
+            </div>
+        </div>
+
+        <div class="lado_derecho">
+            <form method="post" id="formulario_pre_inscripcion" class="contenedor_registro_estudiante">
+                <h3>Pre Inscripción</h3>
+                {% csrf_token %}
+                
+                <label for="nombre">Nombres:</label>
+                <div class="grupo-campo">
+                    <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese los nombres" required>
+                </div>
+                
+                <label for="apellido">Apellidos:</label>
+                <div class="grupo-campo">
+                    <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese el apellido parteno y materno" required>
+                </div>
+                
+                <label for="cedula_identidad">Cedula Identidad:</label>
+                <div class="grupo-campo">
+                    <select name="nacionalidad" id="nacionalidad" class="nacionalidad">
+                        <option value="">N</option>
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                    </select>
+                    <input type="text" name="cedula_identidad" id="cedula_identidad" class="cedula_identidad" autocomplete="off" required>
+                </div>
+
+                <label for="Correo">Correo Electrónico (Principal):</label>
+                <div class="grupo-campo">
+                    <input type="text" name="correo_electronico" id="Correo" class="correo" autocomplete="off" required>
+                    <select name="dominio"  id="dominio" class="dominio"></select>
+                </div>
+
+                <label for="numero_telefonico">Telefono (Principal):</label>
+                <div class="grupo-campo">
+                    <select name="prefijo" id="prefijo_telefono" class="prefijo"></select>
+                    <input type="text" name="telefono" id="numero_telefonico" autocomplete="off" disabled required>
+                </div>
+
+                <label for="nombre_usuario">Nombre Usuario:</label>
+                <div class="grupo-campo">
+                    <input type="text" name="usuario" id="nombre_usuario" autocomplete="off" placeholder="Nombre de Usuario" required>
+                </div>
+                
+                <label for="password">Contraseña:</label>
+                <div class="contrasenia grupo-campo">
+                    <input type="password" name="password" id="password" autocomplete="off" placeholder="Contraseña" required>
+
+                    <input type="checkbox" id="oculta_aparecer">
+                    <label class="icon-eye-off eye_off" for="oculta_aparecer"></label>
+                    <label class="icon-eye eye_on" for="oculta_aparecer"></label>
+                </div>
+
+                <div class="seguridad-password">
+                    <div class="barra-password">
+                        <div id="nivel_password"></div>
+                    </div>
+                    <span id="texto_password">Seguridad de la contraseña</span>
+                </div>
+                <button type="submit">Pre Inscripción</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/telefono.js' %}"></script>
+<script src="{% static 'Funcionalidades/correo_electronico.js' %}"></script>
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/validar_contrasenia.js' %}"></script>
+
+<script src="{% static 'Funciones_Asincronas/registro_pre_inscripcion.js' %}"></script>
+
+{% endblock %}

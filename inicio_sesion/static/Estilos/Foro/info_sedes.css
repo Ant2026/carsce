@@ -24,5 +24,5 @@
     object-fit: cover; 
     flex-shrink: 0;    
     display: block;
-    border-bottom: 15px solid #211C84;
+    border-bottom: 15px solid var(--color-azulE);
 }

@@ -1,0 +1,137 @@
+#registrar_personal{
+    min-height: 100vh;
+    margin-top: 120px;
+    padding: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f7fa;
+}
+/* ============================
+   INFORMACIÓN PERSONAL
+============================ */
+
+#registrar_personal .lado_izquierdo{
+    width:48%;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+}
+
+#registrar_personal .lado_izquierdo img{
+    width: 300px;
+    margin-top: 20px;
+    margin-left: 130px;
+}
+
+#registrar_personal .lado_izquierdo p{
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* ============================
+   FORMULARIO
+============================ */
+#registrar_personal .lado_derecho{
+    width:52%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#registrar_personal .lado_derecho label{
+    margin-bottom: 10px;
+}
+
+#registrar_personal .contenedor_busqueda{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 70px;
+}
+
+#registrar_personal .contenedor_busqueda h3{
+    font-size: 2rem;
+    color: var(--color-azulE);
+}
+
+#registrar_personal .grupo-input{
+    display: flex;
+    gap: 10px;
+    margin-bottom:20px;
+}
+
+#registrar_personal .nacionalidad{
+    width: 50px;
+    height: 55px;
+    border: 2px solid var(--color-azulE);
+    border-radius: 12px;
+    background: #636CCB;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: .3s;
+    color: var(--color-base);
+}
+
+#registrar_personal .nacionalidad:focus{
+    border-color: var(--color-hover-azulE);
+}
+
+#registrar_personal .cedula_identidad{
+    flex: 1;
+    height: 55px;
+    border: 2px solid lightgray;
+    border-radius: 12px;
+    padding: 0 20px;
+    font-size: 1rem;
+    outline: none;
+    transition: .3s;
+}
+
+#registrar_personal .cedula_identidad:focus{
+    border-color: var(--color-azulE);
+    box-shadow: 0 0 10px rgba(0,0,0,.08);
+}
+
+/* BOTON */
+#registrar_personal input[type="submit"]{
+    width: 220px;
+    height: 55px;
+    border: none;
+    border-radius: 12px;
+    background: var(--color-azulE);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+
+#registrar_personal input[type="submit"]:hover{
+    background: var(--color-hover-azulE);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,.15);
+}
+
+/* ============================
+   BOTON
+============================ */
+
+#registrar_personal .btn-regresar{
+    background: var(--color-azulE);
+    color: var(--color-base);
+    display: inline-block;
+    border-bottom-right-radius: 2rem;
+    border-top-left-radius: 2rem;
+}
+
+#registrar_personal .btn-regresar:hover{
+    background: var(--color-neutro);
+    color: var(--color-base);
+}

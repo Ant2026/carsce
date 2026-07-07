@@ -1,0 +1,32 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="panel_registro">
+    <div class="tarjeta_principal">
+        <div class="separador">
+            <a href="{% url 'inicio_sesion' %}" class="btn-regresar icon-left-open">Regresar</a>
+        </div>
+        <div class="contenedor_registro">
+                <a href="{% url 'confirmar_registro_personal' %}">
+                    <article>
+                        <img src="{% static 'Imagenes/administrativo.png' %}" 
+                        alt="Personal">
+                    </article>
+                    <p>Personal</p>
+                </a>
+
+                <a href="{% url 'registro_estudiantil' %}">
+                    <article>
+                        <img src="{% static 'Imagenes/estudiante.png' %}" 
+                        alt="Estudiante">
+                    </article>
+                    <p>Estudiante</p>
+                </a>
+        </div>
+    </div>              
+</section>
+
+{% endblock %}

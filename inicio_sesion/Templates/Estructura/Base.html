@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{% static 'Imagenes/UPT_LOGO.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'Estilos/fontello.css' %}">
-    <link rel="stylesheet" href="{% static 'Estilos/estilos.css' %}">
+    <link rel="stylesheet" href="{% static 'Estilos/Estructura/estilos.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     
@@ -16,6 +16,33 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<<<<<<< HEAD
+=======
+    {% if request.path == '/' or request.session.usuario_nombre %}
+     
+        {% include 'Estructura/Encabezado.html' %}
+
+    {% endif %}
+
+    {% if request.session.usuario_nombre %}
+        <aside id="barra_lateral">
+            <h3 class="menu-title">MENÚ</h3>
+
+            {% if "Director General" in request.session.perfiles %}
+                <a href="{% url 'pre_registro_personal' %}">Pre Registro Personal</a>
+            {% endif %}
+
+            {% if "Encargado de Control de Estudio" in request.session.perfiles %}
+                <a href="{% url 'inscripcion_estudiante' %}">Inscripción Estudiante</a>
+            {% endif %}
+
+            {% if "Coordinador de PNF" in request.session.perfiles %}
+                <a href="{% url 'inscripcion_estudiante' %}">Inscripción Estudiante</a>
+            {% endif %}
+
+        </aside>
+    {% endif %}
+>>>>>>> cbcc481 (Cambios - Jonatan)
     
     {% include 'Estructura/Encabezado.html' %}
 

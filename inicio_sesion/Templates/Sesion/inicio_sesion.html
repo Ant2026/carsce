@@ -1,0 +1,50 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+<section id="inicio_sesion">
+    <div class="tarjeta_principal">
+        <div class="login-left">
+            <img src="{% static 'Imagenes/Login.png' %}" alt="Imagen para el formulario de autenticación">
+        </div>
+
+        <div class="login-right">
+            <form method="post" id="formulario_login">
+                <h2 class="titulo">INICIO DE SESIÓN</h2>
+
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <label class="icon-user icon-input"></label>
+                    <input type="text" name="usuario" autocomplete="off" id="input_usuario" class="input-control" placeholder="Nombre de Usuario" required>
+                </div>
+
+                <div class="input-group password-group">
+                    <label class="icon-lock icon-input"></label>
+                    <input type="password" name="contrasenia" autocomplete="off" id="password" class="input-control password-input" placeholder="Contraseña" required>
+                    <input type="checkbox" id="oculta_aparecer">
+                    <label class="icon-eye-off eye_off" for="oculta_aparecer"></label>
+                    <label class="icon-eye eye_on" for="oculta_aparecer"></label>
+                </div>
+
+                <div class="texto-registro">
+                    <p>¿Olvidaste tus credenciales? <a href="{% url 'buscar_usuario' %}">Recuperar</a></p>
+                </div>
+
+                <div class="texto-registro">
+                    <p>¿No te has registrado? <a href="{% url 'panel_registro' %}">Regístrate</a></p>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="login-button">Acceder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/autenticación.js' %}"></script>
+
+{% endblock %}

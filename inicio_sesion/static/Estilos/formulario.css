@@ -1,0 +1,29 @@
+/* ==========================
+   TARJETA
+========================== */
+
+.tarjeta_principal{
+    width: 90%;
+    max-width: 1400px;
+    min-height: 550px;
+    background: var(--color-base);
+    border-radius: 2rem;
+    display: flex;
+    overflow: hidden;
+    box-shadow: var(--shadows);
+}
+
+.btn-regresar{
+    position: relative;
+    text-decoration: none;
+    background: #FFE100;
+    color: black;
+    padding: 12px 20px;
+    font-weight: bold;
+    transition: .3s ease;
+}
+
+.btn-regresar:hover{
+    background: #111;
+    color: white;
+} 

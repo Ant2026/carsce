@@ -1,30 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('encabezado.css');
-@import url('barra_lateral.css');
+/* @import url('barra_lateral.css'); */
 @import url('pie_pagina.css');
 
-@import url('Historia.css');
-@import url('mision_vision.css');
-@import url('Proyectos.css');
-@import url('Trayectos.css');
-@import url('carreras_impartidas.css');
+@import url('../Foro/Historia.css');
+@import url('../Foro/mision_vision.css');
+@import url('../Foro/Proyectos.css');
+@import url('../Foro/Trayectos.css');
+@import url('../Foro/carreras_impartidas.css');
+@import url('../Foro/info_sedes.css');
+@import url('../Foro/mantenimiento.css');
 
-@import url('formulario_inicio_sesion.css');
-@import url('formularios_recuperar_credenciales.css');
-@import url('completar_registro_estudiante.css');
-@import url('formularios_registros.css');
+@import url('../formulario.css');
+@import url('../Sesion/formulario_inicio_sesion.css'); /* Estilos del Login */
+@import url('../Sesion/formularios_registros.css'); /* Estilos panel de registro*/
+@import url('../Sesion/formulario_registro_personal.css'); /* Estilos formulario de registro personal */
+@import url('../Sesion/formulario_registro_estudiantil.css'); /* Estilos formulario registro estudiantil */
+@import url('../Sesion/formularios_recuperar_credenciales.css'); /* Estilos formulario recuperar credenciales */
 
 @import url('models_actualizar.css');
 @import url('horario_otros_modulo.css');
 
 @import url('inscripcion.css');
-@import url('info_sedes.css');
-
-@import url('mantenimiento.css');
-
 @import url('continuacion.css');
 
-* {
+:root{
+    --color-base: white; /* Para tarjetas y fondos en especifico */
+    --color-neutro: black; /* Letras */
+    --color-intermitente: #555; /* Letras de menor importancia */
+    --color-claro: #ccc;
+    --shadows: 0px 0px 20px rgba(0,0,0,.15); /* Sombras general */
+    /* Paleta de colores */
+    --color-azulE: #211C84; /* Color primordial en el encabezado */
+    --color-hover-azulE: #2f6fd6; /* La sombra para el color del encabezado */
+    --color-botones: #FFE100; /* Para los botones */
+    /* Paleta del foro */
+    --color-principal: #8C1007; /* Color principal del foro */
+}
+
+*{
     padding: 0;
     margin: 0;
     box-sizing: border-box;

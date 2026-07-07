@@ -1,8 +1,8 @@
 #footer{
-    background: rgb(255, 255, 255);
-    color: #222;
+    background: var(--color-base);
+    color: var(--color-neutro);
     padding: 20px 0;
-    border-top: 20px solid #211C84;
+    border-top: 20px solid var(--color-azulE);
 }
 
 #footer .footer-contenedor{
@@ -26,7 +26,7 @@
     font-size: 16px;
     line-height: 1.5;
     padding: 0 15px;
-    color: #222;
+    color: var(--color-neutro);
 }
 
 #footer .footer-redes{
@@ -36,11 +36,11 @@
 }
 
 #footer .footer-redes a{
-    color: #222;
+    color: var(--color-neutro);
     transition: 0.3s;
 }
 
 #footer .footer-redes a:hover{
-    color: #0d6efd;
+    color: var(--color-hover-azulE);
     transform: scale(1.2);
 }

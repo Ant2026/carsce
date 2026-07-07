@@ -91,6 +91,8 @@ urlpatterns = [
     path('buscar_datos_usuario/', views.buscar_datos_usuario, name="buscar_datos_usuario"),
     path('modulo_actualizar_usuarios/', views.modulo_actualizar_usuarios, name="modulo_actualizar_usuarios"),
 
+    path('registro_estudiantil/', views.registro_estudiantil, name="registro_estudiantil"),
+
     #FORO
     path('Historia/', views.Historia, name="Historia"),
     path('mision_vision/', views.mision_vision, name="mision_vision"),
