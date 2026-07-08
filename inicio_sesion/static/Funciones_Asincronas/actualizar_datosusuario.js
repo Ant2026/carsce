@@ -171,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 correoAlternativoNuevo !== resultado.correo_alternativo;
 
             if (cambioCorreo) {
-                datosPendientes = new FormData(formulario_actualizar);
 
                 label_correo_principal.textContent = resultado.correo_principal;
 
@@ -186,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            await actualizarDatos(new FormData(formulario_actualizar));
+            await actualizarDatos();
         } catch (error) {
             console.error(error);
         }
@@ -202,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formulario
             });
             const resultado = await respuesta.json()
+            
 
             dialogo_autentica_codigo.showModal()
             dialogo_actualizar_correo.close()
@@ -210,11 +210,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    async function actualizarDatos(formulario) {
+    async function actualizarDatos() {
         try {
             const respuesta = await fetch("/actualizar_datosusuario/", {
                 method: "POST",
-                body: formulario
+                body: new FormData(formulario_actualizar)
             });
             const resultado = await respuesta.json();
 
@@ -240,15 +240,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formulario
             });
             const resultado = await respuesta.json();
-
+            console.log(resultado);
             if (resultado.estado == "exito") {
                 dialogo_autentica_codigo.close();
                 formulario_autenticacion.reset();
 
-                if (datosPendientes) {
-                    await actualizarDatos(datosPendientes);
-                    datosPendientes = null;
-                }
+                await actualizarDatos();
+       
             } else {
                 Swal.fire({
                     text: resultado.descripcion,

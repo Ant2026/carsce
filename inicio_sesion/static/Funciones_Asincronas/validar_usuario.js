@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
             const resultado = await respuesta.json();
+            console.log(resultado)
 
             if (resultado.estado === "exito") {
                 window.location.href = "/panel_recuperar_credenciales/";
@@ -56,13 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 formulario.reset();
             }
         } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: error.message,
-                icon: "error",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            });
+            console.error(error)
         }
     });
 });

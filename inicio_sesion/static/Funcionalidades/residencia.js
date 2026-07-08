@@ -61,11 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 parroquiaSelect.appendChild(option);
             });
 
-            parroquiaSelect.disabled = false;
-            direccionTextarea.disabled = false;
+            parroquiaSelect.readonly = false;
+            direccionTextarea.readonly = false;
         } else {
-            parroquiaSelect.disabled = true;
-            direccionTextarea.disabled = true;
+            parroquiaSelect.readonly = true;
+            direccionTextarea.readonly = true;
         }
     }
     actualizarParroquias();

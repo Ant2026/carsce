@@ -164,69 +164,86 @@ def buscar_usuario(request):
         
     return render(request, 'buscar_usuario.html')
 
+# Asegúrate de importar tus modelos y funciones (Usuario, Contacto, VerificacionCodigo, etc.)
+
 def comprobar_usuario(request):
+    # 1. Validaciones de flujo de sesión obligatorias
     if not request.session.get("flujo_verificacion"):
         return redirect("buscar_usuario")
 
     usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
-
     if not usuario:
         return redirect("buscar_usuario")
 
     contacto = Contacto.objects.filter(id_usuario_id=usuario.id_usuario).first()
+    token_sesion = request.session.get("token_recuperacion")
 
-    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=usuario.cedula_identidad,token=request.session.get("token_recuperacion")).first()
+    # 2. Intentar buscar si ya existe un código activo para este token
+    verificacion = VerificacionCodigo.objects.filter(
+        cedula_identidad=usuario.cedula_identidad, 
+        token=token_sesion
+    ).first()
 
+    # Si no existe, se genera y envía por primera vez
     if not verificacion:
         enviar_codigo_verificacion(
             usuario.nombres,
             usuario.apellidos,
             contacto.correo_electronico,
             usuario.cedula_identidad,
-            request.session["token_recuperacion"])
-        
-        verificacion = VerificacionCodigo.objects.filter(cedula_identidad=usuario.cedula_identidad,token=request.session.get("token_recuperacion")).first()
+            token_sesion
+        )
+        # Volvemos a consultar para obtener el registro recién creado
+        verificacion = VerificacionCodigo.objects.filter(
+            cedula_identidad=usuario.cedula_identidad, 
+            token=token_sesion
+        ).first()
 
-        if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
-            codigo_ingresado = request.POST.get("codigo")
+    # 3. MANEJO DE LA PETICIÓN ASÍNCRONA (POST) -> Sacado del bloque anterior
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        codigo_ingresado = request.POST.get("codigo")
 
-            if not codigo_ingresado:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "warning",
-                    "descripcion": "Debe ingresar el código de verificación",
-                    "accion": "input_vacio"
-                })
+        if not codigo_ingresado:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "warning",
+                "descripcion": "Debe ingresar el código de verificación",
+                "accion": "input_vacio"
+            })
 
-            if verificacion and verificacion.fecha_expiracion < timezone.now():
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "descripcion": "El código ha expirado, debe solicitar el código a través del botón de reenviar código",
-                    "accion": "expirado"
-                })
+        # Verificar si el código ya expiró
+        if verificacion and verificacion.fecha_expiracion < timezone.now():
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "error",
+                "descripcion": "El código ha expirado, debe solicitar el código a través del botón de reenviar código",
+                "accion": "expirado"
+            })
 
-            respuesta = validar_codigo(
-                codigo_ingresado,
-                usuario.cedula_identidad,
-                request.session["token_recuperacion"])
+        # Validamos el código usando tu función externa
+        respuesta = validar_codigo(
+            codigo_ingresado,
+            usuario.cedula_identidad,
+            token_sesion
+        )
 
-            datos = json.loads(respuesta.content)
+        # Procesamos la respuesta para limpiar intentos si fue exitoso
+        datos = json.loads(respuesta.content)
+        if datos.get("estado") == "exito":    
             request.session["correo_verificado"] = True
-            
-            if datos.get("estado") == "exito":    
+            if verificacion:
                 verificacion.intentos = 0
                 verificacion.bloqueado_hasta = None
                 verificacion.activo = 0
                 verificacion.save()
 
-            return respuesta
+        return respuesta
 
-    fecha_expiracion_ts = int(verificacion.fecha_expiracion.timestamp())
+    # 4. MANEJO DE LA PETICIÓN INICIAL (GET)
+    # Pasamos el timestamp de expiración a la plantilla
+    fecha_expiracion_ts = int(verificacion.fecha_expiracion.timestamp()) if verificacion else 0
 
-    return render(request, "comprobar_usuario.html", {
-        "fecha_expiracion": fecha_expiracion_ts
-    })
+    return render(request, "comprobar_usuario.html", {"fecha_expiracion": fecha_expiracion_ts})
 
 def validar_codigo(codigo, cedula_identidad,token):
     verificacion = VerificacionCodigo.objects.filter(
@@ -2812,9 +2829,9 @@ def enviar_codigo_actualizar_correo(request):
         contacto = Contacto.objects.get(id_usuario=usuario)
 
         if correo_seleccionado == "principal":
-            correo_electronico = contacto.correo_principal
+            correo_electronico = contacto.correo_electronico
         else:
-            correo_electronico = contacto.correo_secundario
+            correo_electronico = contacto.correo_alternativo
 
         return enviar_codigo_verificacion(
             usuario.nombres,

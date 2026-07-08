@@ -95,9 +95,9 @@ WSGI_APPLICATION = 'proyecto_carsce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'carsce',
-        'USER': 'postgres',
-        'PASSWORD': '31359116',
+        'NAME': 'casrce',
+        'USER': 'soporte',
+        'PASSWORD': '12345678',
         'HOST': 'localhost',
         'PORT': '5432',
     }
