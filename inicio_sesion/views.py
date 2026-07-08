@@ -51,7 +51,6 @@ from reportlab.lib.units import cm
 #     )
 
 
-<<<<<<< HEAD
 def inicio_sesion(request):
     if request.method == "POST":
         try:
@@ -122,8 +121,6 @@ def inicio_sesion(request):
             })
 
     return render(request, 'inicio_sesion.html')
-=======
->>>>>>> cbcc481 (Cambios - Jonatan)
 
 def cerrar_sesion(request):
     request.session.flush() 
@@ -568,7 +565,6 @@ def recuperar_usuario(request):
 # pre-inscripción para los estudiantes
 
 
-<<<<<<< HEAD
 def panel_estudiantes(request):
     return render(request, 'panel_estudiantes.html')
 
@@ -615,8 +611,6 @@ def confirmar_registro_personal(request):
         })
 
     return render(request, "confirmar_registro_personal.html")
-=======
->>>>>>> cbcc481 (Cambios - Jonatan)
 
 def guardar_credenciales_personal(request):
     if request.method == "POST":
@@ -658,7 +652,6 @@ def guardar_credenciales_personal(request):
 
     return render(request, 'confirmar_registro_personal.html')
 
-<<<<<<< HEAD
 def buscar_personal_registrado(request):
     if request.method == "POST":
         nacionalidad = request.POST.get('nacionalidad')
@@ -806,9 +799,6 @@ def pre_inscripcion(request):
         })
 
     return render(request, "pre_inscripcion.html")
-=======
-
->>>>>>> cbcc481 (Cambios - Jonatan)
 
 # Modulo 
 
