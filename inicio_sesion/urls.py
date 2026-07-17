@@ -5,22 +5,22 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.foro, name="foro"),
-    path('inicio_sesion/', views.inicio_sesion, name="inicio_sesion"),
+    path('Sesion/inicio_sesion/', views.inicio_sesion, name="inicio_sesion"),
     
-    path('buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
-    path('comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
+    path('Sesion/buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
+    path('Sesion/comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
     path('reenviar_codigo_btn/', views.reenviar_codigo_btn, name="reenviar_codigo_btn"),
     path('panel_recuperar_credenciales/', views.panel_recuperar_credenciales, name="panel_recuperar_credenciales"),
-    path('recuperar_contrasenia/', views.recuperar_contrasenia, name="recuperar_contrasenia"),
+    path('Sesion/recuperar_contrasenia/', views.recuperar_contrasenia, name="recuperar_contrasenia"),
     path('recuperar_usuario/', views.recuperar_usuario, name="recuperar_usuario"),
 
-    path('panel_registro/', views.panel_registro, name="panel_registro"),
+    path('Sesion/panel_registro/', views.panel_registro, name="panel_registro"),
     path('panel_estudiantes/', views.panel_estudiantes, name="panel_estudiantes"),
-    path('confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),
+    path('Sesion/confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),
     path('guardar_credenciales_personal/', views.guardar_credenciales_personal, name="guardar_credenciales_personal"),
     path('buscar_personal_registrado/', views.buscar_personal_registrado, name="buscar_personal_registrado"),
     path('credenciales_estudiante/', views.credenciales_estudiante, name="credenciales_estudiante"),
-    path('pre_inscripcion/', views.pre_inscripcion, name="pre_inscripcion"),
+    path('registro_estudiantil/', views.registro_estudiantil, name="registro_estudiantil"),
 
     path('pre_registro_personal/', views.pre_registro_personal, name="pre_registro_personal"),
     path('validar_nucleos/', views.validar_nucleos, name="validar_nucleos"),
@@ -37,8 +37,6 @@ urlpatterns = [
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
 
     # 
-    path('nucleos_coordinador_pnfs/', views.nucleos_coordinador_pnfs, name="nucleos_coordinador_pnfs"),
-    path('pnfs_coordinador_pnfs/', views.pnfs_coordinador_pnfs, name="pnfs_coordinador_pnfs"),
     path('obtener_pre_inscrito/', views.obtener_pre_inscrito, name="obtener_pre_inscrito"),
     path('obtener_datos_pre_inscrito/', views.obtener_datos_pre_inscrito, name="obtener_datos_pre_inscrito"),
     path('inscripcion_estudiante/', views.inscripcion_estudiante, name="inscripcion_estudiante"),
@@ -59,7 +57,7 @@ urlpatterns = [
     path('guardar_actualizacion_seccion/', views.guardar_actualizacion_seccion, name="guardar_actualizacion_seccion"),
     path('modulo_seccion/', views.modulo_seccion, name="modulo_seccion"),
     
-    path('materias_registradas/', views.materias_registradas, name="materias_registradas"),
+    path('materias_almacenada/', views.materias_almacenada, name="materias_almacenada"),
     path('datos_materia/', views.datos_materia, name="datos_materia"),
     path('guardar_actualizacion_materia/', views.guardar_actualizacion_materia, name="guardar_actualizacion_materia"),
     path('modulo_materia/', views.modulo_materia, name="modulo_materia"),
@@ -76,7 +74,9 @@ urlpatterns = [
     path('autenticacion_actualizar_correo/', views.autenticacion_actualizar_correo, name="autenticacion_actualizar_correo"),
     path('actualizar_datosusuario/', views.actualizar_datosusuario, name="actualizar_datosusuario"),
     
+    path('buscar_materias_docente/', views.buscar_materias_docente, name="buscar_materias_docente"),
     path('modulo_horario_academico/', views.modulo_horario_academico, name="modulo_horario_academico"),
+    path('generar_horario_pdf/', views.generar_horario_pdf, name="generar_horario_pdf"),
     
     path('pnfs_pertenece_nucleo/', views.pnfs_pertenece_nucleo, name="pnfs_pertenece_nucleo"),
     path('docentes_registrados/', views.docentes_registrados, name="docentes_registrados"),
@@ -90,8 +90,16 @@ urlpatterns = [
     
     path('buscar_datos_usuario/', views.buscar_datos_usuario, name="buscar_datos_usuario"),
     path('modulo_actualizar_usuarios/', views.modulo_actualizar_usuarios, name="modulo_actualizar_usuarios"),
-
-    path('registro_estudiantil/', views.registro_estudiantil, name="registro_estudiantil"),
+    
+    path('siguiente_trayecto/', views.siguiente_trayecto, name="siguiente_trayecto"),
+    path('trayectos_registrados/', views.trayectos_registrados, name="trayectos_registrados"),
+    path('modulo_trayecto/', views.modulo_trayecto, name="modulo_trayecto"),
+    
+    path('aulas_registrados/', views.aulas_registrados, name="aulas_registrados"),
+    path('aulas_almacenadas/', views.aulas_almacenadas, name="aulas_almacenadas"),
+    path('datos_aula/', views.datos_aula, name="datos_aula"),
+    path('actualizar_aula_academica/', views.actualizar_aula_academica, name="actualizar_aula_academica"),
+    path('modulo_aula_academica/', views.modulo_aula_academica, name="modulo_aula_academica"),
 
     #FORO
     path('Historia/', views.Historia, name="Historia"),
@@ -100,7 +108,9 @@ urlpatterns = [
     path('psc/', views.psc, name="psc"),
     path('trayectoria/', views.trayectoria, name="trayectoria"),
     path('carreras_impartidas/', views.carreras_impartidas, name="carreras_impartidas"),
-    path('Planificacion_Docente/', views.Planificacion_Docente, name="Planificacion_Docente")
+    path('Planificacion_Docente/', views.Planificacion_Docente, name="Planificacion_Docente"),
+
+    path('barra_lateral/', views.barra_lateral, name="barra_lateral"),
 ]
 
 if settings.DEBUG:

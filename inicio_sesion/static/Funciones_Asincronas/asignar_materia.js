@@ -122,12 +122,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 body: formulerio
             });
             const resultado = await respuesta.json();
+            console.log(resultado)
 
             select_docentes_registrados.innerHTML = '<option value="">Selecciona un docente.</option>';
 
             resultado.usuarios.forEach(usuario => {
                 const opcion = document.createElement("option");
-                opcion.value = usuario.id_usuario;
+                opcion.value = usuario.id_asignacion;
                 opcion.textContent = usuario.nombres + " " + usuario.apellidos;
                 select_docentes_registrados.appendChild(opcion);
             });
@@ -143,9 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     async function obtener_materias_registradas() {
-        if (!pnf) {
-            return;
-        }
+        if (!pnf) return;
 
         try {
             const formulario = new FormData();
@@ -164,26 +163,53 @@ document.addEventListener("DOMContentLoaded", function() {
 
             contenedorMaterias.innerHTML = "<h4>Materias Disponibles</h4>";
 
+            if (resultado.materias.length === 0) {
+                contenedorMaterias.innerHTML += "<p>No hay materias registradas.</p>";
+                return;
+            }
+
+            const tabla = document.createElement("table");
+            tabla.className = "tabla-materias";
+
+            tabla.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Seleccionar</th>
+                        <th>Nombre</th>
+                        <th>Código</th>
+                        <th>Trayecto</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+
+            const tbody = tabla.querySelector("tbody");
+
             resultado.materias.forEach(materia => {
 
-                const div = document.createElement("div");
+                const fila = document.createElement("tr");
 
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.name = "materias";
-                checkbox.value = materia.id_materia;
-                checkbox.id = "materia_" + materia.id_materia;
+                fila.innerHTML = `
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="materias"
+                            value="${materia.id_materia}"
+                            id="materia_${materia.id_materia}">
+                    </td>
+                    <td>
+                        <label for="materia_${materia.id_materia}">
+                            ${materia.nombre}
+                        </label>
+                    </td>
+                    <td>${materia.codigo}</td>
+                    <td>${materia.id_trayecto__trayecto}</td>
+                `;
 
-                const label = document.createElement("label");
-                label.htmlFor = checkbox.id;
-                label.textContent = materia.nombre;
-
-                div.appendChild(checkbox);
-                div.appendChild(label);
-
-                contenedorMaterias.appendChild(div);
-
+                tbody.appendChild(fila);
             });
+
+            contenedorMaterias.appendChild(tabla);
 
         } catch (error) {
             console.error(error);
@@ -205,22 +231,15 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             const resultado = await respuesta.json();
 
-            if (resultado.estado === "success") {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-            } else {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-            }
-            formulario_asignar_materia.reset();
+            console.log(resultado);
+
+            Swal.fire({
+                text: resultado.descripcion,
+                icon: resultado.icon,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+
         } catch (error) {
             console.error(error);
         }

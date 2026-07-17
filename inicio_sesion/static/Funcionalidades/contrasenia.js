@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function actualizarIconoYPassword() {
         if (toggleCheck.checked) {
-            inputPassword.type = "text";   // mostrar contraseña
+            inputPassword.type = "text";  
             eyeOff.classList.add("ocultar");
             eyeOn.classList.remove("ocultar");
         } else {
-            inputPassword.type = "password"; // ocultar contraseña
+            inputPassword.type = "password"; 
             eyeOn.classList.add("ocultar");
             eyeOff.classList.remove("ocultar");
         }
@@ -18,6 +18,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     toggleCheck.addEventListener("change", actualizarIconoYPassword);
 
-    // Estado inicial
     actualizarIconoYPassword();
 });

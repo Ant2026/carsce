@@ -1,0 +1,299 @@
+#seccion-login,
+#comprobar_usuario{
+    min-height: 100vh;
+    margin-top: 120px;
+    padding: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-base);
+}
+
+/*==================================
+TARJETA
+==================================*/
+
+#seccion-login .lado_izquierdo{
+    width:60%;
+    display:flex;
+    flex-direction:column;
+}
+
+#seccion-login .lado_izquierdo .contenedor{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px;
+}
+
+#seccion-login .lado_izquierdo p{
+    text-align:center;
+    font-size:1.1rem;
+    color:#555;
+}
+
+#seccion-login .lado_izquierdo img{
+    width: 100%;
+    max-width: 550px;
+}
+
+/*==================================
+BOTON REGRESAR
+==================================*/
+
+#seccion-login .btn-regresar{
+    background: var(--color-azulE);
+    color: var(--color-base);
+    display: inline-block;
+    border-bottom-right-radius: 2rem;
+    border-top-left-radius: 2rem;
+}
+
+#seccion-login .btn-regresar:hover{
+    background:var(--color-neutro);
+}
+
+/*==================================
+FORMULARIO
+==================================*/
+
+#seccion-login .lado_derecho{
+    width:50%;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-self: center;
+}
+
+#seccion-login .buscar_usuario{
+    width: 100%;
+    max-width: 400px;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-self: center;
+    padding:35px 45px 45px;
+    gap:8px;
+    border: 2px solid var(--color-claro);
+    border-radius: 2rem;
+    box-shadow: var(--shadows);
+}
+#comprobar_usuario h3,
+#seccion-login h3{
+    font-size:2rem;
+    color:var(--color-azulE);
+    margin-bottom:15px;
+}
+#comprobar_usuario label,   
+#seccion-login label{
+    font-weight:600;
+    color:#555;
+    margin-top:10px;
+}
+
+#comprobar_usuario .grupo-campo,
+#seccion-login .grupo-campo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:2px solid #d7d7d7;
+    border-radius:12px;
+    overflow:hidden;
+    transition:.3s;
+    background:#fff;
+}
+
+#comprobar_usuario .grupo-campo:focus-within,
+#seccion-login .grupo-campo:focus-within{
+    border-color:var(--color-azulE);
+    box-shadow:0 0 8px rgba(0,0,0,.08);
+}
+#comprobar_usuario .grupo-campo input,  
+#seccion-login .grupo-campo input{
+    flex:1;
+    height:50px;
+    border:none;
+    outline:none;
+    padding:0 15px;
+    font-size:1rem;
+    background:transparent;
+}
+
+#seccion-login .texto-registro{
+    text-align:center;
+    margin-top:15px;
+    font-size:1rem;
+    color:#666;
+}
+
+#seccion-login .texto-registro a{
+    color: #8C1007;
+    font-weight:bold;
+}
+
+/*==================================
+SELECTS
+==================================*/
+
+#seccion-login .nacionalidad{
+    width:60px;
+    border:none;
+    outline:none;
+    height:50px;
+    background:#33A1E0;
+    color:var(--color-neutro);
+    font-size:1rem;
+    text-align:center;
+}
+
+/*==================================
+CONTRASEÑA
+==================================*/
+
+#seccion-login .contrasenia{
+    position:relative;
+}
+
+#seccion-login .contrasenia input[type="password"]{
+    padding-right:50px;
+}
+
+#seccion-login #oculta_aparecer{
+    display:none;
+}
+
+#seccion-login .eye_off,
+#seccion-login .eye_on{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:var(--color-intermitente);
+    font-size:1.2rem;
+}
+
+#seccion-login .eye_on{
+    display:none;
+}
+
+#seccion-login #oculta_aparecer:checked ~ .eye_off{
+    display:none;
+}
+
+#seccion-login #oculta_aparecer:checked ~ .eye_on{
+    display:block;
+}
+
+/*==================================
+SEGURIDAD PASSWORD
+==================================*/
+
+#seccion-login .seguridad-password{
+    margin-top:8px;
+}
+
+#seccion-login .barra-password{
+    width:100%;
+    height:8px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+#seccion-login #nivel_password{
+    height:100%;
+    width:0;
+    transition:.3s;
+}
+
+#seccion-login #texto_password{
+    display:block;
+    margin-top:8px;
+    font-size:.9rem;
+    color:#666;
+}
+
+/*==================================
+BOTON
+==================================*/
+
+#comprobar_usuario button[type="button"],
+#comprobar_usuario button[type="submit"],
+#seccion-login button[type="submit"]{
+    width:100%;
+    height:55px;
+    margin-top:20px;
+    border:none;
+    border-radius:12px;
+    background:var(--color-azulE);
+    color:#fff;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#comprobar_usuario button[type="button"]:hover,
+#comprobar_usuario button[type="submit"]:hover,
+#seccion-login button[type="submit"]:hover{
+    background:var(--color-hover-azulE);
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.15);
+}
+
+/*==================================
+COMPROBACION DE USUARIO
+==================================*/
+
+#comprobar_usuario .tarjeta_principal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#comprobar_usuario .contenedor{
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 2px solid var(--color-claro);
+    border-radius: 2rem;
+    box-shadow: var(--shadows);
+}
+
+#comprobar_usuario .contenedor p{
+    text-align:justify;
+    font-size:1.1rem;
+    color:#555;
+}
+
+#comprobar_usuario .contador{
+    margin-bottom: 15px;
+}
+
+/*==================================
+VALIDACION
+==================================*/
+
+#comprobar_usuario .eye_off,
+#comprobar_usuario .eye_on{
+    cursor: pointer;
+    color: var(--color-intermitente);
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#comprobar_usuario .ocultar{
+    display: none;
+}
+
+#comprobar_usuario #oculta_aparecer {
+    display: none;
+}

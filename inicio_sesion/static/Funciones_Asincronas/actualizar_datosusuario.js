@@ -37,12 +37,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const input_check_correo_principal = document.getElementById("correo_principal")
     const input_check_correo_secundario = document.getElementById("correo_principal")
 
+    const mensaje_correo = document.getElementById("mensaje_correo")
+
     let datosPendientes = null;
 
     async function datos_usuario() {
         try {
             const respuesta = await fetch("/datos_usuario/")
             const resultado = await respuesta.json()
+            console.log(resultado)
 
             const telefonoPrincipal = resultado.contacto.telefono_personal;
             const prefijoPrincipal = telefonoPrincipal.substring(0, 4);
@@ -248,17 +251,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 await actualizarDatos();
        
             } else {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
+                mostrarMensaje(resultado.descripcion);
             }
         } catch (error) {
             console.error(error);
         }
     });
+
+    function mostrarMensaje(texto, tipo = "error") {
+        mensaje_correo.textContent = texto;
+        mensaje_correo.style.display = "block";
+
+        if (tipo === "error") {
+            mensaje_correo.style.background = "#f8d7da";
+            mensaje_correo.style.color = "#842029";
+            mensaje_correo.style.border = "1px solid #f5c2c7";
+        } else if (tipo === "success") {
+            mensaje_correo.style.background = "#d1e7dd";
+            mensaje_correo.style.color = "#0f5132";
+            mensaje_correo.style.border = "1px solid #badbcc";
+        }
+
+        clearTimeout(mensaje_correo.temporizador);
+
+        mensaje_correo.temporizador = setTimeout(() => {
+            mensaje_correo.style.display = "none";
+        }, 4000);
+    }
 
     btn_cerrar_dialogo.addEventListener("click", () => {
         dialogo_actualizar_correo.close();

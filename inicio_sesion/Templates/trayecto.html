@@ -1,0 +1,39 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_trayecto">
+    <div class="contenedor_trayecto_academico">
+        <h2>Trayecto Académico</h2>
+
+        <form method="post" id="formulario_registrar_trayectos">
+            {% csrf_token %}
+            <label for="trayecto_registrar">Trayecto:</label>
+            <input type="text" id="trayecto_registrar" name="trayecto" readonly  placeholder="Se generará automáticamente">
+
+            <input type="submit" value="Registrar Trayecto">
+        </form>
+
+        <div id="contenedor_trayectos">
+            <h3>Trayectos Registrados</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Trayecto</th>
+                    </tr>
+                </thead>
+
+                <tbody id="trayectos_registrados">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/modulo_trayecto.js' %}"></script>
+
+{% endblock %}

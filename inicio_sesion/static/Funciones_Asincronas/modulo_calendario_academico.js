@@ -42,8 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const resultado = await respuesta.json();
 
         if (resultado.estado === "exito") {
-            select_actualizar_fecha.innerHTML =
-                '<option value="" selected disabled>Seleccione una opción</option>';
+            select_actualizar_fecha.innerHTML = '<option selected>Seleccione una opción</option>';
 
             resultado.periodos.forEach(periodo => {
                 const option = document.createElement("option");
@@ -59,32 +58,20 @@ document.addEventListener("DOMContentLoaded", () => {
     formulario_registrar.addEventListener("submit", async (e) => {
         e.preventDefault()
         try {
-            const formulario = new FormData(formulario_registrar)
+            const formulario = new FormData(formulario_registrar);
 
             const respuesta = await fetch("/modelo_calendario_academico/", {
                 method: "POST",
-                headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
                 body: formulario
             });
-            const resultado = await respuesta.json()
-
-            if (resultado.estado == "ok") {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-            } else {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-            }
+            const resultado = await respuesta.json();
+            
+            Swal.fire({
+                text: resultado.descripcion,
+                icon: resultado.icon,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
             formulario_registrar.reset()
         } catch (error) {
             console.error(error)
@@ -121,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function cargarCalendarios() {
         const response = await fetch("/calendarios_registrados/");
         const data = await response.json();
+        console.log(data)
 
         contenedor_calendario_academico.innerHTML = "";
 
@@ -203,23 +191,15 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const resultado = await respuesta.json();
             dialogo_actualizar.close()
-            if (resultado.estado == "ok") {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }).then(() => {
-                    location.reload();
-                });
-            } else {
-                Swal.fire({
-                    text: resultado.descripcion,
-                    icon: resultado.icon,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-            }
+        
+            Swal.fire({
+                text: resultado.descripcion,
+                icon: resultado.icon,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+
+            await cargarCalendarios();
         } catch (error) {
             console.error(error);
         }

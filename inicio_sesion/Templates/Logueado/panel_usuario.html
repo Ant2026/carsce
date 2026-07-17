@@ -1,0 +1,203 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{% if "Director General" in request.session.perfil %}
+<section class="encabezado_dashboard">
+
+    <div class="informacion_dashboard">
+
+        <span class="badge_dashboard">
+            Sistema CARSCE
+        </span>
+
+        <h1>Bienvenido, {{ request.session.usuario_nombre }}</h1>
+
+        <p>
+            Gestiona estudiantes, inscripciones, expedientes y constancias
+            desde un solo lugar.
+        </p>
+
+    </div>
+
+    <div class="acciones_dashboard">
+
+        <div class="fecha_dashboard">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>13 Julio 2026</span>
+        </div>
+
+        <!-- <a href="#" class="btn_dashboard">
+            <i class="fa-solid fa-download"></i>
+            Exportar Reporte
+        </a> -->
+
+    </div>
+
+</section>
+
+<section class="estadisticas">
+
+    <article class="card">
+        <div class="card_icon azul">
+            <i class="fa-solid fa-user-graduate"></i>
+        </div>
+
+        <div class="card_info">
+            <small>Total estudiantes</small>
+            <h2>1,245</h2>
+            <span class="positivo">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                Total
+            </span>
+        </div>
+    </article>
+
+    <article class="card">
+        <div class="card_icon verde">
+            <i class="fa-solid fa-file-signature"></i>
+        </div>
+
+        <div class="card_info">
+            <small>Inscripciones</small>
+            <h2>98</h2>
+            <span class="positivo">
+                <i class="fa-solid fa-check"></i>
+                Activas
+            </span>
+        </div>
+    </article>
+
+    <article class="card">
+        <div class="card_icon naranja">
+            <i class="fa-solid fa-file-lines"></i>
+        </div>
+
+        <div class="card_info">
+            <small>Constancias</small>
+            <h2>327</h2>
+            <span class="neutral">
+                Emitidas
+            </span>
+        </div>
+    </article>
+
+</section>
+
+<section class="contenido_dashboard">
+
+    <article class="actividad">
+
+        <div class="titulo_panel">
+
+            <h2>Actividad reciente</h2>
+
+            <a href="#">Ver todo</a>
+
+        </div>
+
+        <div class="timeline">
+
+            <div class="evento">
+
+                <div class="punto azul"></div>
+
+                <div>
+
+                    <strong>Administrador</strong>
+
+                    <p>Registró un nuevo estudiante.</p>
+
+                    <small>Hace 5 minutos</small>
+
+                </div>
+
+            </div>
+
+            <div class="evento">
+
+                <div class="punto verde"></div>
+
+                <div>
+
+                    <strong>Secretaría</strong>
+
+                    <p>Emitió una constancia.</p>
+
+                    <small>Hace 25 minutos</small>
+
+                </div>
+
+            </div>
+
+            <div class="evento">
+
+                <div class="punto naranja"></div>
+
+                <div>
+
+                    <strong>Control de Estudios</strong>
+
+                    <p>Actualizó un expediente.</p>
+
+                    <small>Ayer</small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </article>
+
+<article class="grafico">
+
+    <div class="titulo_panel">
+
+        <h2>Estadísticas de registros</h2>
+
+    </div>
+
+    <div class="resumen_grafico">
+
+        <div>
+
+            <strong>1,245</strong>
+
+            <span>Estudiantes</span>
+
+        </div>
+
+        <div>
+
+            <strong>98</strong>
+
+            <span>Inscripciones</span>
+
+        </div>
+
+        <div>
+
+            <strong>327</strong>
+
+            <span>Constancias</span>
+
+        </div>
+
+    </div>
+
+    <div class="contenedor_grafico">
+
+        <canvas id="grafico_dashboard"></canvas>
+
+    </div>
+
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'funcionalidades/dashboard_director_general.js' %}"></script>
+{% endif %}
+
+{% endblock %}

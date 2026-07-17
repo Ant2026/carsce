@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const label_CI = document.getElementById("label_CI")
     const select_nacionalidad = document.getElementById("nacionalidad")
     const input_CI = document.getElementById("cedula_identidad")
-    const btn_buscar_usuario = document.getElementById("comprobar_usuario")
+    const btn_buscar_usuario = document.getElementById("validar_usuario")
 
     const label_nombre_usuario = document.getElementById("label_nombre_usuario")
     const label_password = document.getElementById("label_password")
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const datos = new FormData(formulario_buscar_usuario);
 
-            const respuesta = await fetch("/confirmar_registro_personal/", {
+            const respuesta = await fetch("/../../Sesion/confirmar_registro_personal/", {
                 method: "POST",
                 body: datos,
                 headers: {
@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
             const resultado = await respuesta.json()
-            
+            console.log(resultado);
+
             if (resultado.existe == "success") {
                 label_CI.hidden = true
                 select_nacionalidad.hidden = true
@@ -60,13 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             formulario_buscar_usuario.reset()
         } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: error,
-                icon: "error",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            });
+            console.error(error)
         }
     });
 
@@ -85,29 +80,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultado = await respuesta.json()
             
             if (resultado.existe == "success") {
-                if (resultado.existe == "success") {
+                await Swal.fire({
+                    text: resultado.descripcion,
+                    icon: resultado.icon,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
 
-                    await Swal.fire({
-                        text: resultado.descripcion,
-                        icon: resultado.icon,
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    });
+                label_CI.hidden = false
+                select_nacionalidad.hidden = false
+                input_CI.hidden = false
+                btn_buscar_usuario.hidden = false
+                
+                label_nombre_usuario.hidden = true
+                label_password.hidden = true
+                input_nombre_usuario.hidden = true
+                input_password.hidden = true
+                btn_guardar_credenciales.hidden = true
 
-                    label_CI.hidden = false
-                    select_nacionalidad.hidden = false
-                    input_CI.hidden = false
-                    btn_buscar_usuario.hidden = false
-                    
-                    label_nombre_usuario.hidden = true
-                    label_password.hidden = true
-                    input_nombre_usuario.hidden = true
-                    input_password.hidden = true
-                    btn_guardar_credenciales.hidden = true
-                    contenedor_validar.hidden = true
-                    tag_i_mostrar.hidden = true
-                    tag_i_ocultar.hidden = true
-                }
+                contenedor_validar.hidden = true
+
+                tag_i_mostrar.hidden = true
+                tag_i_ocultar.hidden = true
             } else {
                 Swal.fire({
                     text: resultado.descripcion,
@@ -116,17 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowEscapeKey: false
                 });
             }
-
             
             formulario_registrar_credenciales.reset()
         } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: error,
-                icon: "error",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            });
+            console.error(error)
         }
     })
 

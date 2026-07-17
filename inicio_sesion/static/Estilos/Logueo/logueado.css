@@ -1,0 +1,22 @@
+.body-logueado{
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 120px 1fr;
+    grid-template-areas:
+        "header header"
+        "aside  main";
+    min-height: 100vh;
+}
+
+.header-logueado{
+    grid-area: header;
+}
+
+#barra_lateral{
+    grid-area: aside;
+}
+
+.main-logueado{
+    grid-area: main;
+    
+}

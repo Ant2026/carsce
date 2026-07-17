@@ -35,7 +35,7 @@
 
                 <div id="datos_basicos">
                     <h5>Datos Básica</h5>   
-                    <input type="hidden" name="perfilusuario" id="perfil_usuario">
+                    <input type="hidden" name="id_usuario" id="id_seleccionado">
 
                     <label for="nombres_actualizar_usuario">Nombres:</label>
                     <input type="text" name="nombres_actualizar" id="nombres_actualizar_usuario" autocomplete="off">
@@ -85,15 +85,13 @@
                     <label for="correo_principal">Correo Electronico (Principal):</label>
                     <div class="controles_agrupado">
                         <input type="text" name="nombre_correo_principal" id="correo_principal_actualizar" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
-                        <select name="dominio_correo_principal" id="dominio_principal_actualizar">
-                        </select>
+                        <select name="dominio_correo_principal" id="dominio_principal_actualizar"></select>
                     </div>
 
                     <label for="correo_secundaria">Correo Electronico (Secundaria):</label>
                     <div class="controles_agrupado">
                         <input type="text" name="nombre_correo_secundaria" id="correo_secundaria_actualizar" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
-                        <select name="dominio_correo_secundaria" id="dominio_secundaria_actualizar">
-                        </select>
+                        <select name="dominio_correo_secundaria" id="dominio_secundaria_actualizar"></select>
                     </div>
                 </div>
 
@@ -273,14 +271,9 @@
                 <input type="submit" value="Actualizar">
             </form>
         </div>
-
-        
     </div>
 </section>
 
-<script src="{% static 'Funcionalidades/pais.js' %}"></script>
-<script src="{% static 'Funcionalidades/nacimiento.js' %}"></script>
-<script src="{% static 'Funcionalidades/residencia.js' %}"></script>
 <script src="{% static 'Funciones_Asincronas/actualizar_datos.js' %}"></script>
 
 {% endblock %}

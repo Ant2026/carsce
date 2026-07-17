@@ -1,0 +1,25 @@
+{% extends "Email/Base.html" %}
+
+{% block content %}
+
+<section id="recuperar_usuario">
+    <div class="contenedor_recuperar_usuario">
+        <h2>Recuperación de Usuario</h2>
+
+        <p>
+            Estimado(a) <strong>{{ nombres }} {{ apellidos }}</strong>,
+            de acuerdo con su solicitud, a continuación se muestra el nombre de usuario asociado a su cuenta en la Plataforma Digital para la Gestión de CARSCE.
+        </p>
+
+        <div id="nombre_usuario">
+            {{ nombre_usuario }}
+        </div>
+
+        <p>
+            Utilice este nombre de usuario para iniciar sesión en la plataforma.
+            Si usted no realizó esta solicitud, puede ignorar este correo de forma segura.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

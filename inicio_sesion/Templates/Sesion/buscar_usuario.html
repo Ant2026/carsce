@@ -1,0 +1,50 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="seccion-login">
+    <div class="tarjeta_principal">
+        <div class="lado_izquierdo">
+            <div class="separador">
+                <a href="{% url 'inicio_sesion' %}" class="btn-regresar icon-left-open">Regresar</a>
+            </div>
+            <div class="contenedor">
+                <img src="{% static 'Imagenes/recuperar_credenciales.png' %}" 
+                alt="imagen de verificar si se encuentra r*ole4gistrado">
+
+                <p>Este formulario está destinado exclusivamente para recuperar credenciales de acceso. Si tiene alguna duda, por favor contacte al administrador.</p>
+            </div>
+        </div>
+
+        <div class="lado_derecho">
+            <form method="post" id="formulario_buscar_usuario" class="buscar_usuario">
+                <h3>Recuperación de Credenciales</h3>
+                {% csrf_token %}
+                
+                <label for="cedula_identidad">Ingresa tú cédula de identidad:</label>
+                <div class="grupo-campo">
+                    <select name="nacionalidad" id="nacionalidad" class="nacionalidad">
+                        <option value="">N</option>
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                    </select>
+
+                    <input type="text" name="ci" id="cedula_identidad" autocomplete="off" class="control-entrada" placeholder="Selecciona la nacionalidad">
+                </div>
+
+                <button type="submit" class="boton-login">Enviar código de verificación</button>
+
+                <div class="texto-registro">
+                    <p>¿Tienes credenciales? <a href="{% url 'inicio_sesion' %}">¡Haz clic aquí!</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/buscar_usuario.js' %}"></script>
+
+{% endblock %}

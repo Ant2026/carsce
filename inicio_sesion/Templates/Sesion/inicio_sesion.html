@@ -10,8 +10,8 @@
         </div>
 
         <div class="login-right">
-            <form method="post" id="formulario_login">
-                <h2 class="titulo">INICIO DE SESIÓN</h2>
+            <form method="POST" id="formulario_login">
+                <h2 class="titulo">Inicio de Sesión</h2>
 
                 {% csrf_token %}
 
@@ -24,6 +24,7 @@
                     <label class="icon-lock icon-input"></label>
                     <input type="password" name="contrasenia" autocomplete="off" id="password" class="input-control password-input" placeholder="Contraseña" required>
                     <input type="checkbox" id="oculta_aparecer">
+                    
                     <label class="icon-eye-off eye_off" for="oculta_aparecer"></label>
                     <label class="icon-eye eye_on" for="oculta_aparecer"></label>
                 </div>
@@ -45,6 +46,7 @@
 </section>
 
 <script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/notificacion_inicio_sesion.js' %}"></script>
 <script src="{% static 'Funciones_Asincronas/autenticación.js' %}"></script>
 
 {% endblock %}

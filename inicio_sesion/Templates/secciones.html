@@ -11,18 +11,31 @@
         <div class="contenedor_registrar_secciones">
             <h4>Registrar Sección</h4>
 
-            <form method="post" id="registrarsecciones">
+            <form method="post" id="formulario_registrar_seccion">
                 {% csrf_token %}
-                <label for="registrar_seccion">Sección Académica:</label>
-                <input type="text" name="seccion" id="registrar_seccion">
+                <label for="registro_nucleo_registrado">Núcleo:</label>
+                <select name="registro_nucleo" id="registro_nucleo_registrado"></select>
+
+                <label for="registro_pnf_registrado">P.N.F:</label>
+                <select name="registro_pnf" id="registro_pnf_registrado"></select>
+
+                <label for="registro_trayecto_registrado">Trayecto:</label>
+                <select name="registro_trayecto" id="registro_trayecto_registrado"></select>
+
+                <label for="registro_aula_registrado">Aula Académico:</label>
+                <select name="registro_aula" id="registro_aula_registrado"></select>
+
+                <label for="registrar_turno">Turno:</label>
+                <select name="registro_turno" id="registrar_turno"></select>
+
+                <label for="registrar_seccion">Sección:</label>
+                <input type="text" name="registro_seccion" id="registrar_seccion">
 
                 <input type="submit" value="Registrar Sección">
             </form>
         </div>
 
-        <div id="tabla_secciones">
-
-        </div>
+        <div id="tabla_secciones"></div>
     </div>
 </section>
 
@@ -31,12 +44,27 @@
         <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
         <h4>Modificar Núcleo</h4>
 
-        <form method="post" id="modificarnsecciones">
+        <form method="post" id="formulario_actualizar_seccion">
             {% csrf_token %}
-            <input type="hidden" name="seccionesseleccionado" id="secciones_seleccionado">
+            <input type="hidden" name="seccion" id="secciones_seleccionado">
 
-            <label for="actualizar_seccion">Sección Académica:</label>
-            <input type="text" name="seccion" id="actualizar_seccion">
+            <label for="actualizar_nucleo_registrado">Núcleo:</label>
+            <select name="actualizar_nucleo" id="actualizar_nucleo_registrado"></select>
+
+            <label for="actualizar_pnf_registrado">P.N.F:</label>
+            <select name="actualizar_pnf" id="actualizar_pnf_registrado"></select>
+
+            <label for="actualizar_trayecto_registrado">Trayecto:</label>
+            <select name="actualizar_trayecto" id="actualizar_trayecto_registrado"></select>
+
+            <label for="actualizar_aula_registrado">Aula Académico:</label>
+            <select name="actualizar_aula" id="actualizar_aula_registrado"></select>
+
+            <label for="actualizar_turno_registrado">Turno:</label>
+            <select name="actualizar_turno" id="actualizar_turno_registrado"></select>
+
+            <label for="actualizar_seccion_registrado">Sección:</label>
+            <input type="text" name="actualizar_seccion" id="actualizar_seccion_registrado">
             
             <input type="submit" value="Actualizar Sección">
         </form>

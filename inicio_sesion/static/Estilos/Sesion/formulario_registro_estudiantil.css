@@ -1,139 +1,46 @@
-#registro_estudiantil {
-    min-height: 100vh;
-    margin-top: 120px;
-    padding: 30px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f5f7fa;
+#registro_estudiantil{
+    min-height:100vh;
+    margin-top:120px;
+    padding:30px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f7fa;
 }
 
-/* ============================
-   INFORMACIÓN PERSONAL
-============================ */
+/*==================================
+TARJETA
+==================================*/
 
 #registro_estudiantil .lado_izquierdo{
-    width:48%;
-    position:relative;
+    width:60%;
     display:flex;
     flex-direction:column;
-    background: var(--color-intermitente);
 }
 
-#registro_estudiantil .lado_izquierdo img{
-    width: 300px;
-    margin-top: 20px;
-    margin-left: 130px;
+#registro_estudiantil .lado_izquierdo .contenedor{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 40px;
 }
 
 #registro_estudiantil .lado_izquierdo p{
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    text-align: center;
+    text-align:center;
+    font-size:1.1rem;
+    padding: 10px;
+    color:#555;
 }
 
-/* ============================
-   FORMULARIO
-============================ */
-#registro_estudiantil .lado_derecho{
-    width:52%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: red;
+#registro_estudiantil .lado_izquierdo img{
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
 }
 
-#registro_estudiantil .contenedor_registro_estudiante{
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    justify-content: center;
-    padding: 70px;
-}
-
-#registro_estudiantil .contenedor_registro_estudiante h3{
-    font-size: 2rem;
-    color: var(--color-azulE);
-    text-align: center;
-}
-
-#registro_estudiantil .grupo-campo{
-    display: flex;
-    gap: 10px;
-}
-
-#registro_estudiantil .dominio,
-#registro_estudiantil .prefijo,
-#registro_estudiantil .nacionalidad{
-    width: 50px;
-    height: 50px;
-    border: 2px solid var(--color-azulE);
-    border-radius: 12px;
-    background: #636CCB;
-    font-size: 1rem;
-    text-align: center;
-    outline: none;
-    transition: .3s;
-    color: var(--color-base);
-}
-
-#registro_estudiantil .dominio{
-    width: 100px;
-    text-align: center;
-}
-
-#registro_estudiantil .prefijo{
-    width: 80px;
-    text-align: center;
-}
-
-#registro_estudiantil .nacionalidad:focus{
-    border-color: var(--color-hover-azulE);
-}
-
-#registro_estudiantil .contenedor_registro_estudiante .grupo-campo input{
-    flex: 1;
-    height: 50px;
-    border: none;
-    border-radius: 12px;
-    padding: 0 10px;
-    font-size: 1rem;
-    outline: none;
-    margin-bottom:20px;
-    transition: .3s;
-}
-
-#registro_estudiantil .cedula_identidad:focus{
-    border-color: var(--color-azulE);
-    box-shadow: 0 0 10px rgba(0,0,0,.08);
-}
-
-/* BOTON */
-/* #registro_estudiantil button[type="submit"]{
-    width: 220px;
-    height: 55px;
-    border: none;
-    border-radius: 12px;
-    background: var(--color-azulE);
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .3s;
-} */
-
-#registro_estudiantil button[type="submit"]:hover{
-    background: var(--color-hover-azulE);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,.15);
-}
-
-/* ============================
-   BOTON
-============================ */
+/*==================================
+BOTON REGRESAR
+==================================*/
 
 #registro_estudiantil .btn-regresar{
     background: var(--color-azulE);
@@ -144,22 +51,180 @@
 }
 
 #registro_estudiantil .btn-regresar:hover{
-    background: var(--color-neutro);
-    color: var(--color-base);
+    background:var(--color-neutro);
 }
 
+/*==================================
+FORMULARIO
+==================================*/
 
+#registro_estudiantil .lado_derecho{
+    width:50%;
+}
+
+#registro_estudiantil .contenedor_registro_estudiante{
+    display:flex;
+    flex-direction:column;
+    padding:35px 45px 45px;
+    gap:8px;
+}
+
+#registro_estudiantil h3{
+    text-align:center;
+    font-size:2rem;
+    color:var(--color-azulE);
+    margin-bottom:15px;
+}
+
+#registro_estudiantil label{
+    font-weight:bold;
+    color:var(--color-intermitente);
+    margin-top:10px;
+}
+
+#registro_estudiantil .grupo-campo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:2px solid #d7d7d7;
+    border-radius:12px;
+    overflow:hidden;
+    transition:.3s;
+    background:#fff;
+}
+
+#registro_estudiantil .grupo-campo:focus-within{
+    border-color:var(--color-azulE);
+    box-shadow:0 0 8px rgba(0,0,0,.08);
+}
+
+#registro_estudiantil .grupo-campo input{
+    flex:1;
+    height:50px;
+    border:none;
+    outline:none;
+    padding:0 15px;
+    font-size:1rem;
+    background:transparent;
+}
+
+/*==================================
+SELECTS
+==================================*/
+
+#registro_estudiantil .nacionalidad,
+#registro_estudiantil .prefijo,
+#registro_estudiantil .dominio{
+    border:none;
+    outline:none;
+    height:50px;
+    background:#33A1E0;
+    color:var(--color-neutro);
+    font-size:1rem;
+    text-align:center;
+}
+
+#registro_estudiantil .nacionalidad{
+    width:60px;
+}
+
+#registro_estudiantil .prefijo{
+    width:90px;
+}
+
+#registro_estudiantil .dominio{
+    width:110px;
+}
+
+/*==================================
+CONTRASEÑA
+==================================*/
+
+#registro_estudiantil .contrasenia{
+    position:relative;
+}
+
+#registro_estudiantil .contrasenia input[type="password"]{
+    padding-right:50px;
+}
+
+#registro_estudiantil #oculta_aparecer{
+    display:none;
+}
 
 #registro_estudiantil .eye_off,
 #registro_estudiantil .eye_on{
-    cursor: pointer;
-    color: var(--color-intermitente);    
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:var(--color-intermitente);
+    font-size:1.2rem;
 }
 
-#registro_estudiantil .ocultar{
-    display: none;
+#registro_estudiantil .eye_on{
+    display:none;
 }
 
-#oculta_aparecer {
-    display: none;
+#registro_estudiantil #oculta_aparecer:checked ~ .eye_off{
+    display:none;
 }
+
+#registro_estudiantil #oculta_aparecer:checked ~ .eye_on{
+    display:block;
+}
+
+/*==================================
+SEGURIDAD PASSWORD
+==================================*/
+
+#registro_estudiantil .seguridad-password{
+    margin-top:8px;
+}
+
+#registro_estudiantil .barra-password{
+    width:100%;
+    height:8px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+#registro_estudiantil #nivel_password{
+    height:100%;
+    width:0;
+    transition:.3s;
+}
+
+#registro_estudiantil #texto_password{
+    display:block;
+    margin-top:8px;
+    font-size:.9rem;
+    color:#666;
+}
+
+/*==================================
+BOTON
+==================================*/
+
+#registro_estudiantil button[type="submit"]{
+    width:100%;
+    height:55px;
+    margin-top:20px;
+    border:none;
+    border-radius:12px;
+    background:var(--color-azulE);
+    color:#fff;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#registro_estudiantil button[type="submit"]:hover{
+    background:var(--color-hover-azulE);
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.15);
+}
+

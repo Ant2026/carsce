@@ -1,0 +1,66 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="aulas_academicas">
+    <div class="contenedor_aulas_academicas">
+        <h2>Aulas Académicas</h2>
+
+        <form method="post" id="formulario_registro_aulas">
+            {% csrf_token %}
+            <label for="registrar_nombre_aula">Nombre/Número del Aula:</label>
+            <input type="text" name="registrar_aula" id="registrar_nombre_aula" autocomplete="off" required>
+            
+            <label for="registrar_nombre_edificio">Nombre del Edificio:</label>
+            <input type="text" name="registrar_edificio" id="registrar_nombre_edificio" autocomplete="off" required>
+            
+            <label for="registrar_piso_edificio">Piso del Edificio</label>
+            <input type="text" name="registrar_piso" id="registrar_piso_edificio" autocomplete="off" required>
+
+            <label for="registrar_nucleo_aula">Núcleo:</label>
+            <select name="registrar_nucleo" id="registrar_nucleo_aula"></select>
+
+            <input type="submit" value="Registrar Aulas">
+        </form>
+
+        <div class="contenedor_busqueda_aulas">
+            <h3>Busqueda Aulas Académicas</h3>
+
+            <div id="aulas_registradas"></div>
+        </div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar_aula">
+    <div class="contenedor_actualizar_aula">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        <h3>Actualizar Aula Académica</h3>
+
+        <div id="mensajede_error"></div>
+
+        <form method="post" id="formulario_actualizar_aula">
+            {% csrf_token %}
+            <input type="hidden" name="aulaseleccionar" id="aula_seleccionar">
+
+            <label for="actualizar_nombre_aula">Nombre/Número del Aula:</label>
+            <input type="text" name="actualizar_aula" id="actualizar_nombre_aula" autocomplete="off" required>
+
+            <label for="actualizar_nombre_edificio">Nombre del Edificio:</label>
+            <input type="text" name="actualizar_edificio" id="actualizar_nombre_edificio" autocomplete="off" required>
+            
+            <label for="actualizar_piso_edificio">Piso del Edificio</label>
+            <input type="text" name="actualizar_piso" id="actualizar_piso_edificio" autocomplete="off" required>
+
+            <label for="actualizar_nucleo_aula">Núcleo:</label>
+            <select name="actualizar_nucleo" id="actualizar_nucleo_aula"></select>
+
+            <input type="submit" value="Actualizar Aula">
+        </form> 
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/modulo_aulas_academicas.js' %}"></script>
+
+{% endblock %}

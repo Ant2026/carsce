@@ -1,0 +1,21 @@
+_{% extends 'Email/Base.html' %}
+
+{% block content %}
+
+<section id="enviar_codigo_email">
+    <div class="contenedor_enviar_codigo">
+        <h2>Código de Autenticación</h2>
+        <p>
+            Estimado(a) usuario(a), hemos recibido una solicitud para recuperar las credenciales de acceso a su cuenta. 
+            A continuación encontrará el código de autenticación necesario para continuar con el proceso de verificación.
+        </p>
+
+        <div id="codigo_autenticacion">{{codigo}}</div>
+
+        <p>
+            Este código es válido por <strong>15 minutos</strong>. No lo comparta con ninguna persona. Si usted no realizó esta solicitud, puede ignorar este correo de forma segura.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

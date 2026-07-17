@@ -13,8 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultado = await respuesta.json()
             
             if (resultado.estado === "exito") {
-                window.location.href = "/comprobar_usuario/";
-
+                window.location.href = "/../../Sesion/comprobar_usuario/";
             } else {
                 Swal.fire({
                     title: "Error",
@@ -23,19 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
-
                 formulario.reset()
             }
-
         } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: "Ocurrió un error, por favor verifique!",
-                icon: "error",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            });
-
+            console.error(error);
         }
     });
 });

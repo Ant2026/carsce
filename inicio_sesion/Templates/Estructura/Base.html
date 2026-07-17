@@ -13,81 +13,20 @@
     
     <title>UPT José Félix Ribas</title>
 </head>
-<body>
+<body class="{% if request.session.usuario_nombre %}body-logueado{% endif %}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<<<<<<< HEAD
-=======
-    {% if request.path == '/' or request.session.usuario_nombre %}
-     
-        {% include 'Estructura/Encabezado.html' %}
-
-    {% endif %}
-
-    {% if request.session.usuario_nombre %}
-        <aside id="barra_lateral">
-            <h3 class="menu-title">MENÚ</h3>
-
-            {% if "Director General" in request.session.perfiles %}
-                <a href="{% url 'pre_registro_personal' %}">Pre Registro Personal</a>
-            {% endif %}
-
-            {% if "Encargado de Control de Estudio" in request.session.perfiles %}
-                <a href="{% url 'inscripcion_estudiante' %}">Inscripción Estudiante</a>
-            {% endif %}
-
-            {% if "Coordinador de PNF" in request.session.perfiles %}
-                <a href="{% url 'inscripcion_estudiante' %}">Inscripción Estudiante</a>
-            {% endif %}
-
-        </aside>
-    {% endif %}
->>>>>>> cbcc481 (Cambios - Jonatan)
     
     {% include 'Estructura/Encabezado.html' %}
 
-    {% if request.session.usuario_nombre and request.session.registro_completado %}
-        <aside id="barra_lateral">
-            <h3 class="menu-title">MENÚ</h3>
-
-            {% if "Director General" in request.session.perfil %}
-                <a href="{% url 'panel_usuario' %}">Inicio</a>
-                <a href="{% url 'pre_registro_personal' %}">Pre Registro Personal</a>
-                <a href="{% url 'modulo_pnf' %}">P.N.F</a>
-                <a href="{% url 'modulo_nucleo' %}">Núcleo</a>
-                <a href="{% url 'modulo_seccion' %}">Sección</a>
-                <a href="{% url 'modulo_materia' %}">Materia</a>
-                <a href="{% url 'modelo_calendario_academico' %}">Calendario Académico</a>
-                <a href="{% url 'actualizar_datosusuario' %}">Actualizar Datos Báisca</a>
-                <a href="{% url 'modulo_asignar_materia_docente' %}">Asignar Materia a Docente</a>
-                <a href="{% url 'modulo_horario_academico' %}">Horario Académico</a>
-                <a href="{% url 'modulo_autoridades' %}">Autoridades</a>
-                <a href="{% url 'modulo_actualizar_usuarios' %}">Actualizar Datos Usuarios</a>
-            {% endif %}
-
-            {% if "Encargado de Control de Estudio" in request.session.perfil %}
-                <a href="{% url 'inscripcion_estudiante' %}">Inscripción Estudiante</a>
-            {% endif %}
-
-            {% if "Coordinador de PNF" in request.session.perfil %}
-                # Crear Horario Académico
-                <a href="{% url 'inscripcion_estudiante' %}">Inscripción Estudiante</a>
-            {% endif %}
-
-            {% if "Docente" in request.session.perfil %}
-                
-            {% endif %}
-
-            {% if "Estudiante" in request.session.perfil %}
-                
-            {% endif %}
-        </aside>
+    {% if request.session.usuario_nombre %}
+        {% include 'Estructura/Barra_lateral.html' %} 
     {% endif %}
 
-    <main>
-        {% block content %}
-            
-        {% endblock %}   
+    <main class="{% if request.session.usuario_nombre %}main-logueado{% endif %}">
+    {% block content %}
+
+    {% endblock %}
     </main>
     
     {% if not request.session.usuario_nombre %}

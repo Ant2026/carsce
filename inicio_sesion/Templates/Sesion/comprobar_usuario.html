@@ -1,0 +1,37 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="comprobar_usuario">
+    <div class="tarjeta_principal">
+        <div class="contenedor">
+            <h3>Verificar Código</h3>
+            <p>Se ha enviado un código a su correo electrónico. <br> Por favor, ingréselo a continuación para verificar su
+                identidad.</p>
+            <p class="contador">Tiempo restante del código: <strong id="contador_codigo"
+                    data-expiracion="{{ fecha_expiracion }}"></strong></p>
+
+            <form method="post" id="formulario_comprar_usuario" class="comprobar_usuario">
+                {% csrf_token %}
+                <label for="password">Código:</label>
+                <div class="grupo-campo">
+                    <input type="password" name="codigo" autocomplete="off" maxlength="6" minlength="6" id="password" placeholder="Ingresar código" required>
+                    <input type="checkbox" id="oculta_aparecer">
+                    
+                    <label class="icon-eye-off eye_off" for="oculta_aparecer"></label>
+                    <label class="icon-eye eye_on" for="oculta_aparecer"></label>
+                </div>
+                <button type="submit">Verificar</button>
+            </form>
+            <button type="button" id="btn_reenviar_codigo" class="btn-reenvio" disabled>Reenviar código (<span id="contador_reenvio">60</span>s)</button>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
+<script src="{% static 'Funcionalidades/reenvio_codigo.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/validar_usuario.js' %}"></script>
+
+{% endblock %}

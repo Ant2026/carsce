@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const contenedor_pre_inscripcion = document.getElementById("contenedor_pre_inscripcion")
 
     const dialogo = document.getElementById("datos_estudiantes")
@@ -45,8 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const control_img_sabana = document.getElementById("contenedor_sabana_nota_estudiante")
     const control_img_opsu = document.getElementById("contenedor_opsu_estudiante")
 
-    const selects_nucleos = document.getElementById("selects_nucleos")
-    const selects_pnfs = document.getElementById("selects_pnfs")
+    const select_nucleos_registrados = document.getElementById("nucleos_registrados")
+    const select_pnf_registrados = document.getElementById("pnf_registrados")
 
     function getCookie(nombre) {
         let cookieValue = null;
@@ -72,16 +71,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let pnf = "", nucleo = ""
 
-    selects_nucleos.addEventListener("change", async () => {
-        nucleo = selects_nucleos.value;
+    async function nucleos_registrados() {
+        try {
+            const respuesta = await fetch("/nucleos_registrados/");
+            const resultado = await respuesta.json();
+            select_nucleos_registrados.innerHTML = "<option>Seleccionar el Núcleo</option>"
 
-        if (nucleo && pnf) {
-            await estudiante_pre_inscripcion();
+            resultado.nucleos.forEach(nucleo => {
+                const option = document.createElement("option");
+                option.value = nucleo.id_nucleo;
+                option.textContent = nucleo.municipio;
+                select_nucleos_registrados.append(option)
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    nucleos_registrados();
+
+    async function pnfs_registrados() {
+        try {
+            const formulario = new FormData()
+            formulario.append("nucleo", nucleo)
+            
+            const respuesta = await fetch("/pnfs_pertenece_nucleo/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrftoken
+                },
+                body: formulario
+            });
+            const resultado = await respuesta.json();
+            select_pnf_registrados.innerHTML = "<option>Seleccionar el P.N.F</option>"
+
+            resultado.pnfs.forEach(pnf => {
+                const option_pnf_registrar = document.createElement("option")
+                option_pnf_registrar.value = pnf.id_pnf
+                option_pnf_registrar.textContent = pnf.pnf
+                select_pnf_registrados.append(option_pnf_registrar)
+            }); 
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    select_nucleos_registrados.addEventListener("change", async () => {
+        nucleo = select_nucleos_registrados.value;
+        select_pnf_registrados.disabled = false;
+
+        if (nucleo) {
+            await pnfs_registrados();
         }
     });
 
-    selects_pnfs.addEventListener("change", async () => {
-        pnf = selects_pnfs.value;
+    select_pnf_registrados.addEventListener("change", async () => {
+        pnf = select_pnf_registrados.value;
 
         if (nucleo && pnf) {
             await estudiante_pre_inscripcion();
@@ -93,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const formulario = new FormData();
             formulario.append("nucleo", nucleo);
             formulario.append("pnf", pnf);
-    
+
             const respuesta = await fetch("/obtener_pre_inscrito/", {
                 method: "POST",
                 headers: {
@@ -104,48 +148,67 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultado = await respuesta.json();
 
             contenedor_pre_inscripcion.innerHTML = "";
-
             if (resultado.estado !== "exito") {
                 return;
             }
 
-            const opcion = resultado.seccion
-                ? `<option value="${resultado.seccion.id_seccion}">
-                        ${resultado.seccion.seccion}
-                </option>`
-                : '<option value="">Sin cupos disponibles</option>';
+            let opciones = "";
+            if (resultado.secciones.length > 0) {
+                opciones += `
+                    <option value="" selected>
+                        Seleccione una sección
+                    </option>`;
+
+                resultado.secciones.forEach(seccion => {
+                    opciones += `
+                        <option value="${seccion.id_seccion}">
+                            ${seccion.seccion} | Aula ${seccion.aula} | ${seccion.turno} (${seccion.cantidad_estudiantes} estudiante)
+                        </option>
+                    `;
+                });
+            } else {
+                opciones = ` <option value=""> No hay secciones disponibles</option>`;
+            }
 
             resultado.estudiantes.forEach((estudiante, index) => {
+
                 contenedor_pre_inscripcion.innerHTML += `
                     <tr data-cedula="${estudiante.cedula}">
                         <td>${index + 1}</td>
                         <td>${estudiante.nombres}</td>
                         <td>${estudiante.apellidos}</td>
                         <td>${estudiante.cedula}</td>
+
                         <td>
                             <select name="seccion" class="select_seccion">
-                                ${opcion}
+                                ${opciones}
                             </select>
                         </td>
+
                         <td>
                             <button type="button" class="inscribir">
                                 Inscribir
                             </button>
                         </td>
+
                         <td>
                             <button type="button" class="rechazar">
                                 Rechazar
                             </button>
                         </td>
-                    </tr>`;
+                    </tr>
+                `;
             });
+
         } catch (error) {
             console.error(error);
         }
     }
 
+    estudiante_pre_inscripcion();
+
     document.addEventListener("change", async function (e) {
-    if (!e.target.classList.contains("select_seccion")) return;
+        if (!e.target.classList.contains("select_seccion")) return;
 
         const select = e.target;
 
@@ -314,6 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
+    mostrarPagina();
 
     btnAvanzar.addEventListener("click", () => {
         if (paginaActual < paginas.length - 1) {
@@ -329,8 +393,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    mostrarPagina();
-
     contenedor_pre_inscripcion.addEventListener("click", async (e) => {
 
         if (!e.target.classList.contains("inscribir") && !e.target.classList.contains("rechazar")) {
@@ -338,14 +400,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const fila = e.target.closest("tr");
-
         const cedula = fila.dataset.cedula;
-
         const seccion = fila.querySelector(".select_seccion").value;
-
-        const accion = e.target.classList.contains("inscribir")
-            ? "aceptado"
-            : "rechazado";
+        const accion = e.target.classList.contains("inscribir")? "aceptado" : "rechazado";
 
         const formulario = new FormData();
 
@@ -356,7 +413,6 @@ document.addEventListener("DOMContentLoaded", () => {
         formulario.append("accion", accion);
 
         try {
-
             const respuesta = await fetch("/inscripcion_estudiante/", {
                 method: "POST",
                 headers: {
@@ -364,7 +420,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: formulario
             });
-
             const resultado = await respuesta.json();
 
             Swal.fire({
@@ -372,11 +427,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 text: resultado.descripcion,
                 icon: resultado.icon
             });
-
         } catch (error) {
             console.error(error);
         }
     });
-    estudiante_pre_inscripcion();
-
 });

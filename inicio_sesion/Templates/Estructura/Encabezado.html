@@ -1,17 +1,14 @@
 {% load static %}
 
-<header>
+<header class="{% if request.session.usuario_nombre %}header-logueado{% endif %}">
     <nav id="navegacion">
         <div class="contenedor">
             <div class="GBV">
                 <img src="{% static 'Imagenes/MPPE.png' %}" alt="GBV">
                 <h1>Gobierno Bolivariano <br>de Venezuela</h1>
-                <p>|</p>                  
+                <p>|</p>
             </div>
-<<<<<<< HEAD
-=======
-                
->>>>>>> cbcc481 (Cambios - Jonatan)
+
             <div class="MPPE">
                 <h1>Ministerio del Poder Popular<br>para la Educación Universitaria</h1>
                 <p>|</p>
@@ -19,24 +16,25 @@
             <div class="UPT">
                 <img src="{% static 'Imagenes/UPT_LOGO.png' %}" alt="UPT">
                 <h1>Universidad Politénica Territorial del<br>Estado Barinas José Félix Ribas</h1>
-            </div> 
+            </div>
         </div>
-        
-        <div class="contenedor_barra">
-            <ul class="navbar">
-                {% if not request.session.usuario_nombre %}
+
+        {% if not request.session.usuario_nombre %}
+            <div class="contenedor_barra">           
+                <ul class="navbar">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'foro'%}" >Inicio</a>
+                        <a class="nav-link" href="{% url 'foro'%}">Inicio</a>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="#">Institución</a>
 
-<<<<<<< HEAD
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'Historia' %}">Nuestra Historia</a></li>
                             <li><a class="dropdown-item" href="{% url 'mision_vision' %}">Mision y Vision</a></li>
                         </ul>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="#">Formación Estudiantil</a>
 
@@ -45,69 +43,41 @@
                             <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario (PSC)</a></li>
                         </ul>
                     </li>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="#">Guia Estudiantil/Docente</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Trayectoria Academica</a></li>
-                            <li><a class="dropdown-item" href="{% url 'Planificacion_Docente'%}">Planificación Docente</a></li>
+                            <li><a class="dropdown-item" href="{% url 'Planificacion_Docente'%}">Planificación Docente</a>
+                            </li>
                         </ul>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'carreras_impartidas' %}" >Carreras Impartidas</a>
+                        <a class="nav-link" href="{% url 'carreras_impartidas' %}">Carreras Impartidas</a>
                     </li>
-                {% endif %}   
-                {% if request.session.usuario_nombre %}
+
                     <li class="nav-item">
-                        <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar</a>
+                        <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
                     </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
-                        </li>
-                {% endif %}
-=======
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="#">Institución</a>
 
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'Historia' %}">Nuestra Historia</a></li>
-                        <li><a class="dropdown-item" href="{% url 'mision_vision' %}">Mision y Vision</a></li>
-                    </ul>
-                </li>
+                </ul>
+            </div>
+        {% endif %}
+        {% if request.session.usuario_nombre %}
+            <div class="contenedor_logueado">
+                <ul class="navbar">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link icon-user" href="#">Perfil</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Configuración</a></li>
+                            <li><a class="dropdown-item icon-logout" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="#">Formación Estudiantil</a>
-
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'pst' %}">Proyecto Socio-Tecnologico (PST)</a></li>
-                        <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario (PSC)</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="#">Guia Estudiantil/Docente</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Trayectoria Academica</a></li>
-                        <li><a class="dropdown-item" href="{% url 'Planificacion_Docente'%}">Planificación Docente</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'carreras_impartidas' %}" >Carreras Impartidas</a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
-                </li>
->>>>>>> cbcc481 (Cambios - Jonatan)
-            </ul>
-        </div>
-        
     </nav>
 </header>
-
-
-<!-- {% if request.path == '/' %} -->
-                    <!-- {% else %}
-                        <a href="{% url 'cerrar_sesion' %}" class="btn_acceder">Cerrar Sesión</a>
-                    {% endif %} -->

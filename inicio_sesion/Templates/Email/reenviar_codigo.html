@@ -1,0 +1,38 @@
+{% extends "Email/Base.html" %}
+
+{% block content %}
+
+<section id="reenviar_codigo_email">
+    <div class="contenedor_enviar_codigo">
+        <h2>Nuevo Código de Autenticación</h2>
+
+        <p>
+            Estimado(a) <strong>{{ nombres }} {{ apellidos }}</strong>,
+            de acuerdo con su solicitud, se ha generado un nuevo código de autenticación para continuar con el proceso de recuperación de credenciales de acceso.
+        </p>
+        <p>
+            El código anterior ha sido reemplazado y ya no es válido.
+            Utilice únicamente el código que se muestra a continuación.
+        </p>
+
+        <p id="numero_intento">
+            <strong>Reenvío N.º {{ numero_intento }}</strong>
+        </p>
+
+        <div id="codigo_autenticacion">
+            {{ codigo }}
+        </div>
+
+        <p>
+            Este nuevo código permanecerá vigente durante
+            <strong>5 minutos</strong>.
+        </p>
+
+        <p>
+            Por motivos de seguridad, no comparta este código con ninguna persona.
+            Si usted no solicitó este nuevo código, ignore este mensaje y comuníquese con el administrador de la plataforma si considera que su cuenta puede estar comprometida.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

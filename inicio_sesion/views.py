@@ -1,55 +1,38 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.hashers import check_password, make_password
-from django.http import JsonResponse
-from django.core.mail import send_mail
+from django.http import JsonResponse, FileResponse
+from django.core.mail import send_mail, EmailMessage
 from django.utils import timezone
 from django.db import transaction
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime, timedelta
 from django.forms.models import model_to_dict
+from django.template.loader import render_to_string
 
-from .models import Usuario, Perfiles, Nucleos, Pnf, Contacto, SeccionEstudiante, VerificacionCodigo, PNFNucleo,  GacetaOficial, UsuarioAsignacion, Nacimiento, Residencia, DatosPreofesion, Discapacidad, InformacionSecundaria, DocumentosEstudiante, PadresEstudiante, EstatusEstudiante, SeccionAcademica, CredencialesUsuario, Materia, PeriodoAcademico, CalendarioAcademico, PeriodoMateria, CalendarioMateria, MateriaAsignada, Autoridades
+from .models import Usuario, Perfiles, Nucleos, Pnf, Contacto, SeccionEstudiante, VerificacionCodigo, PNFNucleo,  GacetaOficial, UsuarioAsignacion, Nacimiento, Residencia, DatosPreofesion, Discapacidad, InformacionSecundaria, DocumentosEstudiante, PadresEstudiante, EstatusEstudiante, SeccionAcademica, CredencialesUsuario, Materia, PeriodoAcademico, CalendarioAcademico, PeriodoMateria, CalendarioMateria, MateriaAsignada, Autoridades, TrayectoAcademico, AulaAcademica, HorarioAcademica
 
 from collections import defaultdict
 import secrets, string, json, uuid, os
 from math import ceil
+import json
+import re
+from pathlib import Path
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, A3, letter, legal, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+
+ROMANOS = [
+    "I", "II", "III", "IV", "V",
+    "VI", "VII", "VIII", "IX", "X"
+]
 
 # Create your views here.
-# def foro(request):
-#     if request.method == "POST":
-#         nucleo = request.POST.get("nucleos_seleccionado")
-
-#         if not nucleo:
-#             return JsonResponse({
-#                 "icon": "warning",
-#                 "descripcion": "Debe seleccionar un núcleo."
-#             })
-
-#         request.session["nucleo_seleccionado"] = nucleo
-
-#         return JsonResponse({
-#             "icon": "success",
-#             "descripcion": "Núcleo registrado correctamente."
-#         })
-
-#     return render(
-#         request,
-#         "Foro/foro.html",
-#         {
-#             "mostrar_dialogo": not request.session.get("nucleo_seleccionado"),
-#             "nucleo_seleccionado": request.session.get("nucleo_seleccionado")
-#         }
-#     )
-
 
 def inicio_sesion(request):
     if request.method == "POST":
@@ -87,31 +70,33 @@ def inicio_sesion(request):
             perfil = credenciales.id_asignacion.id_perfil
 
             request.session['cedula_usuario'] = usuario.cedula_identidad
-            request.session['usuario_nombre'] = (f"{usuario.nombres} {usuario.apellidos}")
+            request.session['usuario_nombre'] = f"{usuario.nombres} {usuario.apellidos}"
             request.session['perfil'] = perfil.perfil
 
             registro_basico = Nacimiento.objects.filter(id_usuario=usuario).exists()
 
             registro_estudiante = InformacionSecundaria.objects.filter(id_usuario=usuario).exists()
 
-            request.session['registro_completado'] = registro_basico
+            request.session['registro_completado'] = (
+                registro_basico or registro_estudiante
+            )
 
             if not registro_basico:
                 if perfil.perfil == "Estudiante":
-                    url = "/completar_registro_estudiante/"
+                    url = "/../completar_registro_estudiante/"
                 else:
                     url = "/completar_registro_personal/"
 
             elif perfil.perfil == "Estudiante" and not registro_estudiante:
-                url = "/completar_registro_pe/"
+                url = "/../completar_registro_pe/"
             else:
-                url = "/panel_usuario/"
+                url = "/../panel_usuario/"
 
             return JsonResponse({
                 "success": True,
                 "url": url
             })
-
+        
         except Exception as e:
             return JsonResponse({
                 "success": False,
@@ -120,7 +105,7 @@ def inicio_sesion(request):
                 "detalle": str(e)
             })
 
-    return render(request, 'inicio_sesion.html')
+    return render(request, 'Sesion/inicio_sesion.html')
 
 def cerrar_sesion(request):
     request.session.flush() 
@@ -159,7 +144,9 @@ def buscar_usuario(request):
                     "descripcion": "Debe completar los campos"
                 })
         
-    return render(request, 'buscar_usuario.html')
+    return render(request, 'Sesion/buscar_usuario.html')
+
+# Asegúrate de importar tus modelos y funciones (Usuario, Contacto, VerificacionCodigo, etc.)
 
 # Asegúrate de importar tus modelos y funciones (Usuario, Contacto, VerificacionCodigo, etc.)
 
@@ -240,7 +227,7 @@ def comprobar_usuario(request):
     # Pasamos el timestamp de expiración a la plantilla
     fecha_expiracion_ts = int(verificacion.fecha_expiracion.timestamp()) if verificacion else 0
 
-    return render(request, "comprobar_usuario.html", {"fecha_expiracion": fecha_expiracion_ts})
+    return render(request, "Sesion/comprobar_usuario.html", {"fecha_expiracion": fecha_expiracion_ts})
 
 def validar_codigo(codigo, cedula_identidad,token):
     verificacion = VerificacionCodigo.objects.filter(
@@ -347,12 +334,16 @@ def reenviar_codigo_btn(request):
             request.session.get("token_recuperacion"))
 
 def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
-    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=cedula_identidad,
-                                                     token=token).first()
+    numero_intento = 0
+    
+    verificacion = VerificacionCodigo.objects.filter(
+        cedula_identidad=cedula_identidad,
+        token=token
+    ).first()
 
     # Bloqueo activo
     if verificacion and verificacion.bloqueado_hasta and timezone.now() < verificacion.bloqueado_hasta:
-        
+
         tiempo_restante = verificacion.bloqueado_hasta - timezone.now()
         minutos_restantes = max(1, int(tiempo_restante.total_seconds() / 60))
 
@@ -374,9 +365,12 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
         verificacion.fecha_expiracion = fecha_expiracion
         verificacion.activo = 1
         verificacion.save()
+
+        numero_intento = verificacion.intentos
     else:
         verificacion = VerificacionCodigo.objects.create(
             cedula_identidad=cedula_identidad,
+            token=token,
             codigo=codigo_generado,
             creado=timezone.now(),
             intentos=0,
@@ -386,11 +380,21 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
             descripcion=f"Código de verificación para recuperación de credenciales al usuario {nombres_usuario} {apellidos_usuario}"
         )
 
+    html = render_to_string(
+        "Email/reenviar_codigo.html",
+        {
+            "nombres": nombres_usuario,
+            "apellidos": apellidos_usuario,
+            "codigo": codigo_generado,
+            "numero_intento": numero_intento,
+        }
+    )
     send_mail(
-        subject="Código de verificación",
-        message=f"Tu código es: {codigo_generado}",
+        subject="Nuevo código de autenticación - UPT José Félix Ribas",
+        message=f"Su nuevo código de autenticación es: {codigo_generado}",
         from_email="ejemplo@gmail.com",
         recipient_list=[correo_electronico],
+        html_message=html,
     )
 
     return JsonResponse({
@@ -414,11 +418,23 @@ def enviar_codigo_verificacion(nombres_usuario, apellidos_usuario, correo_electr
         descripcion=f"Código de verificación para recuperación de credenciales al usuario {nombres_usuario} {apellidos_usuario}"
     )
 
+    # Renderizar la plantilla HTML
+    html = render_to_string(
+        "Email/enviar_codigo.html",
+        {
+            "nombres": nombres_usuario,
+            "apellidos": apellidos_usuario,
+            "codigo": codigo_generado,
+        }
+    )
+
+    # Enviar correo
     send_mail(
-        subject="Código de verificación",
-        message=f"Tu código es: {codigo_generado}",
+        subject="Código de Autenticación - UPT José Félix Ribas",
+        message=f"Su código de autenticación es: {codigo_generado}",  # Texto plano de respaldo
         from_email="ejemplo@gmail.com",
         recipient_list=[correo_electronico],
+        html_message=html,
     )
 
     return JsonResponse({
@@ -517,56 +533,191 @@ def recuperar_contrasenia(request):
             "descripcion": "Contraseña actualizada correctamente"
         })
 
-    return render(request, "recuperar_contrasenia.html")
+    return render(request, "Sesion/recuperar_contrasenia.html")
+
+from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 
 def recuperar_usuario(request):
-    if not request.session.get("flujo_verificacion"):
-        return redirect("buscar_usuario")
-    
-    if not request.session.get("correo_verificado"):
-        return redirect("comprobar_usuario")
+    ci_usuario = request.session.get("CI_usuario")
 
-    token = request.session.get("token_recuperacion")
+    if not ci_usuario:
+        return redirect("inicio_sesion")
 
-    verificacion = VerificacionCodigo.objects.filter(token=token, activo=0).first()
-    if not verificacion:
-        return redirect("buscar_usuario")
+    try:
+        usuario = Usuario.objects.get(
+            cedula_identidad=ci_usuario
+        )
 
-    usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
-    if not usuario: 
-        return redirect("buscar_usuario")
-    
-    asignacion = UsuarioAsignacion.objects.filter(id_usuario=usuario).first()
-    credenciales = CredencialesUsuario.objects.filter(id_asignacion=asignacion).first()
+        contacto = Contacto.objects.filter(
+            id_usuario=usuario
+        ).first()
 
-    contacto = Contacto.objects.filter(id_usuario_id=usuario.id_usuario).first()
+        if not contacto or not contacto.correo_electronico:
+            return render(
+                request,
+                "Sesion/recuperar_usuario.html",
+                {
+                    "error": "El usuario no posee un correo electrónico registrado."
+                }
+            )
 
-    correo = contacto.correo_electronico
+        credenciales = (
+            CredencialesUsuario.objects
+            .filter(id_asignacion__id_usuario=usuario)
+            .select_related("id_asignacion")
+            .first()
+        )
 
-    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session["CI_usuario"]).first()
-    if verificacion:
-        verificacion.token = ""
-        verificacion.save()
+        if not credenciales:
+            return render(
+                request,
+                "Sesion/recuperar_usuario.html",
+                {
+                    "error": "No existen credenciales asociadas a este usuario."
+                }
+            )
 
-    del request.session["correo_verificado"]
-    del request.session["CI_usuario"]
-    del request.session["token_recuperacion"]
+        correo = contacto.correo_electronico
 
-    send_mail(
-        subject="Recuperación de usuario",
-        message=f"Su nombre de usuario es: {credenciales.nombre_usuario}",
-        from_email="ejemplo@gmail.com",
-        recipient_list=[correo],
+    except ObjectDoesNotExist:
+        return render(
+            request,
+            "Sesion/recuperar_usuario.html",
+            {
+                "error": "Los datos suministrados no son válidos."
+            }
+        )
+
+    VerificacionCodigo.objects.filter(
+        cedula_identidad=ci_usuario
+    ).update(token="")
+
+    request.session.pop("correo_verificado", None)
+    request.session.pop("CI_usuario", None)
+    request.session.pop("token_recuperacion", None)
+
+    html = render_to_string(
+        "Email/recuperar_usuario.html",
+        {
+            "nombres": usuario.nombres,
+            "apellidos": usuario.apellidos,
+            "nombre_usuario": credenciales.nombre_usuario,
+        }
     )
 
-    return render(request, 'recuperar_usuario.html', {"usuario_enviado": True})
+    try:
+        send_mail(
+            subject="Recuperación de usuario - UPT José Félix Ribas",
+            message=f"Su nombre de usuario es: {credenciales.nombre_usuario}",
+            from_email="ejemplo@gmail.com",
+            recipient_list=[correo],
+            html_message=html,
+            fail_silently=False,
+        )
+
+    except Exception:
+        return render(
+            request,
+            "Sesion/recuperar_usuario.html",
+            {
+                "error": "No fue posible enviar el correo electrónico."
+            }
+        )
+
+    return render(
+        request,
+        "Sesion/recuperar_usuario.html",
+        {
+            "usuario_enviado": True
+        }
+    )
 
 # Esto son los modulos para registrar credenciales por parte del personal y
 # pre-inscripción para los estudiantes
 
-
 def panel_estudiantes(request):
     return render(request, 'panel_estudiantes.html')
+
+def panel_registro(request):
+    return render(request, 'Sesion/panel_registro.html')
+
+def registro_estudiantil(request):
+    if request.method == "POST":
+        nombres = request.POST.get("nombres")
+        apellidos = request.POST.get("apellidos")
+        nacionalidad = request.POST.get("nacionalidad")
+        num_cedula = request.POST.get("cedula_identidad")
+        nombre_correo = request.POST.get("correo_electronico")
+        dominio = request.POST.get("dominio")
+        prefijo = request.POST.get("prefijo")
+        num_telefono = request.POST.get("telefono")
+        usuario = request.POST.get("usuario")
+        password = request.POST.get("password")
+
+        if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono and usuario and password:
+            correo_electronico = nombre_correo + dominio
+            cedula_identidad = nacionalidad + "-" + num_cedula
+            telefono = prefijo + num_telefono
+
+            verificar_cedula = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
+            verificar_usuario = CredencialesUsuario.objects.filter(nombre_usuario=usuario).first()
+            verificar_correo = Contacto.objects.filter(correo_electronico=correo_electronico).exists()
+
+            if verificar_cedula:
+                return JsonResponse({
+                    "icon": "error",
+                    "descripcion": "Ya existe una cédula registrada."
+                })
+
+            if verificar_correo:
+                return JsonResponse({
+                    "icon": "error",
+                    "descripcion": "Ya existe un correo registrado."
+                })
+
+            if verificar_usuario:
+                return JsonResponse({
+                    "icon": "error",
+                    "descripcion": "Ya existe el usuario registrado."
+                })
+            
+            nuevo_usuario = Usuario.objects.create(
+                            nombres=nombres,
+                            apellidos=apellidos,
+                            cedula_identidad=cedula_identidad
+                        )
+
+            Contacto.objects.create(
+                telefono_personal=telefono,
+                correo_electronico=correo_electronico,
+                id_usuario=nuevo_usuario)
+
+            perfil = Perfiles.objects.get(pk=5)
+
+            nuevo_asignacion = UsuarioAsignacion.objects.create(
+                id_usuario=nuevo_usuario,
+                id_perfil=perfil
+            )
+
+            CredencialesUsuario.objects.create(
+                            nombre_usuario=usuario,
+                            clave=make_password(password),
+                            id_asignacion=nuevo_asignacion)
+
+            return JsonResponse({
+                "icon": "success",
+                "descripcion": "Se registró correctamente."
+            })
+
+        return JsonResponse({
+            "icon": "warning",
+            "descripcion": "Complete todos los campos."
+        })
+
+    return render(request, "Sesion/registro_estudiantil.html")
 
 def confirmar_registro_personal(request):
     if request.method == "POST":
@@ -610,7 +761,7 @@ def confirmar_registro_personal(request):
             "descripcion": "Complete todos los campos"
         })
 
-    return render(request, "confirmar_registro_personal.html")
+    return render(request, "Sesion/confirmar_registro_personal.html")
 
 def guardar_credenciales_personal(request):
     if request.method == "POST":
@@ -739,74 +890,12 @@ def credenciales_estudiante(request):
 
     return render(request, "credenciales_estudiante.html")
 
-def pre_inscripcion(request):
-    if request.method == "POST":
-        nombres = request.POST.get("nombres")
-        apellidos = request.POST.get("apellidos")
-        nacionalidad = request.POST.get("nacionalidad")
-        num_cedula = request.POST.get("cedula_identidad")
-        nombre_correo = request.POST.get("correo_electronico")
-        dominio = request.POST.get("dominio")
-        prefijo = request.POST.get("prefijo")
-        num_telefono = request.POST.get("telefono")
-        usuario = request.POST.get("usuario")
-        password = request.POST.get("password")
-
-        if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono and usuario and password:
-            correo_electronico = nombre_correo + dominio
-            cedula_identidad = nacionalidad + "-" + num_cedula
-            telefono = prefijo + num_telefono
-
-            verificar_cedula = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
-            verificar_correo = Contacto.objects.filter(correo_electronico=correo_electronico).exists()
-
-            if verificar_cedula:
-                return JsonResponse({
-                    "icon": "error",
-                    "descripcion": "Ya existe una cédula registrada"
-                })
-
-            if verificar_correo:
-                return JsonResponse({
-                    "icon": "error",
-                    "descripcion": "Ya existe un correo registrado"
-                })
-            
-            nuevo_usuario = Usuario.objects.create(
-                            nombres=nombres,
-                            apellidos=apellidos,
-                            cedula_identidad=cedula_identidad)
-
-            Contacto.objects.create(
-                telefono_personal=telefono,
-                correo_electronico=correo_electronico,
-                id_usuario=nuevo_usuario)
-
-            perfil = Perfiles.objects.get(pk=5)
-            
-            usuario_asignacion = UsuarioAsignacion.objects.create(id_usuario=nuevo_usuario,  id_perfil=perfil)
-
-            CredencialesUsuario.objects.create(nombre_usuario=usuario, clave=password, id_asignacion=usuario_asignacion)
-
-            return JsonResponse({
-                "icon": "success",
-                "descripcion": "Se registró correctamente"
-            })
-
-        return JsonResponse({
-            "icon": "warning",
-            "descripcion": "Complete todos los campos"
-        })
-
-    return render(request, "pre_inscripcion.html")
-
-# Modulo 
+# MODULO 
 
 def panel_usuario(request):
-    return render(request, 'panel_usuario.html')
+    return render(request, 'Logueado/panel_usuario.html')
 
-
-# Esto son los modulos para realizar el pre registro por parte del Director General
+# PRE REGISTRO PERSONAL
 
 def datos_registro(request):
     perfiles = Perfiles.objects.exclude(perfil="Estudiante")
@@ -881,11 +970,11 @@ def pnfs_nucleos(request):
             perfil = Perfiles.objects.get(pk=perfil_id)
 
             pnfs = PNFNucleo.objects.filter(
-                id_nucleo=nucleo_id
+                id_nucleo_id=nucleo_id
             ).select_related("id_pnf")
 
-            # Solo excluir los PNF ocupados por el mismo perfil
-            if perfil.perfil in ["Coordinador de PNF", "Docente"]:
+            # Solo para Coordinador de PNF se excluyen los PNF ya asignados
+            if perfil.perfil == "Coordinador de PNF":
 
                 pnfs_ocupados = UsuarioAsignacion.objects.filter(
                     id_perfil=perfil,
@@ -907,12 +996,20 @@ def pnfs_nucleos(request):
                 for item in pnfs
             ]
 
-            return JsonResponse({"pnfs": resultado})
+            return JsonResponse({
+                "pnfs": resultado
+            })
 
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse(
+                {"error": str(e)},
+                status=500
+            )
 
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+    return JsonResponse(
+        {"error": "Método no permitido"},
+        status=405
+    )
 
 def pre_registro_personal(request):
     if request.method == "POST":
@@ -1019,7 +1116,7 @@ def pre_registro_personal(request):
         
     return render(request, 'pre_registro_personal.html')
 
-# Formulario Completo del Personal
+# FORMULARIOS USUARIOS
 
 def datos_registrado(request):
     if not request.session.get("usuario_nombre"):
@@ -1227,6 +1324,29 @@ def completar_registro_estudiante(request):
             ci_representante_principal = nacionalidad_representante + "-" + ci_representante
             tlf_representante_principal = prefijo_num2 + telefono_representante
 
+            if nombres_otrorepresentante and apellidos_otrorepresentante and nacionalidad_otrorepresentante and ci_otrorepresentante and prefijo_num3 and telefono_otrorepresentante and parestencootrorepresentante:
+                
+                ci_otro_representante = nacionalidad_otrorepresentante + "-" + ci_otrorepresentante
+                tlf_representante_principal = prefijo_num3 + telefono_otrorepresentante
+
+                if ci_otro_representante == ci_representante_principal:
+                    return JsonResponse({
+                        "titulo": "¡Advertencia!",
+                        "estado": "fallo",
+                        "icon": "warning",
+                        "descripcion": "La cedula de identidad del Representante es identica a la cedula de identidad del primer representante, por favor ingrese la cedula correspondiente del representante."
+                    })
+                
+                if ci_otro_representante == request.session.get("cedula_usuario"):
+                    return JsonResponse({
+                        "titulo": "¡Advertencia!",
+                        "estado": "fallo",
+                        "icon": "warning",
+                        "descripcion": "La cedula de identidad del Representante es identica a la cedula de identidad del estudiante, por favor ingrese la cedula correspondiente del representante."
+                    })
+                
+                PadresEstudiante.objects.create(nombres=nombres_otrorepresentante, apellidos=apellidos_otrorepresentante, cedula_identidad=ci_otrorepresentante, telefono=telefono_otrorepresentante, parentesco=parestencootrorepresentante, id_usuario=usuario)
+
             usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
             if not usuario:
                 return JsonResponse({
@@ -1252,36 +1372,12 @@ def completar_registro_estudiante(request):
                     "descripcion": "Este correo ya está registrado en otro usuario"
                 })
                             
-            if PadresEstudiante.objects.filter(cedula_identidad=ci_representante_principal).exclude(id_usuario=usuario).exists():
-                return JsonResponse({
-                    "titulo": "¡Advertencia!",
-                    "estado": "fallo",
-                    "icon": "warning",
-                    "descripcion": "La cédula del representante ya está registrada"
-                })
-
             if PadresEstudiante.objects.filter(cedula_identidad=ci_otrorepresentante).exclude(id_usuario=usuario).exists():
                 return JsonResponse({
                     "titulo": "¡Advertencia!",
                     "estado": "fallo",
                     "icon": "warning",
                     "descripcion": "La cédula del segundo representante ya está registrada"
-                })
-
-            if ci_otrorepresentante == ci_representante_principal:
-                return JsonResponse({
-                    "titulo": "¡Advertencia!",
-                    "estado": "fallo",
-                    "icon": "warning",
-                    "descripcion": "La cedula de identidad del Representante es identica a la cedula de identidad del primer representante, por favor ingrese la cedula correspondiente del representante."
-                })
-                
-            if ci_otrorepresentante == request.session.get("cedula_usuario"):
-                return JsonResponse({
-                    "titulo": "¡Advertencia!",
-                    "estado": "fallo",
-                    "icon": "warning",
-                    "descripcion": "La cedula de identidad del Representante es identica a la cedula de identidad del estudiante, por favor ingrese la cedula correspondiente del representante."
                 })
 
             usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
@@ -1295,13 +1391,6 @@ def completar_registro_estudiante(request):
             contacto.save()
 
             PadresEstudiante.objects.create(nombres=nombres_representante, apellidos=apellidos_representante, cedula_identidad=ci_representante_principal, telefono=tlf_representante_principal, parentesco=parestencorepresentante, id_usuario=usuario)
-
-            if nombres_otrorepresentante and apellidos_otrorepresentante and nacionalidad_otrorepresentante and ci_otrorepresentante and prefijo_num3 and telefono_otrorepresentante and parestencootrorepresentante:
-                
-                ci_otrorepresentante = nacionalidad_otrorepresentante + "-" + ci_otrorepresentante
-                tlf_representante_principal = prefijo_num3 + telefono_otrorepresentante
-                
-                PadresEstudiante.objects.create(nombres=nombres_otrorepresentante, apellidos=apellidos_otrorepresentante, cedula_identidad=ci_otrorepresentante, telefono=telefono_otrorepresentante, parentesco=parestencootrorepresentante, id_usuario=usuario)
 
             Nacimiento.objects.create(pais=pais_nacimiento, estado=estado_nacimiento, municipio=municipio_nacimiento, parroquia=parroquia_nacimiento, direccion_nacimiento=direccion_nacimiento, fecha_nacimiento=fecha_nacimiento, id_usuario=usuario)
 
@@ -1319,6 +1408,7 @@ def completar_registro_estudiante(request):
             }
 
             asignacion_base = UsuarioAsignacion.objects.filter(id_usuario=usuario,id_perfil_id=5).first()
+            trayecto_inicial = TrayectoAcademico.objects.get(trayecto="Inicial")
             primera_asignacion = True
 
             for nombre_nucleo, lista_pnfs in nucleos.items():
@@ -1341,7 +1431,7 @@ def completar_registro_estudiante(request):
                             estado="Espera",
                             ingreso="Bachiller",
                             descripcion_ingreso="No ha presentado Inicial",
-                            trayecto="Inicial",
+                            id_trayecto=trayecto_inicial,
                             fecha_ingreso=timezone.now().date(),
                             id_asignacion=asignacion_base)
 
@@ -1358,7 +1448,7 @@ def completar_registro_estudiante(request):
                             estado="Espera",
                             ingreso="Bachiller",
                             descripcion_ingreso="No ha presentado Inicial",
-                            trayecto="Inicial",
+                            id_trayecto=trayecto_inicial,
                             fecha_ingreso=timezone.now().date(),
                             id_asignacion=nueva_asignacion)
                 
@@ -1398,8 +1488,43 @@ def completar_registro_estudiante(request):
                         nombre_documento=nombre,
                         defaults={
                             "archivo": file_path
-                        })
+                        }
+                    )
                     
+            ruta_pdf = generar_documento_inscripcion(
+                estudiante=usuario,
+                contacto=contacto
+            )
+
+            # Crear contenido HTML del correo utilizando la plantilla
+            html_email = render_to_string(
+                "Email/comprobante_inscripcion.html",
+                {
+                    "nombres": usuario.nombres,
+                    "apellidos": usuario.apellidos,
+                    "fecha": timezone.now().strftime("%d/%m/%Y %H:%M:%S"),
+                }
+            )
+
+            # Crear correo electrónico
+            correo = EmailMessage(
+                subject="Comprobante de Preinscripción - UPT José Félix Ribas",
+                body=html_email,
+                from_email="uptjfr2025@gmail.com",
+                to=[contacto.correo_electronico]
+            )
+
+            # Indicar que el contenido del correo es HTML
+            correo.content_subtype = "html"
+
+            # Adjuntar comprobante PDF
+            correo.attach_file(
+                ruta_pdf
+            )
+
+            # Enviar correo
+            correo.send()
+                        
             request.session['registro_completado'] = True
             
             return JsonResponse({
@@ -1552,6 +1677,7 @@ def completar_registro_pe(request):
             }
 
             asignacion_base = UsuarioAsignacion.objects.filter(id_usuario=usuario,id_perfil_id=5).first()
+            trayecto_inicial = TrayectoAcademico.objects.get(trayecto="Inicial")
             primera_asignacion = True
 
             for nombre_nucleo, lista_pnfs in nucleos.items():
@@ -1574,7 +1700,7 @@ def completar_registro_pe(request):
                             estado="Espera",
                             ingreso="Bachiller",
                             descripcion_ingreso="No ha presentado Inicial",
-                            trayecto="Inicial",
+                            id_trayecto=trayecto_inicial,
                             fecha_ingreso=timezone.now().date(),
                             id_asignacion=asignacion_base)
 
@@ -1591,7 +1717,7 @@ def completar_registro_pe(request):
                             estado="Espera",
                             ingreso="Bachiller",
                             descripcion_ingreso="No ha presentado Inicial",
-                            trayecto="Inicial",
+                            id_trayecto=trayecto_inicial,
                             fecha_ingreso=timezone.now().date(),
                             id_asignacion=nueva_asignacion)
                 
@@ -1632,7 +1758,43 @@ def completar_registro_pe(request):
                         defaults={
                             "archivo": file_path
                         })
-            
+
+            contacto = Contacto.objects.filter(id_usuario=usuario).first()
+                    
+            ruta_pdf = generar_documento_inscripcion(
+                estudiante=usuario,
+                contacto=contacto
+            )
+
+            # Crear contenido HTML del correo utilizando la plantilla
+            html_email = render_to_string(
+                "Email/comprobante_inscripcion.html",
+                {
+                    "nombres": usuario.nombres,
+                    "apellidos": usuario.apellidos,
+                    "fecha": timezone.now().strftime("%d/%m/%Y %H:%M:%S"),
+                }
+            )
+
+            # Crear correo electrónico
+            correo = EmailMessage(
+                subject="Comprobante de Preinscripción - UPT José Félix Ribas",
+                body=html_email,
+                from_email="uptjfr2025@gmail.com",
+                to=[contacto.correo_electronico]
+            )
+
+            # Indicar que el contenido del correo es HTML
+            correo.content_subtype = "html"
+
+            # Adjuntar comprobante PDF
+            correo.attach_file(
+                ruta_pdf
+            )
+
+            # Enviar correo
+            correo.send()
+
             request.session['registro_completado'] = True
 
             return JsonResponse({
@@ -1648,115 +1810,204 @@ def completar_registro_pe(request):
 
     return render(request, "completar_registro_pe.html")
 
-# Inscripción del estudiante por parte del Coordinador de PNF
-
-def nucleos_coordinador_pnfs(request):
-    usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
-    
-    nucleos = Nucleos.objects.filter(
-        usuarioasignacion__id_usuario=usuario,
-        usuarioasignacion__id_perfil_id=3
-    ).distinct()
-
-    return JsonResponse({
-        "estado": "exito",
-        "nucleos": list(nucleos.values(
-                    "id_nucleo",
-                    "municipio",
-                    "direccion"))
-    })
-
-def pnfs_coordinador_pnfs(request):
-    if request.method == "POST":
-        id_nucleo = request.POST.get("nucleo")
-
-        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
-
-        pnfs = Pnf.objects.filter(
-            usuarioasignacion__id_usuario=usuario,
-            usuarioasignacion__id_perfil_id=3,
-            usuarioasignacion__id_nucleo_id=id_nucleo
-        ).distinct()
-
-        return JsonResponse({
-            "estado": "exito",
-            "pnfs": list(pnfs.values(
-                        "id_pnf",
-                        "pnf",
-                        "codigo"))
-        })
-
-def obtener_pre_inscrito(request):
-    if request.method != "POST":
-        return JsonResponse({
-            "estado": "fallo",
-            "descripcion": "Método no permitido"
-        }, status=405)
-
-    id_nucleo = request.POST.get("nucleo")
-    id_pnf = request.POST.get("pnf")
-
-    if not id_nucleo or not id_pnf:
-        return JsonResponse({
-            "estado": "exito",
-            "secciones": [],
-            "estudiantes": []
-        })
-
-    usuario = Usuario.objects.filter(
-        cedula_identidad=request.session.get("cedula_usuario")
-    ).first()
-
-    if not usuario:
-        return JsonResponse({
-            "estado": "fallo",
-            "descripcion": "Usuario no encontrado."
-        })
-
-    # Secciones con cantidad de estudiantes
-    seccion_disponible = None
-
-    for seccion in SeccionAcademica.objects.order_by("seccion"):
-
-        cantidad_estudiantes = SeccionEstudiante.objects.filter(
-            id_seccion=seccion,
-            fecha_final__isnull=True
-        ).count()
-
-        if cantidad_estudiantes < 48:
-            seccion_disponible = {
-                "id_seccion": seccion.id_seccion,
-                "seccion": seccion.seccion,
-                "cantidad_estudiantes": cantidad_estudiantes
-            }
-            break
-
-    estudiantes = EstatusEstudiante.objects.select_related(
-        "id_asignacion",
-        "id_asignacion__id_usuario"
-    ).filter(
-        estatus="Pre-Inscrito(a)",
-        estado="Espera",
-        id_asignacion__id_perfil_id=5,
-        id_asignacion__id_pnf_id=id_pnf,
-        id_asignacion__id_nucleo_id=id_nucleo
+def generar_documento_inscripcion(estudiante, contacto):
+    # Crear la ruta donde se almacenarán los comprobantes PDF
+    carpeta = os.path.join(
+        settings.MEDIA_ROOT,
+        "comprobantes",
+        "preinscripciones"
     )
 
-    datos = []
+    # Crear las carpetas si no existen
+    os.makedirs(carpeta, exist_ok=True)
 
-    for estudiante in estudiantes:
-        usuario_est = estudiante.id_asignacion.id_usuario
+    # Nombre del archivo PDF utilizando la cédula del estudiante
+    nombre_archivo = (
+        f"comprobante_preinscripcion_{estudiante.cedula_identidad}.pdf"
+    )
 
-        datos.append({
-            "nombres": usuario_est.nombres,
-            "apellidos": usuario_est.apellidos,
-            "cedula": usuario_est.cedula_identidad
+    # Ruta completa donde se guardará el documento
+    ruta_archivo = os.path.join(
+        carpeta,
+        nombre_archivo
+    )
+
+    # Configuración del documento PDF:
+    # - Define ubicación del archivo
+    # - Tamaño de página A4
+    # - Márgenes del documento
+    documento = SimpleDocTemplate(
+        ruta_archivo,
+        pagesize=A4,
+        rightMargin=2*cm,
+        leftMargin=2*cm,
+        topMargin=2*cm,
+        bottomMargin=2*cm
+    )
+
+    # Cargar estilos predeterminados de ReportLab
+    estilos = getSampleStyleSheet()
+
+    # Crear estilos personalizados usando Times New Roman (Times-Roman)
+    estilo_titulo = ParagraphStyle(
+        "TituloPersonalizado",
+        parent=estilos["Title"],
+        fontName="Times-Roman",
+        fontSize=26,
+        leading=32,
+        alignment=TA_CENTER
+    )
+
+    estilo_datos = ParagraphStyle(
+        "DatosPersonalizados",
+        parent=estilos["Normal"],
+        fontName="Times-Roman",
+        fontSize=18,
+        leading=25,
+        alignment=TA_LEFT
+    )
+
+    estilo_final = ParagraphStyle(
+        "TextoFinal",
+        parent=estilos["Normal"],
+        fontName="Times-Roman",
+        fontSize=16,
+        leading=22,
+        alignment=TA_LEFT
+    )
+
+    # Lista donde se almacenarán todos los elementos del PDF
+    contenido = []
+
+    # Crear el título del documento
+    titulo = Paragraph(
+        "Comprobante de Preinscripción",
+        estilo_titulo
+    )
+
+    # Agregar título al documento
+    contenido.append(titulo)
+
+    # Agregar espacio debajo del título
+    contenido.append(
+        Spacer(1, 20)
+    )
+
+    # Obtener la fecha y hora actual de generación del documento
+    fecha_actual = timezone.now()
+
+    # Información que aparecerá en el comprobante
+    datos = [
+        f"<b>Universidad:</b> UPT José Félix Ribas",
+        f"<b>Proceso:</b> Preinscripción Académica",
+        f"<b>Estudiante:</b> {estudiante.nombres} {estudiante.apellidos}",
+        f"<b>Cédula:</b> {estudiante.cedula_identidad}",
+        f"<b>Correo:</b> {contacto.correo_electronico}",
+        f"<b>Fecha de emisión:</b> {fecha_actual.strftime('%d/%m/%Y %H:%M:%S')}",
+    ]
+
+    # Recorrer cada dato y agregarlo al PDF
+    for dato in datos:
+        # Agregar texto con formato
+        contenido.append(
+            Paragraph(
+                dato,
+                estilo_datos
+            )
+        )
+
+        # Separación entre cada línea
+        contenido.append(
+            Spacer(1, 10)
+        )
+
+    # Espacio antes del mensaje final
+    contenido.append(
+        Spacer(1, 20)
+    )
+
+    # Mensaje de confirmación del comprobante
+    contenido.append(
+        Paragraph(
+            "Este documento confirma que el estudiante realizó correctamente el proceso de preinscripción.",
+            estilo_final
+        )
+    )
+
+    # Generar físicamente el archivo PDF
+    documento.build(contenido)
+
+    # Retornar la ubicación del archivo creado
+    return ruta_archivo
+
+# INSCRIPCIÓN ESTUDIANTE DIRECTOR GENERAL
+
+def obtener_pre_inscrito(request):
+    if request.method == "POST":
+        id_nucleo = request.POST.get("nucleo")
+        id_pnf = request.POST.get("pnf")
+
+        if not id_nucleo or not id_pnf:
+            return JsonResponse({
+                "estado": "exito",
+                "secciones": [],
+                "estudiantes": []
+            })
+
+        secciones = []
+        for seccion in SeccionAcademica.objects.select_related(
+            "id_aula"
+        ).filter(
+            id_nucleo_id=id_nucleo,
+            id_pnf_id=id_pnf
+        ).order_by("seccion"):
+
+            cantidad_estudiantes = SeccionEstudiante.objects.filter(id_seccion=seccion).count()
+
+            if cantidad_estudiantes < 48:
+                secciones.append({
+                    "id_seccion": seccion.id_seccion,
+                    "seccion": seccion.seccion,
+                    "aula": seccion.id_aula.nombre_aula,
+                    "turno": seccion.turno,
+                    "cantidad_estudiantes": cantidad_estudiantes
+                })
+
+        estudiantes = EstatusEstudiante.objects.select_related(
+            "id_asignacion",
+            "id_asignacion__id_usuario",
+            "id_asignacion__id_perfil",
+            "id_asignacion__id_pnf",
+            "id_asignacion__id_nucleo"
+        ).filter(
+            estatus="Pre-Inscrito(a)",
+            estado="Espera",
+            id_asignacion__id_perfil_id=5,
+            id_asignacion__id_nucleo_id=id_nucleo,
+            id_asignacion__id_pnf_id=id_pnf
+        )
+
+        datos = []
+        for estudiante in estudiantes:
+            usuario = estudiante.id_asignacion.id_usuario
+
+            datos.append({
+                "id_usuario": usuario.id_usuario,
+                "nombres": usuario.nombres,
+                "apellidos": usuario.apellidos,
+                "cedula": usuario.cedula_identidad
+            })
+
+        return JsonResponse({
+            "estado": "exito",
+            "secciones": secciones,
+            "estudiantes": datos
         })
 
     return JsonResponse({
-        "estado": "exito",
-        "seccion": seccion_disponible,
-        "estudiantes": datos
+        "estado": "error",
+        "secciones": [],
+        "estudiantes": []
     })
 
 def obtener_datos_pre_inscrito(request):
@@ -1819,7 +2070,6 @@ def obtener_datos_pre_inscrito(request):
 
 def inscripcion_estudiante(request):
     if request.method == "POST":
-
         cedula = request.POST.get("cedula")
         id_nucleo = request.POST.get("nucleo")
         id_pnf = request.POST.get("pnf")
@@ -2077,7 +2327,6 @@ def modulo_pnf(request):
 # CRUD NÚCLEO
 
 def nucleos_registrados(request):
-
     nucleos = list(Nucleos.objects.values(
         "id_nucleo",
         "municipio",
@@ -2176,10 +2425,19 @@ def modulo_nucleo(request):
 # CRUD SECCIÓN ACADÉMICA
 
 def secciones_registradas(request):
-    secciones = list(SeccionAcademica.objects.values(
-        "id_seccion",
-        "seccion"
-    ))
+    secciones = list(
+        SeccionAcademica.objects.values(
+            "id_seccion",
+            "seccion",
+            "turno",
+            "id_nucleo__municipio",
+            "id_pnf__pnf",
+            "id_trayecto__trayecto",
+            "id_aula__nombre_aula",
+            "id_aula__nombre_edificio",
+            "id_aula__piso_edificio"
+        )
+    )
 
     return JsonResponse({
         "estado": "exito",
@@ -2195,7 +2453,7 @@ def datos_seccion(request):
         if not seccion:
             return JsonResponse({
                 "estado": "error",
-                "mensaje": "Sección no encontrado"
+                "mensaje": "Sección no encontrada"
             })
 
         return JsonResponse({
@@ -2203,15 +2461,37 @@ def datos_seccion(request):
             "seccion": {
                 "id_seccion": seccion.id_seccion,
                 "seccion": seccion.seccion,
+                "turno": seccion.turno,
+                "nucleo": {
+                    "id": seccion.id_nucleo.id_nucleo,
+                    "nombre": seccion.id_nucleo.municipio
+                },
+                "pnf": {
+                    "id": seccion.id_pnf.id_pnf,
+                    "nombre": seccion.id_pnf.pnf
+                },
+                "trayecto": {
+                    "id": seccion.id_trayecto.id_trayecto,
+                    "nombre": seccion.id_trayecto.trayecto
+                },
+                "aula": {
+                    "id": seccion.id_aula.id_aula,
+                    "nombre": seccion.id_aula.nombre_aula
+                }
             }
         })
     
 def guardar_actualizacion_seccion(request):
     if request.method == "POST":
-        id_seccion = request.POST.get("seccionesseleccionado")
-        nuevo_seccion = request.POST.get("seccion")
+        id_seccion = request.POST.get("seccion")
+        nucleo = request.POST.get("actualizar_nucleo")
+        pnf = request.POST.get("actualizar_pnf")
+        trayecto = request.POST.get("actualizar_trayecto")
+        aula = request.POST.get("actualizar_aula")
+        turno = request.POST.get("actualizar_turno")
+        nuevo_seccion = request.POST.get("actualizar_seccion")
 
-        if not id_seccion or not nuevo_seccion:
+        if not id_seccion or not nucleo or not pnf or not trayecto or not aula or not turno or not nuevo_seccion:
             return JsonResponse({
                 "estado": "fallo",
                 "icon": "warning",
@@ -2220,9 +2500,20 @@ def guardar_actualizacion_seccion(request):
 
         try:
             with transaction.atomic():
-                obj_seccion = SeccionAcademica.objects.get(id_seccion=id_seccion)                
-                obj_seccion.seccion = nuevo_seccion
-                obj_seccion.save()
+                id_nucleo = Nucleos.objects.get(id_nucleo=nucleo)
+                id_pnf = Pnf.objects.get(id_pnf=pnf)
+                id_trayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto)
+                id_aula = AulaAcademica.objects.get(id_aula=aula)
+                seccion = SeccionAcademica.objects.get(id_seccion=id_seccion)
+
+                seccion.id_nucleo = id_nucleo
+                seccion.id_pnf = id_pnf
+                seccion.id_trayecto = id_trayecto
+                seccion.id_aula = id_aula
+                seccion.turno = turno
+                seccion.seccion = nuevo_seccion
+
+                seccion.save()
 
             return JsonResponse({
                 "estado": "ok",
@@ -2245,10 +2536,20 @@ def guardar_actualizacion_seccion(request):
 
 def modulo_seccion(request):
     if request.method == "POST":
-        nuevo_seccion = request.POST.get("seccion")
+        nucleo = request.POST.get("registro_nucleo")
+        pnf = request.POST.get("registro_pnf")
+        trayecto = request.POST.get("registro_trayecto")
+        aula = request.POST.get("registro_aula")
+        turno = request.POST.get("registro_turno")
+        seccion = request.POST.get("registro_seccion")
         
-        if nuevo_seccion:
-            SeccionAcademica.objects.create(seccion=nuevo_seccion)
+        if nucleo and pnf and trayecto and aula and turno and seccion:
+            id_nucleo = Nucleos.objects.get(id_nucleo=nucleo)
+            id_pnf = Pnf.objects.get(id_pnf=pnf)
+            id_trayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto)
+            id_aula = AulaAcademica.objects.get(id_aula=aula)
+        
+            SeccionAcademica.objects.create(id_nucleo=id_nucleo, id_pnf=id_pnf, id_trayecto=id_trayecto, id_aula=id_aula, turno=turno, seccion=seccion)
 
             return JsonResponse({
                 "estado": "ok",
@@ -2266,28 +2567,47 @@ def modulo_seccion(request):
 
 # CRUD MATERIA
 
-def materias_registradas(request):
-    if request.method == "POST":
+def materias_almacenada(request):
+   if request.method == "POST":
         pnf = request.POST.get("pnf")
         trayecto = request.POST.get("trayecto")
 
-        materias_query = Materia.objects.all()
-
+        materias_query = Materia.objects.select_related(
+            "id_trayecto",
+            "id_pnf"
+        )
+        
         if pnf and pnf != "ninguno":
             materias_query = materias_query.filter(id_pnf=pnf)
 
         if trayecto and trayecto != "ninguno":
-            materias_query = materias_query.filter(trayecto=trayecto)
+            materias_query = materias_query.filter(
+                id_trayecto=trayecto
+            )
 
-        materias = list(materias_query.values(
-            "id_materia",
-            "nombre",
-            "codigo",
-            "tipo_materia",
-            "trayecto",
-            "recuperacion",
-            "id_pnf"
-        ))
+        materias = list(
+            materias_query.values(
+                "id_materia",
+                "nombre",
+                "codigo",
+                "tipo_materia",
+                "recuperacion",
+                "id_pnf",
+                "id_trayecto"
+            )
+        )
+
+        # Agregar nombre del trayecto
+        for materia in materias:
+            trayecto_obj = TrayectoAcademico.objects.filter(
+                id_trayecto=materia["id_trayecto"]
+            ).first()
+
+            materia["trayecto"] = (
+                trayecto_obj.trayecto 
+                if trayecto_obj 
+                else ""
+            )
 
         pnfs = list(
             Pnf.objects.values(
@@ -2302,12 +2622,16 @@ def materias_registradas(request):
             "materias": materias,
             "pnfs": pnfs
         })
-    
+
 def datos_materia(request):
     if request.method == "POST":
         id_materia = request.POST.get("id_materia")
+
         try:
-            materia = Materia.objects.select_related("id_pnf").get(id_materia=id_materia)
+            materia = Materia.objects.select_related(
+                "id_pnf",
+                "id_trayecto"
+            ).get(id_materia=id_materia)
 
             return JsonResponse({
                 "estado": "ok",
@@ -2316,8 +2640,11 @@ def datos_materia(request):
                     "nombre": materia.nombre,
                     "codigo": materia.codigo,
                     "tipo_materia": materia.tipo_materia,
-                    "trayecto": materia.trayecto,
                     "recuperacion": materia.recuperacion
+                },
+                "trayecto": {
+                    "id_trayecto": materia.id_trayecto.id_trayecto,
+                    "trayecto": materia.id_trayecto.trayecto
                 },
                 "pnf": {
                     "id_pnf": materia.id_pnf.id_pnf,
@@ -2335,7 +2662,6 @@ def datos_materia(request):
 def guardar_actualizacion_materia(request):
     if request.method == "POST":
         id_materia = request.POST.get("materiaseleccionado")
-
         nombre = request.POST.get("nombresmaterias")
         codigo = request.POST.get("codigosmaterias")
         periodo_materia = request.POST.get("periodomateria")
@@ -2351,11 +2677,14 @@ def guardar_actualizacion_materia(request):
             })
 
         try:
+
+            trayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto_materia)
+
             materia = Materia.objects.get(id_materia=id_materia)
             materia.nombre = nombre
             materia.codigo = codigo
             materia.tipo_materia = periodo_materia
-            materia.trayecto = trayecto_materia
+            materia.id_trayecto = trayecto
             materia.recuperacion = reparacion_materia
             materia.id_pnf_id = pnf_materia
             materia.save()
@@ -2460,21 +2789,16 @@ def modulo_materia(request):
                 "icon": "error",
                 "descripcion": "Código duplicado."
             })
-
-        try:
-            pnf_obj = Pnf.objects.get(id_pnf=pnf)
-        except Pnf.DoesNotExist:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "descripcion": "PNF no encontrado."
-            })
+        
+        pnf_obj = Pnf.objects.get(id_pnf=pnf)
+        
+        trayecto_obj = TrayectoAcademico.objects.get(id_trayecto=trayecto)
 
         materia = Materia.objects.create(
             nombre=nombre,
             codigo=codigo,
             tipo_materia=periodo_materia,
-            trayecto=trayecto,
+            id_trayecto=trayecto_obj,
             recuperacion=reparacion,
             id_pnf=pnf_obj
         )
@@ -2705,7 +3029,7 @@ def modelo_calendario_academico(request):
 
         mapa = [
             ("INICIAL", fechainicial),
-            ("REPARACIÓN", fechareparacion),
+            ("REPARACION", fechareparacion),
             ("TRAMO I", fechatramoI),
             ("TRAMO II", fechatramoII),
             ("TRAMO III", fechatramoIII),
@@ -2714,7 +3038,6 @@ def modelo_calendario_academico(request):
         ]
 
         with transaction.atomic():
-
             CalendarioAcademico.objects.filter(activo=True).update(activo=False)
 
             nuevo_calendarios = []
@@ -2734,7 +3057,6 @@ def modelo_calendario_academico(request):
                 nuevo_calendarios.append((calendario, periodo))
 
             for calendario, periodo in nuevo_calendarios:
-
                 periodos_materia = PeriodoMateria.objects.filter(periodo=periodo)
 
                 if periodos_materia.exists():
@@ -2964,20 +3286,27 @@ def actualizar_datosusuario(request):
 
 def pnfs_pertenece_nucleo(request):
     if request.method == "POST":
-        id_nucleo = request.POST.get("nucleo")
+        nucleo = request.POST.get("nucleo")
 
-        if id_nucleo:
-            pnfs = (
-                Pnf.objects.filter(pnfnucleo__id_nucleo_id=id_nucleo)
-                .values("id_pnf", "pnf", "codigo")
-                .distinct()
-            )
+        pnfs = PNFNucleo.objects.filter(
+            id_nucleo=nucleo
+        ).values(
+            "id_pnf__id_pnf",
+            "id_pnf__pnf",
+            "id_pnf__periodo_academico"
+        )
 
-            return JsonResponse({
-                "estado": "exito",
-                "pnfs": list(pnfs)
+        lista = []
+
+        for pnf in pnfs:
+            lista.append({
+                "id_pnf": pnf["id_pnf__id_pnf"],
+                "pnf": pnf["id_pnf__pnf"],
+                "periodo_academico": pnf["id_pnf__periodo_academico"],
             })
 
+        return JsonResponse({"pnfs": lista})
+    
 def docentes_registrados(request):
     if request.method == "POST":
         nucleo = request.POST.get("nucleo")
@@ -2989,24 +3318,29 @@ def docentes_registrados(request):
                 "usuarios": []
             })
 
-        docente = Perfiles.objects.get(pk=4)
-
-        asignados = UsuarioAsignacion.objects.filter(
-            id_perfil=docente,
-            id_nucleo=nucleo,
-            id_pnf=pnf
+        docentes = (
+            UsuarioAsignacion.objects
+            .select_related("id_usuario")
+            .filter(
+                id_perfil__perfil="Docente",
+                id_nucleo_id=nucleo,
+                id_pnf_id=pnf
+            )
         )
 
-        usuarios = Usuario.objects.filter(
-            id_usuario__in=asignados.values_list("id_usuario", flat=True)
-        ).values(
-            "id_usuario",
-            "nombres",
-            "apellidos"
-        )
+        usuarios = [
+            {
+                "id_asignacion": docente.id_asignacion,
+                "id_usuario": docente.id_usuario.id_usuario,
+                "nombres": docente.id_usuario.nombres,
+                "apellidos": docente.id_usuario.apellidos,
+            }
+            for docente in docentes
+        ]
+
         return JsonResponse({
             "estado": "exito",
-            "usuarios": list(usuarios)
+            "usuarios": usuarios
         })
 
     return JsonResponse({
@@ -3024,14 +3358,22 @@ def materias_registradas(request):
                 "materias": []
             })
 
-        materias = Materia.objects.filter(
-            id_pnf_id=pnf
-        ).values(
-            "id_materia",
-            "nombre",
-            "codigo",
-            "trayecto"
-        ).order_by("trayecto", "nombre")
+        materias = (
+            Materia.objects
+            .filter(id_pnf_id=pnf)
+            .values(
+                "id_materia",
+                "nombre",
+                "codigo",
+                "tipo_materia",
+                "recuperacion",
+                "id_trayecto__trayecto"
+            )
+            .order_by(
+                "id_trayecto__trayecto",
+                "nombre"
+            )
+        )
 
         return JsonResponse({
             "estado": "exito",
@@ -3045,34 +3387,27 @@ def materias_registradas(request):
 
 def modulo_asignar_materia_docente(request):
     if request.method == "POST":
-        id_docente = request.POST.get("docentes")
+        id_asignacion = request.POST.get("docentes")
         materias = request.POST.getlist("materias")
 
-        if not id_docente or not materias:
+        if not id_asignacion or not materias:
             return JsonResponse({
                 "estado": "error",
                 "descripcion": "Debe seleccionar un docente y al menos una materia.",
                 "icon": "warning"
             })
 
-        try:
-            asignacion = UsuarioAsignacion.objects.get(id_asignacion=id_docente)
+        asignacion = UsuarioAsignacion.objects.get(id_asignacion=id_asignacion)
 
+        with transaction.atomic():
             for id_materia in materias:
                 MateriaAsignada.objects.get_or_create(id_asignacion=asignacion, id_materia_id=id_materia)
 
-            return JsonResponse({
-                "estado": "success",
-                "descripcion": "Las materias fueron asignadas correctamente al docente.",
-                "icon": "success"
-            })
-
-        except UsuarioAsignacion.DoesNotExist:
-            return JsonResponse({
-                "estado": "error",
-                "descripcion": "No se encontró la asignación del docente.",
-                "icon": "error"
-            })
+        return JsonResponse({
+            "estado": "success",
+            "descripcion": "Las materias fueron asignadas correctamente al docente.",
+            "icon": "success"
+        })
 
     return render(request, "asignar_materia.html")
 
@@ -3208,177 +3543,473 @@ def buscar_datos_usuario(request):
     if request.method == "POST":
 
         nacionalidad = request.POST.get("nacionalidad_busqueda")
-        cedula_busqueda = request.POST.get("cedula_busqueda")
+        cedula = request.POST.get("cedula_busqueda")
 
-        if nacionalidad and cedula_busqueda:
+        cedulausuario = f"{nacionalidad}-{cedula}"
 
-            cedula_identidad = f"{nacionalidad}-{cedula_busqueda}"
+        usuario = (
+            Usuario.objects
+            .select_related(
+                "contacto",
+                "residencia",
+                "nacimiento",
+                "profesional",
+                "discapacidad",
+                "secundaria"
+            )
+            .prefetch_related("padresEstudiante")
+            .filter(cedula_identidad=cedulausuario)
+            .first()
+        )
 
-            usuario = Usuario.objects.filter(cedula_identidad=cedula_identidad).first()
+        if not usuario:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "error",
+                "descripcion": "Usuario no encontrado"
+            })
 
-            if not usuario:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "descripcion": "Usuario no encontrado"
-                })
+        asignacion = (
+            UsuarioAsignacion.objects
+            .select_related("id_perfil")
+            .filter(id_usuario=usuario)
+            .first()
+        )
 
-            perfil = UsuarioAsignacion.objects.filter(id_usuario=usuario).first()
+        perfil = asignacion.id_perfil.perfil if asignacion else None
 
-            if not perfil:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "descripcion": "El usuario no posee un perfil asignado."
-                })
+        contacto = getattr(usuario, "contacto", None)
+        residencia = getattr(usuario, "residencia", None)
+        nacimiento = getattr(usuario, "nacimiento", None)
 
-            contacto = Contacto.objects.filter(id_usuario=usuario).first()
+        respuesta = {
+            "estado": "correcto",
+            "perfil": perfil,
+            "usuario": model_to_dict(usuario),
+            "contacto": model_to_dict(contacto) if contacto else None,
+            "residencia": model_to_dict(residencia) if residencia else None,
+            "nacimiento": model_to_dict(nacimiento) if nacimiento else None,
+        }
 
-            residencia = Residencia.objects.filter(id_usuario=usuario).first()
+        if perfil == "Estudiante":
 
-            nacimiento = Nacimiento.objects.filter(id_usuario=usuario).first()
+            discapacidad = getattr(usuario, "discapacidad", None)
+            secundaria = getattr(usuario, "secundaria", None)
 
-            respuesta = {
-                "respuesta": "correcto",
-                "perfil": perfil.id_perfil_id,
-                "usuario": model_to_dict(usuario),
-                "contacto": model_to_dict(contacto),
-                "residencia": model_to_dict(residencia),
-                "nacimiento": model_to_dict(nacimiento),
-            }
+            respuesta["discapacidad"] = (
+                model_to_dict(discapacidad)
+                if discapacidad else None
+            )
 
-            if perfil.id_perfil_id == 5:
-                discapacidad = Discapacidad.objects.filter(id_usuario=usuario).first()
+            respuesta["secundaria"] = (
+                model_to_dict(secundaria)
+                if secundaria else None
+            )
 
-                secundaria = InformacionSecundaria.objects.filter(id_usuario=usuario).first()
+            respuesta["padres"] = [
+                model_to_dict(padre)
+                for padre in usuario.padresEstudiante.all()
+            ]
 
-                representantes = PadresEstudiante.objects.filter(id_usuario=usuario)
+        else:
 
-                respuesta["discapacidad"] = model_to_dict(discapacidad) 
-                respuesta["informacion_secundaria"] = model_to_dict(secundaria)
-                respuesta["representantes"] = list(representantes.values())
+            profesional = getattr(usuario, "profesional", None)
 
-            else:
-                profesion = DatosPreofesion.objects.filter(id_usuario=usuario).first()
+            respuesta["profesion"] = (
+                model_to_dict(profesional)
+                if profesional else None
+            )
 
-                respuesta["profesion"] = model_to_dict(profesion) if profesion else None
-
-            return JsonResponse(respuesta)
-
-        return JsonResponse({
-            "estado": "fallo",
-            "icon": "error",
-            "descripcion": "Debe ingresar la nacionalidad y la cédula."
-        })
+        return JsonResponse(respuesta)
 
     return JsonResponse({
         "estado": "fallo",
-        "icon": "error",
-        "descripcion": "Método no permitido."
+        "descripcion": "Método no permitido"
     })
 
 def modulo_actualizar_usuarios(request):
     if request.method == "POST":
-        perfil_usuario = request.POST.get("perfilusuario")
+        usuario_id = request.POST.get("id_usuario")
 
         nombres_actualizar = request.POST.get("nombres_actualizar")
         apellidos_actualizar = request.POST.get("apellidos_actualizar")
         genero_actualizar = request.POST.get("genero_actualizar")
         nacionalidad_actualizar = request.POST.get("nacionalidad_actualizar")
+        cedula_actualizar = request.POST.get("cedula_actualizar")
         estado_civil_actualizar = request.POST.get("estado_civil_actualizar")
-
+        
         prefijo_principal = request.POST.get("prefijo_principal")
         telefono_principal = request.POST.get("telefono_principal")
+        prefijo_secundaria = request.POST.get("prefijo_secundaria")
+        telefono_secundaria = request.POST.get("telefono_secundaria")
         nombre_correo_principal = request.POST.get("nombre_correo_principal")
         dominio_correo_principal = request.POST.get("dominio_correo_principal")
-
+        nombre_correo_secundaria = request.POST.get("nombre_correo_secundaria")
+        dominio_correo_secundaria = request.POST.get("dominio_correo_secundaria")
+        
         paisnacimiento = request.POST.get("paisnacimiento")
         estadonacimiento = request.POST.get("estadonacimiento")
+        estado_novzla_personal = request.POST.get("estado_novzla_personal")
         municipionacimiento = request.POST.get("municipionacimiento")
+        municipio_novzla_personal = request.POST.get("municipio_novzla_personal")
         parroquianacimiento = request.POST.get("parroquianacimiento")
+        parroquia_novzla_personal = request.POST.get("parroquia_novzla_personal")
         direccionnacimiento = request.POST.get("direccionnacimiento")
         fechanacimiento = request.POST.get("fechanacimiento")
-
+        
         condicionresidencia = request.POST.get("condicionresidencia")
         municipioresidencia = request.POST.get("municipioresidencia")
         parroquiaresidencia = request.POST.get("parroquiaresidencia")
         direcciondomicilio = request.POST.get("direcciondomicilio")
-
+        
         profesion = request.POST.get("profesion")
         universidad = request.POST.get("universidad")
         paisprofesion = request.POST.get("paisprofesion")
-
-        tipossecundaria = request.POST.get("tipossecundaria")
-        nombreliceo = request.POST.get("nombreliceo")
+        
+        tipos_secundaria = request.POST.get("tipossecundaria")
+        nombre_liceo = request.POST.get("nombreliceo")
         fecha_graduacion = request.POST.get("fecha_graduacion")
         codigo_opsu = request.POST.get("codigo_opsu")
-
+        
+        nombres_representante = request.POST.get("nombresrepresentante")
+        apellidos_representante = request.POST.get("apellidosrepresentante")
+        nacionalidad_representante = request.POST.get("nacionalidadrepresentante")
+        ci_representante = request.POST.get("ci_representante")
+        prefijo_num_representante = request.POST.get("prefijo_num_representante")
+        telefono_representante = request.POST.get("telefono_representante")
+        parestenco = request.POST.get("parestenco")
+        
+        nombres_otro_representante = request.POST.get("nombresotrorepresentante")
+        apellidos_otro_representante = request.POST.get("apellidosotrorepresentante")
+        nacionalidad_otro_representante = request.POST.get("nacionalidad_otrorepresentante")
+        ci_otro_representante = request.POST.get("ci_otrorepresentante")
+        prefijo_num_otro_representante = request.POST.get("prefijo_num_otrorepresentante")
+        telefono_otro_representante = request.POST.get("telefono_otrorepresentante")
+        parestenco_otro_representante = request.POST.get("parestencootrorepresentante")
+        
         carnet_dispacidad = request.POST.get("carnet_dispacidad")
         registro_medico = request.POST.get("registro_medico")
         tipos_discapacidad = request.POST.get("tipos_discapacidad")
         grado_discapacidad = request.POST.get("grado_discapacidad")
         causa_discapacidad = request.POST.get("causa_discapacidad")
 
-        if nombres_actualizar and apellidos_actualizar and genero_actualizar and nacionalidad_actualizar and estado_civil_actualizar and prefijo_principal and telefono_principal and nombre_correo_principal and dominio_correo_principal and paisnacimiento and estadonacimiento and municipionacimiento and parroquianacimiento and direccionnacimiento and fechanacimiento and condicionresidencia and municipioresidencia and parroquiaresidencia and direcciondomicilio and profesion and universidad and paisprofesion and tipossecundaria and nombreliceo and fecha_graduacion and codigo_opsu:
+        if nombres_actualizar and apellidos_actualizar and genero_actualizar and nacionalidad_actualizar and cedula_actualizar and estado_civil_actualizar and prefijo_principal and telefono_principal and nombre_correo_principal and dominio_correo_principal and nombre_correo_secundaria and dominio_correo_secundaria and condicionresidencia and municipioresidencia and parroquiaresidencia and direcciondomicilio:
 
-            usuario = Usuario.objects.filter(id_usuario=request.session.get("id_usuario")).first()
+            cedula_identidad = nacionalidad_actualizar+"-"+cedula_actualizar
+            telefono_personal = prefijo_principal+telefono_principal
+            
+            if prefijo_secundaria and telefono_secundaria:
+                telefono_secundario = prefijo_secundaria+telefono_secundaria
+            else:
+                telefono_secundario = "N/A"
 
-            if usuario:
+            correo_electronico = nombre_correo_principal+dominio_correo_principal
+            correo_alternativo = nombre_correo_secundaria+dominio_correo_secundaria
+
+            if paisnacimiento == "Venezuela":
+                estado = estadonacimiento
+                municipio = municipionacimiento
+                parroquia = parroquianacimiento
+            else:
+                estado = estado_novzla_personal
+                municipio = municipio_novzla_personal
+                parroquia = parroquia_novzla_personal
+
+            usuario = get_object_or_404(Usuario, pk=usuario_id)
+            
+            asignacion = (
+                UsuarioAsignacion.objects
+                .select_related("id_perfil")
+                .filter(id_usuario=usuario)
+                .first()
+            )
+
+            if not asignacion:
+                return JsonResponse({
+                    "estado": "fallo",
+                    "descripcion": "El usuario no tiene un perfil asignado."
+                })
+
+            perfil = asignacion.id_perfil.perfil
+
+            with transaction.atomic():
+
+                # Usuario
                 usuario.nombres = nombres_actualizar
                 usuario.apellidos = apellidos_actualizar
                 usuario.genero = genero_actualizar
-                usuario.cedula_identidad = nacionalidad_actualizar + "-" + request.POST.get("cedula_actualizar")
+                usuario.cedula_identidad = cedula_identidad
                 usuario.estado_civil = estado_civil_actualizar
                 usuario.save()
 
-                contacto, _ = Contacto.objects.get_or_create(id_usuario=usuario)
-                contacto.telefono_personal = prefijo_principal + telefono_principal
-                contacto.correo_electronico = nombre_correo_principal + "@" + dominio_correo_principal
+                # Contacto
+                contacto = usuario.contacto
+                contacto.telefono_personal = telefono_personal
+                contacto.telefono_suplete = telefono_secundario
+                contacto.correo_electronico = correo_electronico
+                contacto.correo_alternativo = correo_alternativo
                 contacto.save()
 
-                nacimiento, _ = Nacimiento.objects.get_or_create(id_usuario=usuario)
+                # Nacimiento
+                nacimiento = usuario.nacimiento
                 nacimiento.pais = paisnacimiento
-                nacimiento.estado = estadonacimiento
-                nacimiento.municipio = municipionacimiento
-                nacimiento.parroquia = parroquianacimiento
+                nacimiento.estado = estado
+                nacimiento.municipio = municipio
+                nacimiento.parroquia = parroquia
                 nacimiento.direccion_nacimiento = direccionnacimiento
                 nacimiento.fecha_nacimiento = fechanacimiento
                 nacimiento.save()
 
-                residencia, _ = Residencia.objects.get_or_create(id_usuario=usuario)
+                # Residencia
+                residencia = usuario.residencia
                 residencia.condicion_residencia = condicionresidencia
                 residencia.municipio = municipioresidencia
                 residencia.parroquia = parroquiaresidencia
                 residencia.direccion_residencia = direcciondomicilio
                 residencia.save()
 
-                if perfil_usuario == "5":
-                    secundaria, _ = InformacionSecundaria.objects.get_or_create(id_usuario=usuario)
-                    secundaria.tipo_institucion = tipossecundaria
-                    secundaria.nombre_institucion = nombreliceo
+                if perfil == "Estudiante":
+                    if not tipos_secundaria or not nombre_liceo or not fecha_graduacion  or not codigo_opsu  or not nombres_representante or not apellidos_representante or not nacionalidad_representante or not ci_representante or not prefijo_num_representante or not telefono_representante or not parestenco:
+                        return JsonResponse({
+                            "estado": "fallo",
+                            "icon": "warning",
+                            "descripcion": "Los campos del estudiante esta vacio."
+                        })
+                    
+                    # Información secundaria
+                    secundaria = usuario.secundaria
+                    secundaria.tipo_institucion = tipos_secundaria
+                    secundaria.nombre_institucion = nombre_liceo
                     secundaria.fecha_grado = fecha_graduacion
                     secundaria.codigo_sni_opsu = codigo_opsu
                     secundaria.save()
 
-                    discapacidad, _ = Discapacidad.objects.get_or_create(id_usuario=usuario)
-                    discapacidad.codigo_carnet_discapacidad = carnet_dispacidad
-                    discapacidad.nro_registro_medico = registro_medico
-                    discapacidad.tipo_discapacidad = tipos_discapacidad
-                    discapacidad.grado_discapacidad = grado_discapacidad
-                    discapacidad.causa_discapacidad = causa_discapacidad
+                    if carnet_dispacidad and registro_medico and tipos_discapacidad and grado_discapacidad and causa_discapacidad:
+                        carnet = carnet_dispacidad
+                        registromedico = registro_medico
+                        tipodiscapacidad = tipos_discapacidad
+                        gradodiscapacidad = grado_discapacidad
+                        causasdiscapacidad = causa_discapacidad
+                    else:
+                        carnet = "N/A"
+                        registromedico = "N/A"
+                        tipodiscapacidad = "N/A"
+                        gradodiscapacidad = "N/A"
+                        causasdiscapacidad = "N/A"
+
+                    # Discapacidad
+                    discapacidad = usuario.discapacidad
+                    discapacidad.codigo_carnet_discapacidad = carnet
+                    discapacidad.nro_registro_medico = registromedico
+                    discapacidad.tipo_discapacidad = tipodiscapacidad
+                    discapacidad.grado_discapacidad = gradodiscapacidad
+                    discapacidad.causa_discapacidad = causasdiscapacidad
                     discapacidad.save()
+
+                    # Representantes
+                    representantes = usuario.padresEstudiante.all()
+
+                    if representantes.exists():
+                        representante = representantes.first()
+                        representante.nombres = nombres_representante
+                        representante.apellidos = apellidos_representante
+                        representante.cedula_identidad = (
+                            f"{nacionalidad_representante}-{ci_representante}"
+                        )
+                        representante.telefono = (
+                            f"{prefijo_num_representante}{telefono_representante}"
+                        )
+                        representante.parentesco = parestenco
+                        representante.save()
+
+                    if representantes.count() > 1:
+                        otro = representantes[1]
+                        otro.nombres = nombres_otro_representante
+                        otro.apellidos = apellidos_otro_representante
+                        otro.cedula_identidad = (
+                            f"{nacionalidad_otro_representante}-{ci_otro_representante}"
+                        )
+                        otro.telefono = (
+                            f"{prefijo_num_otro_representante}{telefono_otro_representante}"
+                        )
+                        otro.parentesco = parestenco_otro_representante
+                        otro.save()
                 else:
-                    profesional, _ = DatosPreofesion.objects.get_or_create(id_usuario=usuario)
+                    if not profesion or not universidad or not paisprofesion:
+                        return JsonResponse({
+                            "estado": "fallo",
+                            "icon": "warning",
+                            "descripcion": "Los campos del usuario está vacio."
+                        })
+                    
+                    profesional = usuario.profesional
                     profesional.profesion_pregrado = profesion
                     profesional.universidad_egreso_pregrado = universidad
                     profesional.pais_profesion_pregrado = paisprofesion
                     profesional.save()
-            
-                return JsonResponse({
-                    "estado": "ok",
-                    "icon": "success",
-                    "descripcion": "Las materias fueron asignadas correctamente al docente."
-                })
+
+            return JsonResponse({
+                "estado": "success",
+                "descripcion": "Las materias fueron asignadas correctamente al docente.",
+                "icon": "success"
+            })
+
+        return JsonResponse({
+            "estado": "fallo",
+            "icon": "warning",
+            "descripcion": "Se encuentra vacío, por favor rellene los campos."
+        })
+    
+    return render(request, "actualizar_datos_usuarios.html")
+
+# MODULO TRAYECTO
+
+def siguiente_trayecto(request):
+    cantidad = TrayectoAcademico.objects.count()
+
+    if cantidad == 0:
+        return JsonResponse({
+            "trayecto": "Inicial"
+        })
+
+    if cantidad - 1 >= len(ROMANOS):
+        return JsonResponse({
+            "estado": "fallo",
+            "icon": "error",
+            "descripcion": "Se alcanzó el número máximo de trayectos permitidos."
+        })
+
+    return JsonResponse({
+        "trayecto": f"TRAYECTO {ROMANOS[cantidad - 1]}"
+    })
+
+def trayectos_registrados(request):
+    trayectos = TrayectoAcademico.objects.all().order_by("id_trayecto")
+
+    datos = []
+
+    for trayecto in trayectos:
+        datos.append({
+            "id_trayecto": trayecto.id_trayecto,
+            "trayecto": trayecto.trayecto,
+        })
+
+    return JsonResponse({
+        "trayectos": datos
+    })
+
+def modulo_trayecto(request):
+    if request.method == "POST":
+        trayecto = request.POST.get("trayecto")
+
+        if not trayecto:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "warning",
+                "descripcion": "Debe indicar el trayecto."
+            })
+
+        if TrayectoAcademico.objects.filter(trayecto=trayecto).exists():
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "warning",
+                "descripcion": "El trayecto ya se encuentra registrado."
+            })
+
+        TrayectoAcademico.objects.create(trayecto=trayecto)
+
+        return JsonResponse({
+            "success": True,
+            "icon": "success",
+            "descripcion": "Trayecto registrado correctamente."
+        })
+
+    return render(request, "trayecto.html")
+
+# MODULO AULAS ACADÉMICAS
+
+def aulas_registrados(request):
+    if request.method == "POST":
+        id_nucleo = request.POST.get("id_nucleo")
+
+        aulas = AulaAcademica.objects.filter(
+            id_nucleo=id_nucleo
+        ).values(
+            "id_aula",
+            "nombre_aula",
+            "nombre_edificio",
+            "piso_edificio"
+        )
+
+        return JsonResponse({
+            "success": True,
+            "aulas": list(aulas)
+        })
+
+def aulas_almacenadas(request):
+    aulas_queryset = AulaAcademica.objects.all().select_related("id_nucleo").values(
+        "id_aula",
+        "nombre_aula",
+        "nombre_edificio",
+        "piso_edificio",
+        "id_nucleo__municipio"
+    )
+
+    aulas_agrupadas = defaultdict(list)
+    for aula in aulas_queryset:
+        municipio = aula["id_nucleo__municipio"] or "Sin Municipio"
+        aulas_agrupadas[municipio].append({
+            "id_aula": aula["id_aula"],
+            "nombre_aula": aula["nombre_aula"],
+            "nombre_edificio": aula["nombre_edificio"],
+            "piso_edificio": aula["piso_edificio"],
+            "id_nucleo": municipio 
+        })
+
+    return JsonResponse(dict(aulas_agrupadas), safe=True)
+
+
+def datos_aula(request):
+    if request.method == "POST":
+        id_aula = request.POST.get("id_aula")
+
+        aula = AulaAcademica.objects.select_related("id_nucleo").get(id_aula=id_aula)
+
+        return JsonResponse({
+            "estado": "ok",
+            "id_aula": aula.id_aula,
+            "nombre_aula": aula.nombre_aula,
+            "nombre_edificio": aula.nombre_edificio,
+            "piso_edificio": aula.piso_edificio,
+            "id_nucleo": aula.id_nucleo.id_nucleo,
+            "municipio": aula.id_nucleo.municipio
+        })
+    
+def actualizar_aula_academica(request):
+    if request.method == "POST":
+        aula_seleccionado = request.POST.get("aulaseleccionar")
+        nombre_aula = request.POST.get("actualizar_aula")
+        edificio = request.POST.get("actualizar_edificio")
+        piso = request.POST.get("actualizar_piso")
+        id_nucleo = request.POST.get("actualizar_nucleo")
+
+        if nombre_aula and edificio and piso and id_nucleo:
+
+            nucleo = Nucleos.objects.get(id_nucleo=id_nucleo)
+            aula = AulaAcademica.objects.get(id_aula=aula_seleccionado)
+
+            aula.nombre_aula = nombre_aula
+            aula.nombre_edificio = edificio
+            aula.piso_edificio = piso
+            aula.id_nucleo = nucleo
+
+            aula.save()
+
+            return JsonResponse({
+                "estado": "ok",
+                "icon": "success",
+                "descripcion": "El aula se actualizó exitosamente."
+            })
 
         return JsonResponse({
             "estado": "fallo",
@@ -3386,13 +4017,420 @@ def modulo_actualizar_usuarios(request):
             "descripcion": "Se encuentra vacío al menos un campo."
         })
     
-    return render(request, "actualizar_datos_usuarios.html")
+def modulo_aula_academica(request):
+    if request.method == "POST":
+        aula = request.POST.get("registrar_aula")
+        edificio = request.POST.get("registrar_edificio")
+        piso = request.POST.get("registrar_piso")
+        id_nucleo = request.POST.get("registrar_nucleo")
+
+        if aula and edificio and piso and id_nucleo:
+            existe = AulaAcademica.objects.filter(nombre_aula__iexact=aula).exists()
+            if existe:
+                return JsonResponse({
+                    "estado": "fallo",
+                    "icon": "error",
+                    "descripcion": "Ya existe una aula registrada con el mismo nombre."
+                })
+            
+            nucleo = Nucleos.objects.get(id_nucleo=id_nucleo)
+
+            AulaAcademica.objects.create(nombre_aula=aula, nombre_edificio=edificio, piso_edificio=piso, id_nucleo=nucleo)
+            
+            return JsonResponse({
+                "estado": "ok",
+                "icon": "success",
+                "descripcion": "Se registro exitosamente el aula académica."
+            })
+
+        return JsonResponse({
+            "estado": "fallo",
+            "icon": "warning",
+            "descripcion": "Se encuentra vacío al menos un campo."
+        })
+
+    return render(request, "aulas_academicas.html")
 
 # HORARIO ACADÉMICO
 
+def buscar_materias_docente(request):
+    if request.method == "POST":
+        nucleo = request.POST.get("nucleos")
+        pnf = request.POST.get("pnfs")
+        trayecto = request.POST.get("trayecto")
+
+        materias = (
+            MateriaAsignada.objects
+            .select_related(
+                "id_materia",
+                "id_asignacion__id_usuario"
+            )
+            .filter(
+                id_materia__id_pnf_id=pnf,
+                id_materia__id_trayecto_id=trayecto,
+                id_asignacion__id_nucleo_id=nucleo
+            )
+        )
+
+        datos = []
+        for materia in materias:
+            docente = materia.id_asignacion.id_usuario
+
+            datos.append({
+                "id_materia": materia.id_materia.id_materia,
+                "materia": materia.id_materia.nombre,
+                "docente": f"{docente.nombres} {docente.apellidos}",
+            })
+
+        return JsonResponse({
+            "success": True,
+            "materias": datos
+        })
+
 def modulo_horario_academico(request):
+    if request.method == "POST":
+        nucleo = request.POST.get("nucleos")
+        pnf = request.POST.get("pnfs")
+        trayecto = request.POST.get("trayecto")
+        periodo = request.POST.get("periodo")
+        aula = request.POST.get("aulas")
+        turno = request.POST.get("turno")
+
+        if nucleo and pnf and trayecto and periodo and aula and turno:
+            
+            idnucleo = Nucleos.objects.get(id_nucleo=nucleo)
+            idpnf = Pnf.objects.get(id_pnf=pnf)
+            idtrayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto)
+            idperiodo = PeriodoAcademico.objects.get(id_periodo_academico=periodo)
+            idaula = AulaAcademica.objects.get(id_aula=aula)
+
+            HorarioAcademica.objects.create(id_nucleo=idnucleo, id_pnf=idpnf, id_trayecto=idtrayecto, id_periodo_academico=idperiodo, id_aula=idaula, turno_academico=turno, activo=1)
+
+            return JsonResponse({
+                "estado": "ok",
+                "icon": "success",
+                "descripcion": "Se registro exitosamente el aula académica."
+            })
+
+        return JsonResponse({
+            "estado": "fallo",
+            "icon": "warning",
+            "descripcion": "Se encuentra vacío al menos un campo."
+        })
+    
     return render(request, "horario_academico.html")
 
+def limpiar_nombre(nombre):
+    nombre = nombre.strip()
+    return re.sub(r'[\\/:*?"<>|]', "_", nombre)
+
+def generar_horario_pdf(request):
+    if request.method != "POST":
+        return JsonResponse({
+            "estado": "error",
+            "descripcion": "Método no permitido."
+        })
+    try:
+        json_data = json.loads(request.body)
+
+        nucleo = json_data.get("nucleos")
+        pnf = json_data.get("pnfs")
+        trayecto = json_data.get("trayecto")
+        periodo = json_data.get("periodo")
+        aula = json_data.get("aulas")
+        turno = json_data.get("turno")
+        horario = json_data.get("horario", [])
+
+        if not all([ nucleo, pnf, trayecto, periodo, aula, turno]):
+            return JsonResponse({
+                "estado": "error",
+                "descripcion": "Faltan datos para generar el horario."
+            })
+
+        idnucleo = get_object_or_404(Nucleos, id_nucleo=nucleo)
+
+        idpnf = get_object_or_404(Pnf, id_pnf=pnf)
+
+        idtrayecto = get_object_or_404(TrayectoAcademico, id_trayecto=trayecto)
+
+        idperiodo = get_object_or_404(PeriodoAcademico, id_periodo_academico=periodo)
+
+        idaula = get_object_or_404(AulaAcademica, id_aula=aula)
+
+        ruta = (
+            Path(settings.MEDIA_ROOT)
+            / "Horarios Academicos"
+            / limpiar_nombre(idnucleo.municipio)
+            / limpiar_nombre(idpnf.pnf)
+            / limpiar_nombre(idtrayecto.trayecto)
+        )
+
+        ruta.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
+        fecha = datetime.now().strftime("%d-%m-%Y")
+        nombre_pdf = limpiar_nombre(
+            f"{fecha} - "
+            f"{idperiodo.nombre} - "
+            f"{idtrayecto.trayecto} - "
+            f"{idpnf.pnf}.pdf"
+        )
+
+        archivo_pdf = ruta / nombre_pdf
+        estilos = getSampleStyleSheet()
+
+        titulo = ParagraphStyle(
+            "Titulo",
+            parent=estilos["Heading1"],
+            alignment=TA_CENTER,
+            fontName="Helvetica-Bold",
+            fontSize=18,
+            spaceAfter=10
+        )
+
+        subtitulo = ParagraphStyle(
+            "Subtitulo",
+            parent=estilos["Heading2"],
+            alignment=TA_CENTER,
+            fontName="Helvetica-Bold",
+            fontSize=13,
+            spaceAfter=15
+        )
+
+        informacion = ParagraphStyle(
+            "Informacion",
+            parent=estilos["BodyText"],
+            alignment=TA_LEFT,
+            fontName="Helvetica",
+            fontSize=10,
+            leading=18
+        )
+
+        doc = SimpleDocTemplate(
+            str(archivo_pdf),
+            pagesize=landscape(letter),
+            rightMargin=1.5 * cm,
+            leftMargin=1.5 * cm,
+            topMargin=1.5 * cm,
+            bottomMargin=1.5 * cm
+        )
+
+        elementos = []
+        elementos.append(
+            Paragraph(
+                "UNIVERSIDAD POLITÉCNICA TERRITORIAL DEL ESTADO BARINAS JOSÉ FÉLIX RIBAS",
+                titulo
+            )
+        )
+
+        elementos.append(
+            Paragraph(
+                "HORARIO ACADÉMICO",
+                subtitulo
+            )
+        )
+
+        elementos.append(
+            Spacer(1, 0.4 * cm)
+        )
+
+        texto = f"""
+            <b>Núcleo:</b> {idnucleo.municipio}<br/>
+            <b>Programa Nacional de Formación:</b> {idpnf.pnf}<br/>
+            <b>Trayecto:</b> {idtrayecto.trayecto}<br/>
+            <b>Periodo Académico:</b> {idperiodo.nombre}<br/>
+            <b>Aula:</b> {idaula.nombre_aula}<br/>
+            <b>Edificio:</b> {idaula.nombre_edificio}<br/>
+            <b>Piso:</b> {idaula.piso_edificio}<br/>
+            <b>Turno:</b> {turno}<br/>
+            <b>Fecha de emisión:</b> {fecha}
+        """
+        elementos.append(
+            Paragraph(
+                texto,
+                informacion
+            )
+        )
+
+        elementos.append(
+            Spacer(1, 0.7 * cm)
+        )
+
+        datos_tabla = [
+            [
+                "Hora Inicio",
+                "Hora Final",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes"
+            ]
+        ]
+
+        for fila in horario:
+            lunes = obtener_materia_docente(
+                fila.get("lunes")
+            )
+            martes = obtener_materia_docente(
+                fila.get("martes")
+            )
+            miercoles = obtener_materia_docente(
+                fila.get("miercoles")
+            )
+            jueves = obtener_materia_docente(
+                fila.get("jueves")
+            )
+            viernes = obtener_materia_docente(
+                fila.get("viernes")
+            )
+
+            # AHORA ESTÁ DENTRO DEL BUCLE FOR
+            datos_tabla.append([
+                fila.get("hora_inicio", ""),
+                fila.get("hora_final", ""),
+                Paragraph(
+                    lunes.replace("\n", "<br/>"),
+                    informacion
+                ),
+                Paragraph(
+                    martes.replace("\n", "<br/>"),
+                    informacion
+                ),
+                Paragraph(
+                    miercoles.replace("\n", "<br/>"),
+                    informacion
+                ),
+                Paragraph(
+                    jueves.replace("\n", "<br/>"),
+                    informacion
+                ),
+                Paragraph(
+                    viernes.replace("\n", "<br/>"),
+                    informacion
+                )
+            ])
+
+        # Definir anchos aproximados en centímetros (el total disponible es ~25.9 cm)
+        anchos_columnas = [2.0 * cm, 2.0 * cm, 4.3 * cm, 4.3 * cm, 4.3 * cm, 4.3 * cm, 4.3 * cm]
+
+        tabla = Table(
+            datos_tabla,
+            colWidths=anchos_columnas,
+            repeatRows=1
+        )
+        tabla.setStyle(
+            TableStyle([(
+                    "BACKGROUND",
+                    (0,0),
+                    (-1,0),
+                    colors.HexColor("#0D6EFD")
+                ),
+                (
+                    "TEXTCOLOR",
+                    (0,0),
+                    (-1,0),
+                    colors.white
+                ),
+
+                (
+                    "FONTNAME",
+                    (0,0),
+                    (-1,0),
+                    "Helvetica-Bold"
+                ),
+
+                (
+                    "FONTSIZE",
+                    (0,0),
+                    (-1,-1),
+                    9
+                ),
+
+                (
+                    "ALIGN",
+                    (0,0),
+                    (-1,-1),
+                    "CENTER"
+                ),
+
+                (
+                    "VALIGN",
+                    (0,0),
+                    (-1,-1),
+                    "MIDDLE"
+                ),
+
+                (
+                    "GRID",
+                    (0,0),
+                    (-1,-1),
+                    0.5,
+                    colors.black
+                ),
+                (
+                    "ROWBACKGROUNDS",
+                    (0,1),
+                    (-1,-1),
+                    [
+                        colors.white,
+                        colors.HexColor("#F5F5F5")
+                    ]
+                )
+            ])
+        )
+
+        elementos.append(tabla)
+        doc.build(elementos)
+
+        archivo = open(
+            archivo_pdf,
+            "rb"
+        )
+
+        return FileResponse(
+            archivo,
+            as_attachment=True,
+            filename=nombre_pdf
+        )
+
+    except Exception as e:
+        return JsonResponse({
+            "estado": "error",
+            "descripcion": str(e)
+        })
+
+def obtener_materia_docente(id_materia):
+    if not id_materia:
+        return ""
+
+    asignacion = (
+        MateriaAsignada.objects
+        .filter(id_materia=id_materia)
+        .select_related(
+            "id_materia",
+            "id_asignacion__id_usuario"
+        )
+        .first()
+    )
+
+    if asignacion:
+        materia = asignacion.id_materia.nombre
+
+        docente = (asignacion.id_asignacion.id_usuario.nombres
+            + " "
+            + asignacion.id_asignacion.id_usuario.apellidos
+        )
+
+        return (
+            f"{materia}\n"
+            f"{docente}"
+        )
+
+    return ""
+    
 """FORO"""
 def foro(request):
     return render(request, 'Foro/foro.html')
@@ -3418,172 +4456,5 @@ def carreras_impartidas(request):
 def Planificacion_Docente(request):
     return render(request, 'Foro/Planificacion_Docente.html')
 
-""" SESION """
-
-def inicio_sesion(request):
-    if request.method == "POST":
-        nombre_usuario = request.POST.get("usuario")
-        contrasenia = request.POST.get("contrasenia")
-
-        if nombre_usuario and contrasenia:
-            usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
-
-            if usuario:
-                if check_password(contrasenia, usuario.clave):
-                    nombre_completo = usuario.nombres + " " + usuario.apellidos
-
-                    perfiles = Perfiles.objects.filter(usuarioasignacion__id_usuario=usuario)
-
-                    lista_perfiles = list(perfiles.values_list('perfil', flat=True))
-
-                    request.session['cedula_usuario'] = usuario.cedula_identidad
-                    request.session['usuario_nombre'] = nombre_completo
-                    request.session['perfiles'] = lista_perfiles
-
-                    existe = Nacimiento.objects.filter(id_usuario=usuario).exists()
-
-                    if existe:
-                        url = "/panel_usuario/"
-                    else:
-                        if "Estudiante" in lista_perfiles:
-                            url = "/completar_registro_estudiante/"
-                        else:
-                            url = "/completar_registro_personal/"
-
-                    return JsonResponse({
-                        "success": True,
-                        "url": url
-                    })
-                else:
-                    return JsonResponse({
-                        "success": False,
-                        "icon": "error",
-                        "descripcion": "Contraseña incorrecta"
-                    })
-            else:
-                return JsonResponse({
-                    "success": False,
-                    "icon": "error",
-                    "descripcion": "El usuario no se encuentra registrado"
-                })
-        else:
-            return JsonResponse({
-                "success": False,
-                "icon": "warning",
-                "descripcion": "Debe completar todos los campos"
-            })
-    return render(request, 'Sesion/inicio_sesion.html')
-
-def panel_registro(request):
-    return render(request, 'Sesion/panel_registro.html')
-
-def registro_estudiantil(request):
-    if request.method == "POST":
-        nombres = request.POST.get("nombres")
-        apellidos = request.POST.get("apellidos")
-        nacionalidad = request.POST.get("nacionalidad")
-        num_cedula = request.POST.get("cedula_identidad")
-        nombre_correo = request.POST.get("correo_electronico")
-        dominio = request.POST.get("dominio")
-        prefijo = request.POST.get("prefijo")
-        num_telefono = request.POST.get("telefono")
-        usuario = request.POST.get("usuario")
-        password = request.POST.get("password")
-
-        if nombres and apellidos and nacionalidad and num_cedula and nombre_correo and dominio and prefijo and num_telefono and usuario and password:
-            correo_electronico = nombre_correo + dominio
-            cedula_identidad = nacionalidad + "-" + num_cedula
-            telefono = prefijo + num_telefono
-
-            verificar_cedula = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
-            verificar_usuario = Usuario.objects.filter(nombre_usuario=usuario).first()
-            verificar_correo = Contacto.objects.filter(correo_electronico=correo_electronico).exists()
-
-            if verificar_cedula:
-                return JsonResponse({
-                    "icon": "error",
-                    "descripcion": "Ya existe una cédula registrada"
-                })
-
-            if verificar_correo:
-                return JsonResponse({
-                    "icon": "error",
-                    "descripcion": "Ya existe un correo registrado"
-                })
-
-            if verificar_usuario:
-                return JsonResponse({
-                    "icon": "error",
-                    "descripcion": "Ya existe el usuario registrado"
-                })
-            
-            nuevo_usuario = Usuario.objects.create(
-                            nombres=nombres,
-                            apellidos=apellidos,
-                            cedula_identidad=cedula_identidad,
-                            nombre_usuario=usuario,
-                            clave=make_password(password))
-
-            Contacto.objects.create(
-                telefono_personal=telefono,
-                correo_electronico=correo_electronico,
-                id_usuario=nuevo_usuario)
-
-            perfil = Perfiles.objects.get(pk=5)
-
-            UsuarioAsignacion.objects.create(
-                id_usuario=nuevo_usuario,
-                id_perfil=perfil
-            )
-
-            return JsonResponse({
-                "icon": "success",
-                "descripcion": "Se registró correctamente"
-            })
-
-        return JsonResponse({
-            "icon": "warning",
-            "descripcion": "Complete todos los campos"
-        })
-
-    return render(request, "Sesion/registro_estudiantil.html")
-
-def confirmar_registro_personal(request):
-
-    if request.method == "POST":
-        nacionalidad = request.POST.get("nacionalidad")
-        num_cedula_identidad = request.POST.get("usuario_ci")
-
-        if nacionalidad and num_cedula_identidad:
-            cedula_identidad = f"{nacionalidad}-{num_cedula_identidad}"
-
-            usuario = Usuario.objects.filter(cedula_identidad=cedula_identidad).first()
-
-            if not usuario:
-                return JsonResponse({
-                    "existe": "error",
-                    "icon": "error",
-                    "descripcion": "El usuario no se encuentra registrado"
-                })
-
-            # Verificar si ya tiene credenciales
-            if usuario.nombre_usuario and usuario.clave:
-                return JsonResponse({
-                    "existe": "error",
-                    "icon": "warning",
-                    "descripcion": "El usuario ya posee credenciales registradas"
-                })
-
-            request.session["cedula_personal"] = cedula_identidad
-
-            return JsonResponse({
-                "existe": "success"
-            })
-
-        return JsonResponse({
-            "existe": "error",
-            "icon": "warning",
-            "descripcion": "Complete todos los campos"
-        })
-
-    return render(request, "Sesion/confirmar_registro_personal.html")
+def barra_lateral(request):
+    return render(request, 'Estructura/Barra_Lateral.html')

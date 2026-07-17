@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('encabezado.css');
-/* @import url('barra_lateral.css'); */
+@import url('barra_lateral.css');
 @import url('pie_pagina.css');
 
 @import url('../Foro/Historia.css');
@@ -16,13 +16,18 @@
 @import url('../Sesion/formularios_registros.css'); /* Estilos panel de registro*/
 @import url('../Sesion/formulario_registro_personal.css'); /* Estilos formulario de registro personal */
 @import url('../Sesion/formulario_registro_estudiantil.css'); /* Estilos formulario registro estudiantil */
-@import url('../Sesion/formularios_recuperar_credenciales.css'); /* Estilos formulario recuperar credenciales */
+@import url('../Sesion/formularios_recuperar_credenciales.css'); /*Estilos formulario recuperar credenciales*/
 
-@import url('models_actualizar.css');
-@import url('horario_otros_modulo.css');
+@import url('../Logueo/logueado.css');
+@import url('../Logueo/panel_director_general.css');
 
-@import url('inscripcion.css');
-@import url('continuacion.css');
+@import url('../models_actualizar.css');
+@import url('../horario_otros_modulo.css');
+/* @import url('models_actualizar.css');
+@import url('horario_otros_modulo.css'); */
+
+/* @import url('inscripcion.css');
+@import url('continuacion.css'); */
 
 :root{
     --color-base: white; /* Para tarjetas y fondos en especifico */
@@ -36,6 +41,39 @@
     --color-botones: #FFE100; /* Para los botones */
     /* Paleta del foro */
     --color-principal: #8C1007; /* Color principal del foro */
+    --sidebar:#111827;
+    --sidebar-hover:#1F2937;
+    --sidebar-active:#2563EB;
+
+    --text:#E5E7EB;
+    --text-muted:#9CA3AF;
+
+    --background:#F8FAFC;
+
+    --shadow-:0 10px 35px rgba(0,0,0,.12);
+
+    --primario:#1D4ED8;
+    --primario-hover:#2563EB;
+
+    --verde:#10B981;
+    --naranja:#F59E0B;
+    --rojo:#EF4444;
+
+    --texto:#1F2937;
+    --texto-secundario:#6B7280;
+
+    --fondo:#F3F6FB;
+    --blanco:#FFFFFF;
+
+    --borde:#E5E7EB;
+
+    --radio:20px;
+
+    --sombra-suave:
+        0 8px 30px rgba(15,23,42,.05);
+
+    --sombra-hover:
+        0 18px 45px rgba(15,23,42,.10);
 }
 
 *{
@@ -47,233 +85,4 @@
 
 .oculto { 
     display: none;
-}
-
-#credenciales_estudiante{
-    width: 100%;
-    padding: 40px;
-    margin-top: 120px;
-    box-sizing: border-box;
-}
-
-/* Contenedor principal en dos columnas */
-.contenedor_credenciales_estudiante{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 50px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-/* IZQUIERDA: texto */
-#contenedor_texto{
-    flex: 1;
-    background: #f5f5f5;
-    padding: 25px;
-    border-radius: 10px;
-    border-left: 5px solid #0d6efd;
-}
-
-#contenedor_texto p{
-    margin: 0;
-    text-align: justify;
-    line-height: 1.8;
-    font-size: 16px;
-    color: #333;
-}
-
-/* DERECHA: formularios */
-#contenedor_credenciales{
-    flex: 1;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-}
-
-#contenedor_credenciales h3{
-    text-align: center;
-    margin-bottom: 25px;
-    color: #0d6efd;
-}
-
-/* Formularios */
-#formulario_buscar_estudiante,
-#formulario_credenciales_estudiante{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-/* Labels */
-label{
-    font-weight: bold;
-    color: #444;
-}
-
-/* Inputs */
-input[type="text"]{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-/* Botones */
-input[type="submit"]{
-    padding: 12px;
-    background: #0d6efd;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-input[type="submit"]:hover{
-    background: #0b5ed7;
-}
-
-/* Responsive */
-@media (max-width: 768px){
-    .contenedor_credenciales_estudiante{
-        flex-direction: column;
-    }
-}
-
-
-
-
-
-#contenedor-principal {
-    margin-left: 260px;
-    margin-top: 70px;
-    padding: 20px;
-}
-
-#pre_registro_personal {
-    margin-left: 50px;
-    margin-top: 100px;
-    padding: 40px 20px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.contenedor_pre_registro_personal {
-    width: 100%;
-    max-width: 700px;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-#formulario_pre_registro_personal {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#formulario_pre_registro_personal label {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: -6px;
-}
-
-#formulario_pre_registro_personal input:not([type="checkbox"]),
-#formulario_pre_registro_personal select {
-    width: 100%;
-    height: 45px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    padding: 0 12px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-#formulario_pre_registro_personal input:not([type="checkbox"]):focus,
-#formulario_pre_registro_personal select:focus {
-    outline: none;
-    border-color: #1f3c88;
-    box-shadow: 0 0 0 3px rgba(31, 60, 136, 0.15);
-}
-
-#contenedor_perfiles,
-#contenedor_pnfs,
-#contenedor_nucleos {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 10px 0;
-}
-
-#contenedor_perfiles label,
-#contenedor_pnfs label,
-#contenedor_nucleos label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    padding: 8px 12px;
-    border: 1px solid #e6e6e6;
-    border-radius: 8px;
-    background: #fff;
-
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#contenedor_perfiles label:hover,
-#contenedor_pnfs label:hover,
-#contenedor_nucleos label:hover {
-    background: #f2f5ff;
-    border-color: #cdd8ff;
-}
-
-#contenedor_perfiles input[type="checkbox"],
-#contenedor_pnfs input[type="checkbox"],
-#contenedor_nucleos input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
-#formulario_pre_registro_personal button {
-    margin-top: 10px;
-    height: 48px;
-    border: none;
-    border-radius: 8px;
-    background: #1f3c88;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#formulario_pre_registro_personal button:hover {
-    background: #162d66;
-}
-
-#formulario_pre_registro_personal button:active {
-    transform: scale(0.98);
-}
-
-@media (max-width: 768px) {
-
-    .contenedor_pre_registro_personal {
-        padding: 20px;
-    }
-
-    #contenedor_perfiles label,
-    #contenedor_pnfs label,
-    #contenedor_nucleos label {
-        font-size: 0.95rem;
-    }
 }

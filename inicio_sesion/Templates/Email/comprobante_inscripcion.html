@@ -1,0 +1,29 @@
+{% extends "Email/Base.html" %}
+
+{% block content %}
+
+<section id="comprobante_inscripcion">
+    <div class="contenedor_comprobante_inscripcion">
+        <h2>Documento de Preinscripción</h2>
+        <p> Estimado(a) <strong>{{ nombres }} {{ apellidos }}</strong>.</p>
+        <p>
+            Su proceso de preinscripción académica ha sido completado
+            correctamente en la <strong>UPT José Félix Ribas</strong>.
+        </p>
+        <p>
+            Se adjunta a este correo el comprobante oficial de preinscripción
+            generado por la Plataforma Digital para la Gestión de CARSCE.
+        </p>
+
+        <div id="mensaje_documento">
+            <strong>Comprobante generado exitosamente</strong>
+            <p>Fecha de emisión: <strong>{{ fecha }}</strong></p>
+
+            <p>Documento: <strong>Comprobante de Preinscripción.pdf</strong></p>
+        </div>
+
+        <p>Recomendamos conservar este documento como respaldo del proceso realizado.</p>
+    </div>
+</section>
+
+{% endblock %}

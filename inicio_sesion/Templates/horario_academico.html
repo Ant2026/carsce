@@ -8,21 +8,48 @@
     <div class="contenedor_horario_academico">
         <h3>Horario Académico</h3>
 
-        <form method="post">
+        <form method="post" id="formulario_registrar_horario">
             {% csrf_token %}
-            <label for="pnfs_registrados">P.N.F:</label>
-            <select name="pnf" id="pnfs_registrados"></select>
+            <div class="campo">
+                <label>Núcleo</label>
+                <select id="nucelos_registrados" name="nucleos"></select>
+            </div>
 
-            <label for="trayectos">Trayecto:</label>
-            <select name="trayecto" id="trayectos"></select>
+            <div class="campo">
+                <label>P.N.F.</label>
+                <select id="pnfs_registrados" name="pnfs"></select>
+            </div>
 
-            <label for="tramos">Tramo/Semestre:</label>
-            <select name="tramo" id="tramos"></select>
+            <div class="campo">
+                <label>Trayecto</label>
+                <select id="trayectos_registrados" name="trayecto"></select>
+            </div>
 
-            <label for="cantidad_fila">Cantidad de Filas:</label>
-            <input type="number" name="filas" id="cantidad_fila">
+            <div class="campo">
+                <label>Periodo Académico</label>
+                <select id="periodos_academicas_registrados" name="periodo"></select>
+            </div>
 
-            <button id="generar_pdf">Generar PDF</button>
+            <div class="campo">
+                <label>Aula Académica</label>
+                <select id="aulas_registrados" name="aulas"></select>
+            </div>
+
+            <div class="campo">
+                <label>Turno Académico</label>
+                <select id="turno_academica" name="turno"></select>
+            </div>
+
+            <div class="campo">
+                <label>Cantidad de Filas</label>
+                <input type="number" id="cantidad_fila" name="filas">
+            </div>
+
+            <div class="campo boton">
+                <button id="generar_pdf">
+                    Generar PDF
+                </button>
+            </div>
         </form>
 
         <table>
@@ -45,6 +72,6 @@
     </div>
 </section>
 
-<script src="{% static 'Funciones_Asincronas/horario_academico.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/modelo_horario_academico.js' %}"></script>
 
 {% endblock %}

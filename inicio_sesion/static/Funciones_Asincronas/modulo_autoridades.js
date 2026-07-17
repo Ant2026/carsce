@@ -118,7 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formulario
             });
             const resultado = await respuesta.json()
-            console.log(resultado)
 
             input_autoridad_oculto.value = resultado.id_autoridad
             input_nombres_actualizar.value = resultado.nombres

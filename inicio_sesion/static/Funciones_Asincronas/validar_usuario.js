@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         try {
             const datos_formulario = new FormData(formulario);
-            const respuesta = await fetch("/comprobar_usuario/", {
+            const respuesta = await fetch("", {
                 method: "POST",
                 body: datos_formulario,
                 headers: {
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(resultado)
 
             if (resultado.estado === "exito") {
-                window.location.href = "/panel_recuperar_credenciales/";
+                window.location.href = "../../panel_recuperar_credenciales/";
             } else {
                 await Swal.fire({
                     text: resultado.descripcion,

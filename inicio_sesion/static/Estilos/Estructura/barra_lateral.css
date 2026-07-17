@@ -1,72 +1,159 @@
-#barra_lateral {
-    position: fixed;
-    top: 70px;
-    left: 0;
+/* ===========================
+   BARRA LATERAL
+=========================== */
 
-    width: 260px;
-    height: calc(100vh - 70px);
+#barra_lateral{
 
-    background: #ddddddc7;
-    color: #000;
-    padding: 18px 14px;
+    position:sticky;
 
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    top:70px;
+    left:0;
 
-    overflow-y: auto;
+    width:250px;
+    height:calc(100vh - 70px);
 
-    z-index: 1000;
+    background:var(--sidebar);
+
+    display:flex;
+    flex-direction:column;
+
+    padding:22px 14px;
+
+    overflow:auto;
+
+    box-shadow:var(--shadow-);
 }
 
-#barra_lateral h3 {
-    font-size: 13px;
-    font-weight: 700;
+/* Scroll */
 
-    text-transform: uppercase;
-    letter-spacing: 1px;
+#barra_lateral::-webkit-scrollbar{
 
-    margin: 5px 0 12px 0;
-    padding-left: 6px;
-
-    border-left: 3px solid #3b82f6;
+    width:5px;
 }
 
-#barra_lateral a {
-    display: flex;
-    align-items: center;
+#barra_lateral::-webkit-scrollbar-thumb{
 
-    padding: 12px 14px;
+    background:#374151;
 
-    border-radius: 10px;
-
-    text-decoration: none;
-
-    font-size: 14px;
-    font-weight: 500;
-
-    color: #000;
-
-    background: transparent;
-
-    transition: 0.25s ease;
-
-    border-left: 3px solid transparent;
+    border-radius:50px;
 }
 
-#barra_lateral a:hover {
-    background: rgba(59, 130, 246, 0.08);
+/* ===========================
+   TÍTULO
+=========================== */
 
-    border-left: 3px solid #3b82f6;
+.menu-title{
 
-    transform: translateX(4px);
+    color:#6B7280;
 
-    color: #1d4ed8;
+    font-size:.72rem;
+
+    letter-spacing:2px;
+
+    margin:0 0 20px 12px;
+
+    font-weight:700;
 }
 
-#barra_lateral a.active {
-    background: rgba(59, 130, 246, 0.15);
-    border-left: 3px solid #2563eb;
-    color: #1d4ed8;
-    font-weight: 600;
+/* ===========================
+   ENLACES
+=========================== */
+
+#barra_lateral a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:14px 18px;
+
+    margin-bottom:4px;
+
+    text-decoration:none;
+
+    color:var(--text-muted);
+
+    border-radius:12px;
+
+    transition:.18s;
+
+    font-weight:500;
+}
+
+#barra_lateral a:hover{
+
+    background:var(--sidebar-hover);
+
+    color:white;
+}
+
+#barra_lateral a.activo{
+
+    background:var(--sidebar-active);
+
+    color:white;
+}
+
+/* Enlace activo */
+
+#barra_lateral a.activo{
+
+    background: var(--color-base);
+    color: var(--color-azulE);
+
+    font-weight: bold;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width:992px){
+
+    #barra_lateral{
+
+        width:220px;
+    }
+
+}
+
+@media (max-width:768px){
+
+    #barra_lateral{
+
+        position: fixed;
+
+        top:70px;
+        left:-260px;
+
+        width:250px;
+        height:calc(100vh - 70px);
+
+        z-index:1000;
+
+        transition:left .35s ease;
+    }
+
+    #barra_lateral.mostrar{
+
+        left:0;
+    }
+
+}
+
+@media (max-width:480px){
+
+    #barra_lateral{
+
+        width:220px;
+    }
+
+    #barra_lateral a{
+
+        font-size:.9rem;
+        padding:10px 12px;
+    }
+
 }

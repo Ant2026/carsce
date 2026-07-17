@@ -1,632 +1,2036 @@
-#pnfs_registrado {
-    margin-top: var(--nav-height);
-    margin-left: var(--aside-width);
+/* ===========================
+   PRE REGISTRO PERSONAL
+=========================== */
 
-    padding-top: 100px;
-    padding-left: 100px;
-
-    background: #f4f6f9;
-    min-height: calc(100vh - var(--nav-height));
-    display: flex;
-    justify-content: center;
+#pre_registro_personal{
+    padding: 45px 25px;
+    background: #F5F7FB;
+    min-height: calc(100vh - 80px);
 }
 
-.contenedor_pnfs_registrado {
-    width: 100%;
-    max-width: 1000px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.contenedor_pre_registro_personal{
+    max-width: 900px;
+    margin: auto;
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 35px 40px;
+    box-shadow: 0 10px 35px rgba(15, 23, 42, .08);
+    border: 1px solid #E5E7EB;
 }
 
-.contenedor_pnfs_registrado h3 {
-    margin-bottom: 20px;
-    text-align: center;
+/* Título */
+
+.contenedor_pre_registro_personal h3{
+    font-size: 28px;
+    font-weight: 700;
+    color: #1E3A8A;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E5E7EB;
 }
 
-.contenedor_registrar_pnf h4 {
-    margin-bottom: 15px;
-}
+/* Formulario */
 
-#modificarpnf,
-#registrarpnf {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-#modificarpnf label,
-#registrarpnf label {
-    font-weight: 600;
-    font-size: 14px;
-    margin-top: 5px;
-}
-
-#modificarpnf input[type="text"],
-#registrarpnf input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-    transition: 0.2s;
-}
-
-#modificarpnf input[type="text"]:focus,
-#registrarpnf input[type="text"]:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 5px rgba(74,144,226,0.3);
-}
-
-#contenedor_nucleo {
-    width: 100%;
-    padding: 10px;
-    background: #fafafa;
-    border: 1px dashed #ccc;
-    border-radius: 6px;
-}
-
-#modificarpnf input[type="submit"],
-#registrarpnf input[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-    margin-top: 10px;
-}
-
-#modificarpnf input[type="submit"]:hover,
-#registrarpnf input[type="submit"]:hover {
-    background: #357abd;
-}
-
-#contenedor_nucleo {
-    grid-column: span 2;
-    padding: 10px;
-    background: #fafafa;
-    border: 1px dashed #ccc;
-    border-radius: 6px;
-}
-
-#modificarpnf input[type="submit"],
-#registrarpnf input[type="submit"] {
-    grid-column: span 2;
-    padding: 10px;
-    background: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-#modificarpnf input[type="submit"]:hover,
-#registrarpnf input[type="submit"]:hover {
-    background: #357abd;
-}
-
-.contenedor_pnfs_registrado table {
-    width: 100%;
-    margin-top: 25px;
-    border-collapse: collapse;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-.contenedor_pnfs_registrado thead {
-    background: #4a90e2;
-    color: white;
-}
-
-.contenedor_pnfs_registrado thead td {
-    padding: 12px;
-    font-weight: bold;
-}
-
-.contenedor_pnfs_registrado tbody td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-}
-
-.contenedor_pnfs_registrado tbody tr:hover {
-    background: #f1f6ff;
-}
-
-#dialogo_actualizar_pnfs {
-    border: none;
-    padding: 0;
-    width: 100%;
-    max-width: 600px;
-
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    font-family: Arial, sans-serif;
-
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#dialogo_actualizar_pnfs::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.contenedor_actualizar_pnf {
-    padding: 20px 25px;
-    background: #fff;
+#formulario_pre_registro_personal{
     display: flex;
     flex-direction: column;
-    gap: 12px;
-}
-
-.contenedor_actualizar_pnf h4 {
-    margin: 0;
-    font-size: 18px;
-    text-align: center;
-    color: #1f2937;
+    gap: 20px;
 }
 
 /* Labels */
-.contenedor_actualizar_pnf label {
-    font-size: 14px;
+
+#formulario_pre_registro_personal label{
+    font-size: .95rem;
+    font-weight: 600;
     color: #374151;
-    margin-top: 8px;
+    margin-bottom: -10px;
 }
 
 /* Inputs */
-.contenedor_actualizar_pnf input[type="text"] {
+
+#formulario_pre_registro_personal input,
+#formulario_pre_registro_personal select{
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
+    height: 48px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    padding: 0 15px;
+    font-size: .95rem;
+    background: #FFFFFF;
+    transition: .25s;
     outline: none;
-    transition: 0.2s;
 }
 
-.contenedor_actualizar_pnf input[type="text"]:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+#formulario_pre_registro_personal input:focus,
+#formulario_pre_registro_personal select:focus{
+    border-color: #2563EB;
+    box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+/* Campos deshabilitados */
+
+#formulario_pre_registro_personal input:disabled{
+    background: #F3F4F6;
+    color: #6B7280;
+    cursor: not-allowed;
+}
+
+/* Placeholder */
+
+#formulario_pre_registro_personal input::placeholder{
+    color: #9CA3AF;
+}
+
+/* Campos dobles */
+
+.grupo-campo{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.grupo-campo select{
+    width: 120px;
+    flex-shrink: 0;
+}
+
+.grupo-campo input{
+    flex: 1;
+}
+
+/* Contenedores dinámicos */
+
+#contenedor_perfiles,
+#contenedor_gaceta,
+#contenedor_fecha_gaceta,
+#contenedor_nucleos_encargado_control_estudios,
+#contenedor_nucleos_coordinador_pnf,
+#contenedor_nucleos_docente,
+#contenedor_pnfs_coordinador_pnf,
+#contenedor_pnfs_docente{
+    padding: 20px;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    background: #FAFBFC;
+}
+
+#perfil,
+#nucleo_docente,
+#nucleo_coordinador_pnf,
+#nucleo_encargado_control_estudios,
+#pnf_docente,
+#pnf_coordinador_pnf{
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Checkbox */
+
+#perfil label,
+#nucleo_docente label,
+#nucleo_coordinador_pnf label,
+#nucleo_encargado_control_estudios label,
+#pnf_docente label,
+#pnf_coordinador_pnf label{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: .25s;
+    margin: 0;
+}
+
+#perfil label:hover,
+#nucleo_docente label:hover,
+#nucleo_coordinador_pnf label:hover,
+#nucleo_encargado_control_estudios label:hover,
+#pnf_docente label:hover,
+#pnf_coordinador_pnf label:hover{
+    border-color: #2563EB;
+    background: #EFF6FF;
+}
+
+/* Botón */
+
+#formulario_pre_registro_personal button{
+    margin-top: 10px;
+    height: 52px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#2563EB,#1D4ED8);
+    color: #FFF;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s;
+    box-shadow: 0 10px 25px rgba(37,99,235,.25);
+}
+
+#formulario_pre_registro_personal button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(37,99,235,.35);
+}
+
+#formulario_pre_registro_personal button:active{
+    transform: scale(.98);
+}
+
+/* Responsive */
+
+@media (max-width:768px){
+
+    .contenedor_pre_registro_personal{
+        padding: 25px;
+    }
+
+    .grupo-campo{
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .grupo-campo select{
+        width: 100%;
+    }
+
+    .contenedor_pre_registro_personal h3{
+        font-size: 24px;
+        text-align: center;
+    }
+
+}
+
+/*==========================================
+    MODULO PNF
+==========================================*/
+
+#pnfs_registrado{
+    padding: 45px 25px;
+    background: #F5F7FB;
+    min-height: calc(100vh - 80px);
+}
+
+.contenedor_pnfs_registrado{
+    max-width: 1400px;
+    margin: auto;
+}
+
+.contenedor_pnfs_registrado>h3{
+    font-size: 2rem;
+    color: #1E3A8A;
+    font-weight: 700;
+    margin-bottom: 35px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+/*==========================================
+    GRID
+==========================================*/
+
+.contenedor_pnfs_registrado{
+    display:grid;
+    grid-template-columns:380px 1fr;
+    gap:30px;
+}
+
+.contenedor_pnfs_registrado>h3{
+    grid-column:1/-1;
+}
+
+/*==========================================
+    FORMULARIO
+==========================================*/
+
+.contenedor_registrar_pnf{
+    background:#FFF;
+    border-radius:18px;
+    padding:30px;
+    border:1px solid #E5E7EB;
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
+    align-self:start;
+}
+
+.contenedor_registrar_pnf h4{
+    font-size:1.3rem;
+    color:#2563EB;
+    margin-bottom:25px;
+    font-weight:700;
+}
+
+#registrarpnf{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+#registrarpnf label{
+    font-weight:600;
+    color:#374151;
+    font-size:.95rem;
+}
+
+#registrarpnf input[type=text],
+#registrarpnf select{
+    width:100%;
+    height:48px;
+    border:1px solid #D1D5DB;
+    border-radius:10px;
+    padding:0 15px;
+    font-size:.95rem;
+    transition:.25s;
+    outline:none;
+    background:#FFF;
+}
+
+#registrarpnf input:focus,
+#registrarpnf select:focus{
+    border-color:#2563EB;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+/*==========================================
+    NUCLEOS
+==========================================*/
+
+#contenedor_registrar_nucleos,
+#contenedor_actualizar_nucleos{
+
+    margin-top:5px;
+    padding:18px;
+    border-radius:12px;
+    border:1px solid #E5E7EB;
+    background:#F9FAFB;
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+
+}
+
+#contenedor_registrar_nucleos label,
+#contenedor_actualizar_nucleos label{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:10px 14px;
+
+    background:#FFF;
+
+    border-radius:8px;
+    border:1px solid #D1D5DB;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+#contenedor_registrar_nucleos label:hover,
+#contenedor_actualizar_nucleos label:hover{
+
+    background:#EFF6FF;
+    border-color:#2563EB;
+
+}
+
+/*==========================================
+    BOTONES
+==========================================*/
+
+#registrarpnf input[type=submit],
+#modificarpnf input[type=submit]{
+
+    margin-top:10px;
+    height:50px;
+
+    border:none;
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+
+    color:#FFF;
+    font-weight:600;
+    font-size:1rem;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+
+}
+
+#registrarpnf input[type=submit]:hover,
+#modificarpnf input[type=submit]:hover{
+
+    transform:translateY(-2px);
+    box-shadow:0 18px 30px rgba(37,99,235,.35);
+
+}
+
+/*==========================================
+    CONTENEDOR TABLAS
+==========================================*/
+
+#tabla_pnfs{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+    gap:25px;
+
+}
+
+/*==========================================
+    TABLAS
+==========================================*/
+
+.tabla_nucleo{
+
+    width:100%;
+    border-collapse:collapse;
+
+    background:#FFF;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 10px 30px rgba(15,23,42,.08);
+
+    transition:.30s;
+
+}
+
+.tabla_nucleo:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 18px 35px rgba(15,23,42,.12);
+
+}
+
+/*==========================================
+    TITULO DEL NUCLEO
+==========================================*/
+
+.tabla_nucleo thead tr:first-child th{
+
+    background:linear-gradient(135deg,#1E3A8A,#2563EB);
+
+    color:#FFF;
+
+    font-size:1rem;
+
+    padding:18px;
+
+    text-align:center;
+
+    letter-spacing:.5px;
+
+}
+
+/*==========================================
+    ENCABEZADOS
+==========================================*/
+
+.tabla_nucleo thead tr:nth-child(2){
+
+    background:#F8FAFC;
+
+}
+
+.tabla_nucleo thead tr:nth-child(2) th{
+
+    color:#475569;
+
+    font-weight:700;
+
+    padding:14px;
+
+    border-bottom:1px solid #E5E7EB;
+
+    text-transform:uppercase;
+
+    font-size:.82rem;
+
+}
+
+/*==========================================
+    FILAS
+==========================================*/
+
+.tabla_nucleo tbody tr{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.tabla_nucleo tbody tr:nth-child(even){
+
+    background:#FAFBFC;
+
+}
+
+.tabla_nucleo tbody tr:hover{
+
+    background:#EFF6FF;
+
+}
+
+.tabla_nucleo tbody td{
+
+    padding:16px;
+
+    border-bottom:1px solid #EEF2F7;
+
+    color:#374151;
+
+    font-size:.94rem;
+
+}
+
+.tabla_nucleo tbody tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+/*==========================================
+    COLUMNA ID
+==========================================*/
+
+.tabla_nucleo tbody td:first-child{
+
+    width:70px;
+
+    text-align:center;
+
+    font-weight:700;
+
+    color:#2563EB;
+
+}
+
+/*==========================================
+    EFECTO SELECCION
+==========================================*/
+
+.tabla_nucleo tbody tr:active{
+
+    transform:scale(.99);
+
+}
+
+/*==========================================
+    DIALOG
+==========================================*/
+
+#dialogo_actualizar_pnfs{
+
+    border:none;
+    border-radius:18px;
+    padding:0;
+    width:650px;
+    max-width:95%;
+
+    overflow:hidden;
+
+    box-shadow:0 30px 70px rgba(0,0,0,.30);
+
+    animation:mostrarDialogo .25s ease;
+
+}
+
+#dialogo_actualizar_pnfs::backdrop{
+
+    background:rgba(15,23,42,.55);
+    backdrop-filter:blur(4px);
+
+}
+
+.contenedor_actualizar_pnf{
+
+    padding:35px;
+    position:relative;
+    background:#FFF;
+
+}
+
+.contenedor_actualizar_pnf h4{
+
+    color:#1E3A8A;
+    font-size:1.5rem;
+    margin-bottom:25px;
+
+}
+
+#modificarpnf{
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+}
+
+#modificarpnf label{
+
+    font-weight:600;
+    color:#374151;
+
+}
+
+#modificarpnf input[type=text],
+#modificarpnf select{
+
+    width:100%;
+    height:48px;
+
+    border-radius:10px;
+
+    border:1px solid #D1D5DB;
+
+    padding:0 15px;
+
+    transition:.25s;
+
+}
+
+#modificarpnf input:focus,
+#modificarpnf select:focus{
+
+    outline:none;
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+/*==========================================
+    CERRAR
+==========================================*/
+
+#cerrar_dialogo{
+
+    position:absolute;
+
+    right:22px;
+    top:20px;
+
+    width:42px;
+    height:42px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    color:#6B7280;
+
+    font-size:1.4rem;
+
+    transition:.25s;
+
+}
+
+#cerrar_dialogo:hover{
+
+    background:#F3F4F6;
+    color:#DC2626;
+    transform:rotate(90deg);
+
+}
+
+/*==========================================
+    RESPONSIVE
+==========================================*/
+
+@media(max-width:1100px){
+
+    .contenedor_pnfs_registrado{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@keyframes mostrarDialogo{
+
+    from{
+
+        opacity:0;
+        transform:translateY(-20px) scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0) scale(1);
+
+    }
+
 }
 
 
 
 
 
+
+/*==========================================
+    MÓDULO NÚCLEOS
+==========================================*/
 
 #nucleos_registrado{
-    width: calc(100% - 260px);
-    margin: 80px 0 30px 260px;
-    padding: 20px;
-    box-sizing: border-box;
+    padding:45px 25px;
+    background:#F5F7FB;
+    min-height:calc(100vh - 80px);
 }
 
 .contenedor_nucleos_registrado{
-    background: #fff;
-    border-radius: 10px;
-    padding: 25px;
-    border: 1px solid #d9d9d9;
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+
+    max-width:1400px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:380px 1fr;
+    gap:30px;
+
 }
 
-.contenedor_nucleos_registrado h3{
-    text-align: center;
-    margin-bottom: 25px;
-    color: #0f3c69;
-    font-size: 26px;
+.contenedor_nucleos_registrado>h3{
+
+    grid-column:1/-1;
+
+    font-size:2rem;
+    font-weight:700;
+    color:#1E3A8A;
+
+    padding-bottom:15px;
+    margin-bottom:10px;
+
+    border-bottom:1px solid #E5E7EB;
+
 }
 
-/* ===========================
-   REGISTRAR NÚCLEO
-=========================== */
+/*==========================================
+    TARJETA FORMULARIO
+==========================================*/
 
 .contenedor_registrar_nucleo{
-    margin-bottom: 35px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    padding: 20px;
-    background: #fafafa;
+
+    background:#FFF;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
+
+    align-self:start;
+
 }
 
 .contenedor_registrar_nucleo h4{
-    margin-bottom: 18px;
-    color: #0f3c69;
+
+    font-size:1.3rem;
+    color:#2563EB;
+    margin-bottom:25px;
+    font-weight:700;
+
 }
 
 #registrarnucleo{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
 }
 
 #registrarnucleo label{
-    font-weight: 600;
+
+    font-size:.95rem;
+    font-weight:600;
+    color:#374151;
+
+}
+
+/*==========================================
+    INPUTS
+==========================================*/
+
+#registrarnucleo select,
+#registrarnucleo textarea,
+#modificarnucleo select,
+#modificarnucleo textarea{
+
+    width:100%;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    padding:14px 15px;
+
+    font-size:.95rem;
+
+    resize:vertical;
+
+    transition:.25s;
+
+    outline:none;
+
+    background:#FFF;
+
 }
 
 #registrarnucleo select,
-#registrarnucleo textarea{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #cfcfcf;
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
-    box-sizing: border-box;
+#modificarnucleo select{
+
+    height:48px;
+
 }
 
-#registrarnucleo textarea{
-    min-height: 120px;
-    resize: vertical;
+#registrarnucleo textarea,
+#modificarnucleo textarea{
+
+    min-height:130px;
+
 }
 
-#registrarnucleo input[type="submit"]{
-    margin-top: 15px;
-    align-self: flex-end;
-    background: #0f5ea8;
-    color: white;
-    border: none;
-    padding: 10px 22px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: .25s;
+#registrarnucleo select:focus,
+#registrarnucleo textarea:focus,
+#modificarnucleo select:focus,
+#modificarnucleo textarea:focus{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
 }
 
-#registrarnucleo input[type="submit"]:hover{
-    background: #0c4d89;
+/*==========================================
+    BOTONES
+==========================================*/
+
+#registrarnucleo input[type=submit],
+#modificarnucleo input[type=submit]{
+
+    margin-top:10px;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+
+    color:#FFF;
+
+    font-size:1rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+
 }
 
-/* ===========================
-   TABLA
-=========================== */
+#registrarnucleo input[type=submit]:hover,
+#modificarnucleo input[type=submit]:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 18px 30px rgba(37,99,235,.35);
+
+}
+
+/*==========================================
+    TABLA
+==========================================*/
 
 #tabla_nucleo{
-    margin-top: 25px;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(420px,1fr));
+    gap:25px;
+
 }
 
-/* ===========================
-   DIALOG
-=========================== */
+/*==========================================
+    TABLA INDIVIDUAL
+==========================================*/
+
+.tabla_nucleo{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:#FFF;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+
+    transition:.30s;
+
+}
+
+.tabla_nucleo:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 20px 35px rgba(15,23,42,.12);
+
+}
+
+/*==========================================
+    TITULO
+==========================================*/
+
+.tabla_nucleo thead tr:first-child th{
+
+    background:linear-gradient(135deg,#1E3A8A,#2563EB);
+
+    color:#FFF;
+
+    padding:18px;
+
+    font-size:1rem;
+
+    letter-spacing:.5px;
+
+}
+
+/*==========================================
+    CABECERAS
+==========================================*/
+
+.tabla_nucleo thead tr:nth-child(2){
+
+    background:#F8FAFC;
+
+}
+
+.tabla_nucleo thead tr:nth-child(2) th{
+
+    padding:14px;
+
+    color:#475569;
+
+    text-transform:uppercase;
+
+    font-size:.82rem;
+
+    border-bottom:1px solid #E5E7EB;
+
+}
+
+/*==========================================
+    FILAS
+==========================================*/
+
+.tabla_nucleo tbody tr{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.tabla_nucleo tbody tr:nth-child(even){
+
+    background:#FAFBFC;
+
+}
+
+.tabla_nucleo tbody tr:hover{
+
+    background:#EFF6FF;
+
+}
+
+.tabla_nucleo tbody td{
+
+    padding:16px;
+
+    border-bottom:1px solid #EEF2F7;
+
+    color:#374151;
+
+}
+
+.tabla_nucleo tbody tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+/*==========================================
+    DIALOG
+==========================================*/
 
 #dialogo_actualizar_nucleos{
-    border: none;
-    border-radius: 10px;
-    padding: 0;
-    width: 550px;
-    max-width: 90%;
-    margin: auto;
-    box-shadow: 0 15px 40px rgba(0,0,0,.3);
+
+    width:650px;
+
+    max-width:95%;
+
+    padding:0;
+
+    border:none;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 30px 70px rgba(0,0,0,.35);
+
+    animation:abrirDialogo .25s ease;
+
 }
 
 #dialogo_actualizar_nucleos::backdrop{
-    background: rgba(0,0,0,.45);
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(4px);
+
 }
 
-/* ===========================
-   CONTENIDO DIALOG
-=========================== */
-
 .contenedor_actualizar_nucleo{
-    position: relative;
-    padding: 25px;
+
+    position:relative;
+
+    background:#FFF;
+
+    padding:35px;
+
 }
 
 .contenedor_actualizar_nucleo h4{
-    text-align: center;
-    color: #0f3c69;
-    margin-bottom: 20px;
-}
 
-#cerrar_dialogo{
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #c62828;
+    color:#1E3A8A;
+
+    font-size:1.5rem;
+
+    margin-bottom:25px;
+
 }
 
 #modificarnucleo{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
 }
 
-#modificarnucleo label{
-    font-weight: 600;
+/*==========================================
+    BOTON CERRAR
+==========================================*/
+
+#cerrar_dialogo{
+
+    position:absolute;
+
+    top:20px;
+    right:22px;
+
+    width:42px;
+    height:42px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    color:#6B7280;
+
+    font-size:1.4rem;
+
+    transition:.30s;
+
 }
 
-#modificarnucleo select,
-#modificarnucleo textarea{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #cfcfcf;
-    border-radius: 6px;
-    font-size: 15px;
-    box-sizing: border-box;
+#cerrar_dialogo:hover{
+
+    background:#F3F4F6;
+
+    color:#DC2626;
+
+    transform:rotate(90deg);
+
 }
 
-#modificarnucleo textarea{
-    min-height: 120px;
-    resize: vertical;
+/*==========================================
+    RESPONSIVE
+==========================================*/
+
+@media(max-width:1100px){
+
+    .contenedor_nucleos_registrado{
+
+        grid-template-columns:1fr;
+
+    }
+
 }
 
-#modificarnucleo input[type="submit"]{
-    margin-top: 15px;
-    align-self: flex-end;
-    background: #0f5ea8;
-    color: white;
-    border: none;
-    padding: 10px 22px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: .25s;
+@keyframes abrirDialogo{
+
+    from{
+
+        opacity:0;
+        transform:translateY(-20px) scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0) scale(1);
+
+    }
+
 }
 
-#modificarnucleo input[type="submit"]:hover{
-    background: #0c4d89;
-}
 
 
-
-/* ===========================
-   MÓDULO MATERIAS
-=========================== */
+/*==========================================
+    MODULO MATERIAS
+==========================================*/
 
 #modulo_materias{
-    margin-top: 80px;      /* Separación del nav */
-    margin-left: 260px;    /* Separación del aside */
-    padding: 20px;
-    min-height: calc(100vh - 80px);
-    background: #f5f7fa;
-    box-sizing: border-box;
+    padding:45px 25px;
+    background:#F5F7FB;
+    min-height:calc(100vh - 80px);
 }
 
 .contenedor_modulo_materias{
-    max-width: 1400px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+
+    max-width:1500px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:380px 1fr;
+    gap:30px;
+
 }
 
-.contenedor_modulo_materias h3{
-    margin: 0;
-    padding-bottom: 15px;
-    text-align: center;
-    font-size: 28px;
-    color: #1f2937;
-    border-bottom: 2px solid #d1d5db;
+.contenedor_modulo_materias>h3{
+
+    grid-column:1/-1;
+
+    font-size:2rem;
+    font-weight:700;
+
+    color:#1E3A8A;
+
+    padding-bottom:15px;
+
+    border-bottom:1px solid #E5E7EB;
+
 }
 
-/* ===========================
-   TARJETAS
-=========================== */
-
-.contenedor_registrar_materia,
-.contenedor_lista_materia{
-    background: #fff;
-    border: 1px solid #dbe2ea;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,.08);
-}
+/*==========================================
+    TARJETA REGISTRO
+==========================================*/
 
 .contenedor_registrar_materia{
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
+
+    background:#FFF;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
+
+    align-self:start;
+
 }
 
-.contenedor_lista_materia{
-    width: 100%;
+.contenedor_registrar_materia h4{
+
+    color:#2563EB;
+
+    font-size:1.35rem;
+
+    margin-bottom:25px;
+
 }
 
-.contenedor_registrar_materia h4,
-.contenedor_lista_materia h4{
-    margin: 0 0 20px;
-    text-align: center;
-    font-size: 20px;
-    color: #374151;
-}
+#registrar_materia{
 
-/* ===========================
-   FORMULARIO
-=========================== */
+    display:flex;
 
-#registrar_materia,
-#actualizar_materia{
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction:column;
+
+    gap:18px;
+
 }
 
 #registrar_materia label,
 #actualizar_materia label{
-    font-weight: 600;
-    color: #374151;
+
+    font-weight:600;
+
+    color:#374151;
+
 }
 
-#registrar_materia input[type="text"],
+#registrar_materia input[type=text],
 #registrar_materia select,
-#actualizar_materia input[type="text"],
+#actualizar_materia input[type=text],
 #actualizar_materia select{
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
-    transition: .3s;
-    box-sizing: border-box;
+
+    width:100%;
+
+    height:48px;
+
+    border-radius:10px;
+
+    border:1px solid #D1D5DB;
+
+    padding:0 15px;
+
+    outline:none;
+
+    transition:.25s;
+
+    background:#FFF;
+
 }
 
-#registrar_materia input[type="text"]:focus,
+#registrar_materia input:focus,
 #registrar_materia select:focus,
-#actualizar_materia input[type="text"]:focus,
+#actualizar_materia input:focus,
 #actualizar_materia select:focus{
-    border-color: #2563eb;
-    box-shadow: 0 0 5px rgba(37,99,235,.25);
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
 }
 
-#registrar_materia input[type="submit"],
-#actualizar_materia input[type="submit"]{
-    margin-top: 10px;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    background: #2563eb;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .3s;
+#registrar_materia input[type=submit],
+#actualizar_materia input[type=submit]{
+
+    margin-top:10px;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+
+    color:#FFF;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+
 }
 
-#registrar_materia input[type="submit"]:hover,
-#actualizar_materia input[type="submit"]:hover{
-    background: #1d4ed8;
+#registrar_materia input[type=submit]:hover,
+#actualizar_materia input[type=submit]:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 18px 35px rgba(37,99,235,.35);
+
 }
 
-/* ===========================
-   TABLA
-=========================== */
+/*==========================================
+    PANEL DERECHO
+==========================================*/
 
-#contenedor_tablas_materia{
-    width: 100%;
-    overflow-x: auto;
+.contenedor_busqueda{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
 }
 
-#contenedor_tablas_materia table{
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-}
-
-#contenedor_tablas_materia th{
-    background: #2563eb;
-    color: #fff;
-    padding: 12px;
-    text-align: center;
-}
-
-#contenedor_tablas_materia td{
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-#contenedor_tablas_materia tr:nth-child(even){
-    background: #f9fafb;
-}
-
-#contenedor_tablas_materia tr:hover{
-    background: #eef4ff;
-}
-
-/* ===========================
-   BÚSQUEDA
-=========================== */
+/*==========================================
+    FILTROS
+==========================================*/
 
 #buscar_materia{
-    width: 100%;
-    margin-bottom: 20px;
+
+    background:#FFF;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 10px 30px rgba(15,23,42,.08);
+
 }
 
 .fila_busqueda{
-    display: flex;
-    gap: 20px;
-    align-items: flex-end;
+
+    display:flex;
+
+    gap:20px;
+
 }
 
 .campo_busqueda{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
 }
 
 .campo_busqueda label{
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #374151;
+
+    font-weight:600;
+
+    color:#374151;
+
 }
 
 .campo_busqueda select{
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
-    transition: .3s;
-    box-sizing: border-box;
+
+    height:48px;
+
+    border-radius:10px;
+
+    border:1px solid #D1D5DB;
+
+    padding:0 15px;
+
+    outline:none;
+
+    transition:.25s;
+
 }
 
 .campo_busqueda select:focus{
-    border-color: #2563eb;
-    box-shadow: 0 0 5px rgba(37,99,235,.25);
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
 }
 
-@media (max-width:700px){
+/*==========================================
+    TABLAS
+==========================================*/
 
-    .fila_busqueda{
-        flex-direction: column;
-        gap: 15px;
-    }
+#contenedor_tablas_materia{
 
-    .campo_busqueda{
-        width: 100%;
-    }
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(450px,1fr));
+
+    gap:25px;
+
 }
+
+.tabla_materia{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    overflow:hidden;
+
+    background:#FFF;
+
+    border-radius:16px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+
+    transition:.30s;
+
+}
+
+.tabla_materia:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 20px 35px rgba(15,23,42,.12);
+
+}
+
+.tabla_materia thead tr:first-child th{
+
+    background:linear-gradient(135deg,#1E3A8A,#2563EB);
+
+    color:#FFF;
+
+    padding:18px;
+
+    font-size:1rem;
+
+}
+
+.tabla_materia thead tr:nth-child(2){
+
+    background:#F8FAFC;
+
+}
+
+.tabla_materia thead tr:nth-child(2) th{
+
+    padding:14px;
+
+    color:#475569;
+
+    text-transform:uppercase;
+
+    border-bottom:1px solid #E5E7EB;
+
+    font-size:.82rem;
+
+}
+
+.tabla_materia tbody tr{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.tabla_materia tbody tr:nth-child(even){
+
+    background:#FAFBFC;
+
+}
+
+.tabla_materia tbody tr:hover{
+
+    background:#EFF6FF;
+
+}
+
+.tabla_materia tbody td{
+
+    padding:15px;
+
+    border-bottom:1px solid #EEF2F7;
+
+    color:#374151;
+
+}
+
+.tabla_materia tbody tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+/*==========================================
+    DIALOG
+==========================================*/
 
 #dialogo_actuailizar_materia{
-    width: 550px;
-    max-width: 95%;
-    padding: 0;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 12px 35px rgba(0,0,0,.35);
+
+    width:720px;
+
+    max-width:95%;
+
+    border:none;
+
+    padding:0;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 35px 70px rgba(0,0,0,.35);
+
+    animation:mostrarMateria .25s ease;
+
 }
 
 #dialogo_actuailizar_materia::backdrop{
-    background: rgba(0,0,0,.55);
-    backdrop-filter: blur(2px);
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(4px);
+
 }
 
 .actualizar_materia{
-    padding: 25px;
-    background: #fff;
+
+    position:relative;
+
+    padding:35px;
+
+    background:#FFF;
+
 }
 
 .actualizar_materia h4{
-    margin: 0 0 20px;
-    text-align: center;
-    font-size: 22px;
-    color: #1f2937;
+
+    font-size:1.5rem;
+
+    color:#1E3A8A;
+
+    margin-bottom:25px;
+
 }
 
-@media (max-width:1100px){
+#actualizar_materia{
 
-    #modulo_materias{
-        margin-left: 0;
-        margin-top: 80px;
-        padding: 15px;
-    }
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/*==========================================
+    BOTON CERRAR
+==========================================*/
+
+#cerrar_dialogo{
+
+    position:absolute;
+
+    right:20px;
+
+    top:20px;
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    color:#6B7280;
+
+    font-size:1.4rem;
+
+    transition:.30s;
+
+}
+
+#cerrar_dialogo:hover{
+
+    background:#F3F4F6;
+
+    color:#DC2626;
+
+    transform:rotate(90deg);
+
+}
+
+/*==========================================
+    RESPONSIVE
+==========================================*/
+
+@media(max-width:1150px){
 
     .contenedor_modulo_materias{
-        gap: 20px;
+
+        grid-template-columns:1fr;
+
     }
 
-    .contenedor_registrar_materia{
-        max-width: 100%;
+    .fila_busqueda{
+
+        flex-direction:column;
+
     }
+
+}
+
+@keyframes mostrarMateria{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-20px) scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0) scale(1);
+
+    }
+
+}
+
+/*==========================================
+    MODULO SECCIONES
+==========================================*/
+
+#secciones_registrado{
+    padding:45px 25px;
+    background:#F5F7FB;
+    min-height:calc(100vh - 80px);
+}
+
+.contenedor_secciones_registrado{
+
+    max-width:1500px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:380px 1fr;
+    gap:30px;
+
+}
+
+.contenedor_secciones_registrado>h3{
+
+    grid-column:1/-1;
+
+    font-size:2rem;
+    font-weight:700;
+
+    color:#1E3A8A;
+
+    padding-bottom:15px;
+
+    border-bottom:1px solid #E5E7EB;
+
+}
+
+/*==========================================
+    TARJETA REGISTRO
+==========================================*/
+
+.contenedor_registrar_secciones{
+
+    background:#FFF;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
+
+    align-self:start;
+
+}
+
+.contenedor_registrar_secciones h4{
+
+    color:#2563EB;
+
+    font-size:1.35rem;
+
+    margin-bottom:25px;
+
+}
+
+#formulario_registrar_seccion{
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+}
+
+#formulario_registrar_seccion label,
+#formulario_actualizar_seccion label{
+
+    font-weight:600;
+    color:#374151;
+
+}
+
+#formulario_registrar_seccion input[type=text],
+#formulario_registrar_seccion select,
+#formulario_actualizar_seccion input[type=text],
+#formulario_actualizar_seccion select{
+
+    width:100%;
+    height:48px;
+
+    border-radius:10px;
+    border:1px solid #D1D5DB;
+
+    padding:0 15px;
+
+    outline:none;
+
+    transition:.25s;
+
+    background:#FFF;
+
+}
+
+#formulario_registrar_seccion input:focus,
+#formulario_registrar_seccion select:focus,
+#formulario_actualizar_seccion input:focus,
+#formulario_actualizar_seccion select:focus{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+/*==========================================
+    BOTONES
+==========================================*/
+
+#formulario_registrar_seccion input[type=submit],
+#formulario_actualizar_seccion input[type=submit]{
+
+    margin-top:10px;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+
+    color:#FFF;
+
+    font-size:1rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+
+}
+
+#formulario_registrar_seccion input[type=submit]:hover,
+#formulario_actualizar_seccion input[type=submit]:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 18px 35px rgba(37,99,235,.35);
+
+}
+
+/*==========================================
+    TABLAS
+==========================================*/
+
+#tabla_secciones{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(480px,1fr));
+
+    gap:25px;
+
+}
+
+.tabla_seccion{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    overflow:hidden;
+
+    background:#FFF;
+
+    border-radius:16px;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 12px 30px rgba(15,23,42,.08);
+
+    transition:.30s;
+
+}
+
+.tabla_seccion:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 20px 35px rgba(15,23,42,.12);
+
+}
+
+/*==========================================
+    ENCABEZADO TABLA
+==========================================*/
+
+.tabla_seccion thead tr:first-child th{
+
+    background:linear-gradient(135deg,#1E3A8A,#2563EB);
+
+    color:#FFF;
+
+    padding:18px;
+
+    font-size:1rem;
+
+    letter-spacing:.5px;
+
+}
+
+.tabla_seccion thead tr:nth-child(2){
+
+    background:#F8FAFC;
+
+}
+
+.tabla_seccion thead tr:nth-child(2) th{
+
+    padding:14px;
+
+    color:#475569;
+
+    text-transform:uppercase;
+
+    font-size:.82rem;
+
+    border-bottom:1px solid #E5E7EB;
+
+}
+
+/*==========================================
+    FILAS
+==========================================*/
+
+.tabla_seccion tbody tr{
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.tabla_seccion tbody tr:nth-child(even){
+
+    background:#FAFBFC;
+
+}
+
+.tabla_seccion tbody tr:hover{
+
+    background:#EFF6FF;
+
+}
+
+.tabla_seccion tbody td{
+
+    padding:15px;
+
+    border-bottom:1px solid #EEF2F7;
+
+    color:#374151;
+
+    font-size:.93rem;
+
+}
+
+.tabla_seccion tbody tr:last-child td{
+
+    border-bottom:none;
+
+}
+
+/*==========================================
+    DIALOG
+==========================================*/
+
+#dialogo_actualizar_secciones{
+
+    width:700px;
+
+    max-width:95%;
+
+    border:none;
+
+    padding:0;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 35px 70px rgba(0,0,0,.35);
+
+    animation:mostrarSeccion .25s ease;
+
+}
+
+#dialogo_actualizar_secciones::backdrop{
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(4px);
+
+}
+
+.contenedor_actualizar_secciones{
+
+    position:relative;
+
+    background:#FFF;
+
+    padding:35px;
+
+}
+
+.contenedor_actualizar_secciones h4{
+
+    font-size:1.5rem;
+
+    color:#1E3A8A;
+
+    margin-bottom:25px;
+
+}
+
+#formulario_actualizar_seccion{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/*==========================================
+    BOTON CERRAR
+==========================================*/
+
+#cerrar_dialogo{
+
+    position:absolute;
+
+    right:20px;
+
+    top:20px;
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    color:#6B7280;
+
+    font-size:1.4rem;
+
+    transition:.30s;
+
+}
+
+#cerrar_dialogo:hover{
+
+    background:#F3F4F6;
+
+    color:#DC2626;
+
+    transform:rotate(90deg);
+
+}
+
+/*==========================================
+    RESPONSIVE
+==========================================*/
+
+@media(max-width:1150px){
+
+    .contenedor_secciones_registrado{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@keyframes mostrarSeccion{
+
+    from{
+
+        opacity:0;
+        transform:translateY(-20px) scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0) scale(1);
+
+    }
+
 }
 
 

@@ -19,10 +19,17 @@
     flex-direction:column;
 }
 
-#registrar_personal .lado_izquierdo img{
-    width: 300px;
+#registrar_personal .contenedor{
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#registrar_personal .lado_izquierdo img{    
+    width: 450px;
     margin-top: 20px;
-    margin-left: 130px;
 }
 
 #registrar_personal .lado_izquierdo p{
@@ -44,6 +51,8 @@
 
 #registrar_personal .lado_derecho label{
     margin-bottom: 10px;
+    font-weight: bold;
+    color: var(--color-intermitente);
 }
 
 #registrar_personal .contenedor_busqueda{

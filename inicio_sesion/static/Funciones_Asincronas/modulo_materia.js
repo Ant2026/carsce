@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const select_registrar_pnfs = document.getElementById("pnfs_registrar_materia");
+    const select_registrar_trayecto = document.getElementById("trayecto_registrar_materia")
     const formulario_registrar = document.getElementById("registrar_materia");
     const contenedor = document.getElementById("contenedor_tablas_materia");
 
@@ -50,25 +51,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     pnfs_registrados();
 
+    async function trayectos_registrados() {
+        try {
+            const respuesta = await fetch("/trayectos_registrados/")
+            const resultado = await respuesta.json()
+            
+            select_registrar_trayecto.innerHTML = "<option value=''>Seleccionar el Trayecto</option>"
+            select_busqueda_trayecto.innerHTML = "<option value=''>Seleccionar el Trayecto</option>"
+            
+            resultado.trayectos.forEach(trayecto => {
+                const option_registrar = document.createElement("option")
+                option_registrar.value = trayecto.id_trayecto
+                option_registrar.textContent = trayecto.trayecto
+                select_registrar_trayecto.appendChild(option_registrar)
+                
+                const option_actualizar = document.createElement("option")
+                option_actualizar.value = trayecto.id_trayecto
+                option_actualizar.textContent = trayecto.trayecto
+                select_actualizar_trayecto.appendChild(option_actualizar)
+                
+                const option_buscar = document.createElement("option")
+                option_buscar.value = trayecto.id_trayecto
+                option_buscar.textContent = trayecto.trayecto
+                select_busqueda_trayecto.appendChild(option_buscar)
+            });
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    trayectos_registrados();
+
     select_busqueda_pnf.addEventListener("change", async () => {
         pnf = select_busqueda_pnf.value;
-
-        await materias_registradas();
+        await materias_registradas()
     });
 
     select_busqueda_trayecto.addEventListener("change", async () => {
         trayecto = select_busqueda_trayecto.value;
-
-        await materias_registradas();
+        await materias_registradas()
     });
 
     async function materias_registradas() {
         try {
-            const formulario = new FormData()
-            formulario.append("pnf", pnf)
-            formulario.append("trayecto", trayecto)
+            const formulario = new FormData();
+            formulario.append("pnf", pnf);
+            formulario.append("trayecto", trayecto);
 
-            const respuesta = await fetch("/materias_registradas/", {
+            const respuesta = await fetch("/materias_almacenada/", {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
@@ -78,8 +107,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultado = await respuesta.json();
 
             contenedor.innerHTML = "";
-
+            if (!resultado.pnfs || !resultado.materias) {
+                return;
+            }
             const materiasPorPNF = {};
+
             resultado.pnfs.forEach(pnf => {
                 materiasPorPNF[pnf.id_pnf] = {
                     id: pnf.id_pnf,
@@ -88,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     materias: []
                 };
             });
-
             resultado.materias.forEach(materia => {
                 if (materiasPorPNF.hasOwnProperty(materia.id_pnf)) {
                     materiasPorPNF[materia.id_pnf].materias.push(materia);
@@ -99,12 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (pnf.materias.length === 0) {
                     return;
                 }
-
                 const tabla = document.createElement("table");
                 tabla.classList.add("tabla_materias");
 
                 let filas = "";
+
                 pnf.materias.forEach((materia, index) => {
+
                     filas += `
                         <tr
                             data-id="${materia.id_materia}"
@@ -130,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <tr>
                             <th colspan="6">${pnf.nombre}</th>
                         </tr>
+
                         <tr>
                             <th>#</th>
                             <th>Materia</th>
@@ -139,10 +172,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             <th>Recuperación</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         ${filas}
                     </tbody>
                 `;
+
                 contenedor.appendChild(tabla);
             });
         } catch (error) {
@@ -218,8 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
             select_actualizar_periodo_materia.appendChild(option_periodo_academico)
             
             const option_trayecto = document.createElement("option")
-            option_trayecto.value = resultado.materia.trayecto
-            option_trayecto.textContent = resultado.materia.trayecto
+            option_trayecto.value = resultado.trayecto.id_trayecto
+            option_trayecto.textContent = resultado.trayecto.trayecto
             option_trayecto.selected = true
             option_trayecto.hidden = true
             select_actualizar_trayecto.appendChild(option_trayecto)
@@ -258,7 +293,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: formulario
             });
-            const resultado = respuesta.json()
+            const resultado = await respuesta.json()
+            console.log(resultado);
 
             dialogo_actualizar.close()
             if (resultado == "ok") {
@@ -268,8 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
-
-                await materias_registradas();
             } else {
                 Swal.fire({
                     text: resultado.descripcion,
@@ -278,6 +312,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowEscapeKey: false
                 });
             }
+            contenedor.innerHTML = "";
+            await materias_registradas();
         } catch (error) {
             console.error(error)
         }
