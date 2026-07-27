@@ -1,9 +1,12 @@
 {% extends 'Estructura/base.html' %}
+
 {% block content %}
+
 {% load static %}
 
 <section id="registrar_personal">
     <div class="tarjeta_principal">
+
         <!-- ================= LADO IZQUIERDO ================= -->
         <div class="lado_izquierdo">
             <div class="separador">
@@ -21,8 +24,9 @@
         <!-- ================= LADO DERECHO ================= -->
         <div class="lado_derecho">
             <form method="post" id="buscar_usuario" class="contenedor_busqueda">
-                <h3>Registro Personal</h3>
                 {% csrf_token %}
+                <h3 id="titulo_busqueda">Buscar Usuario</h3>
+                
                 <label for="cedula_identidad" id="label_CI">Ingrese su cédula de identidad</label>
                 <div class="grupo-input">
                     <select name="nacionalidad" id="nacionalidad" class="nacionalidad">
@@ -32,14 +36,17 @@
                     </select>
                     <input type="text" name="usuario_ci" autocomplete="off" id="cedula_identidad" class="cedula_identidad">
                 </div>
+
                 <input type="submit" id="validar_usuario" value="Validar">
             </form>
 
 
-            <form method="post" id="formulario_registrar_credenciales">
+            <form method="post" id="formulario_registrar_credenciales" class="contenedor_busqueda">
                 {% csrf_token %}
+                <h3 id="titulo_guardar">Guardar Credenciales</h3>
+
                 <label for="nombre_usuario" id="label_nombre_usuario" hidden>Ingrese el nombre de usuario</label>   
-                <input type="text" name="nombre_usuario" autocomplete="off" id="nombre_usuario" hidden>
+                <input type="text" name="nombre_usuario" autocomplete="off" id="nombre_usuario" hidden>   
                 <div class="input-group password-group">
                     <label for="password" id="label_password" hidden>Ingrese la contraseña</label>
                     <input type="password" name="password_usuario" autocomplete="off" id="password" hidden>
@@ -47,16 +54,7 @@
                     <label class="icon-eye-off eye_off" for="oculta_aparecer" hidden></label>
                     <label class="icon-eye eye_on" for="oculta_aparecer" hidden></label>
                 </div>
-
-                <div class="seguridad-password" id="bar_contrasenia" hidden>
-                    <div class="barra-password">
-                        <div id="nivel_password"></div>
-                    </div>
-                    <span id="texto_password">
-                        Seguridad de la contraseña
-                    </span>
-                </div>
-
+                
                 <input type="submit" id="guardar_credenciales" value="Guardar" hidden>
             </form>
         </div>
@@ -65,7 +63,6 @@
 
 <script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
 <script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
-<script src="{% static 'Funcionalidades/validar_contrasenia.js' %}"></script>
-<script src="{% static 'Funciones_Asincronas/comprobar_personal.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Registro_Inicio_Sesion/comprobar_personal.js' %}"></script>
 
 {% endblock %}

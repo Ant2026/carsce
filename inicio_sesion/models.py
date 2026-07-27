@@ -32,9 +32,9 @@ class Residencia(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='residencia')
 
 class Contacto(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
+    id_contacto = models.AutoField(primary_key=True)
     telefono_suplete = models.CharField(max_length=15, null=True, blank=True)
-    telefono_personal = models.CharField(max_length=15, null=True, blank=True)
+    telefono_personal = models.CharField(max_length=15)
     correo_electronico = models.EmailField(max_length=100, unique=True)
     correo_alternativo = models.EmailField(max_length=100, unique=True, null=True, blank=True)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='contacto')
@@ -80,12 +80,21 @@ class PNFNucleo(models.Model):
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, db_column='id_pnf')
 
+    def __str__(self):
+        return f"{self.id_pnf.pnf} - {self.id_nucleo.municipio}"
+
 class UsuarioAsignacion(models.Model):
     id_asignacion = models.AutoField(primary_key=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        pnf = self.id_pnf.pnf if self.id_pnf else "Sin PNF"
+        nucleo = self.id_nucleo.municipio if self.id_nucleo else "Sin Núcleo"
+
+        return f"{self.id_usuario.nombres} - {pnf} - {nucleo}"
 
 class CredencialesUsuario(models.Model):
     nombre_usuario = models.CharField(max_length=160)
@@ -114,10 +123,6 @@ class GacetaOficial(models.Model):
 
 # Clases (Tablas) para Estudiantes
 
-class TrayectoAcademico(models.Model):
-    id_trayecto = models.AutoField(primary_key=True)
-    trayecto = models.CharField(max_length=100)
-
 class AulaAcademica(models.Model):
     id_aula = models.AutoField(primary_key=True)
     nombre_aula = models.CharField(max_length=100)
@@ -134,13 +139,14 @@ class Discapacidad(models.Model):
     causa_discapacidad = models.CharField(max_length=50)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='discapacidad')
 
+# Se elimino la relación con Trayecto
 class EstatusEstudiante(models.Model):
     id_estatus_estudiante = models.AutoField(primary_key=True)
     estatus = models.CharField(max_length=50)
     estado = models.CharField(max_length=50)
     ingreso = models.CharField(max_length=50)
     descripcion_ingreso = models.CharField(max_length=30)
-    id_trayecto = models.ForeignKey(TrayectoAcademico, on_delete=models.CASCADE)
+    trayecto = models.CharField(max_length=10)
     fecha_ingreso = models.DateField()
     id_asignacion = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, related_name='estatus')
 
@@ -203,12 +209,13 @@ class Bitacora(models.Model):
     fecha_hora = models.DateTimeField()
     accion = models.CharField(max_length=100)
 
+# Se elimino la relación con Trayecto
 class Materia(models.Model):
     id_materia = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=100)
     tipo_materia = models.CharField(max_length=100)
-    id_trayecto = models.ForeignKey(TrayectoAcademico, on_delete=models.CASCADE)
+    trayecto = models.CharField(max_length=10)
     recuperacion = models.CharField(max_length=100)
     id_pnf = models.ForeignKey(Pnf, models.CASCADE, db_column='id_pnf')
 
@@ -216,6 +223,7 @@ class MateriaAsignada(models.Model):
     id_materia_asignada = models.AutoField(primary_key=True)
     id_materia = models.ForeignKey(Materia, models.CASCADE, db_column='id_materia')
     id_asignacion = models.ForeignKey(UsuarioAsignacion, models.CASCADE, db_column='id_usuario')
+
 
 class PeriodoAcademico(models.Model):
     id_periodo_academico = models.AutoField(primary_key=True)
@@ -247,30 +255,32 @@ class CalendarioMateria(models.Model):
             )
         ]
 
+# Se elimino la relación con Trayecto
 class SeccionAcademica(models.Model):
     id_seccion = models.AutoField(primary_key=True)
-    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
-    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
-    id_trayecto = models.ForeignKey(TrayectoAcademico, on_delete=models.CASCADE, null=True, blank=True)
-    id_aula = models.ForeignKey(AulaAcademica, on_delete=models.CASCADE, null=True, blank=True)
-    turno = models.CharField(max_length=20, null=True, blank=True)
-    seccion = models.CharField(max_length=5, null=True, blank=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
+    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE)
+    id_aula = models.ForeignKey(AulaAcademica, on_delete=models.CASCADE)
+    trayecto = models.CharField(max_length=10)
+    turno = models.CharField(max_length=20)
+    seccion = models.CharField(max_length=5)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class SeccionEstudiante(models.Model):
     id_seccion_estudiante = models.AutoField(primary_key=True)
-    id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, null=True, blank=True)
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField(null=True, blank=True)
 
+# Se elimino la relación con Trayecto
 class HorarioAcademica(models.Model):
     id_horario = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE)
     id_periodo_academico = models.ForeignKey(PeriodoAcademico, on_delete=models.CASCADE)
-    id_trayecto = models.ForeignKey(TrayectoAcademico, on_delete=models.CASCADE)
     id_aula = models.ForeignKey(AulaAcademica, on_delete=models.CASCADE)
+    trayecto = models.CharField(max_length=10)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     turno_academico = models.CharField(max_length=100)
     activo = models.BooleanField(default=True)

@@ -5,18 +5,27 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.foro, name="foro"),
-    path('Sesion/inicio_sesion/', views.inicio_sesion, name="inicio_sesion"),
+    path('inicio_sesion/', views.autenticacion, name="inicio_sesion"),
     
-    path('Sesion/buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
-    path('Sesion/comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
+    path('verificar_cedula_identidad/', views.verificar_cedula_identidad, name="verificar_cedula_identidad"),
+    path('verificar_cedula_representante/', views.verificar_cedula_representante, name="verificar_cedula_representante"),
+    path('verificar_correo_electronico/', views.verificar_correo_electronico, name="verificar_correo_electronico"),
+    path('verificar_nombre_usuario/', views.verificar_nombre_usuario, name="verificar_nombre_usuario"),
+    path('verificar_password/', views.verificar_password, name="verificar_password"),
+    path('verificar_codigo_opsu/', views.verificar_codigo_opsu, name="verificar_codigo_opsu"),
+
+    path('buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
+    path('comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),
+    path('enviar_codigo_usuario/', views.enviar_codigo_usuario, name="enviar_codigo_usuario"),
+    path('comprobar_codigo_usuario/', views.comprobar_codigo_usuario, name="comprobar_codigo_usuario"),
     path('reenviar_codigo_btn/', views.reenviar_codigo_btn, name="reenviar_codigo_btn"),
     path('panel_recuperar_credenciales/', views.panel_recuperar_credenciales, name="panel_recuperar_credenciales"),
-    path('Sesion/recuperar_contrasenia/', views.recuperar_contrasenia, name="recuperar_contrasenia"),
+    path('recuperar_contrasenia/', views.recuperar_contrasenia, name="recuperar_contrasenia"),
     path('recuperar_usuario/', views.recuperar_usuario, name="recuperar_usuario"),
 
-    path('Sesion/panel_registro/', views.panel_registro, name="panel_registro"),
+    path('panel_registro/', views.panel_registro, name="panel_registro"),
     path('panel_estudiantes/', views.panel_estudiantes, name="panel_estudiantes"),
-    path('Sesion/confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),
+    path('confirmar_registro_personal/', views.confirmar_registro_personal, name="confirmar_registro_personal"),
     path('guardar_credenciales_personal/', views.guardar_credenciales_personal, name="guardar_credenciales_personal"),
     path('buscar_personal_registrado/', views.buscar_personal_registrado, name="buscar_personal_registrado"),
     path('credenciales_estudiante/', views.credenciales_estudiante, name="credenciales_estudiante"),
@@ -74,10 +83,6 @@ urlpatterns = [
     path('autenticacion_actualizar_correo/', views.autenticacion_actualizar_correo, name="autenticacion_actualizar_correo"),
     path('actualizar_datosusuario/', views.actualizar_datosusuario, name="actualizar_datosusuario"),
     
-    path('buscar_materias_docente/', views.buscar_materias_docente, name="buscar_materias_docente"),
-    path('modulo_horario_academico/', views.modulo_horario_academico, name="modulo_horario_academico"),
-    path('generar_horario_pdf/', views.generar_horario_pdf, name="generar_horario_pdf"),
-    
     path('pnfs_pertenece_nucleo/', views.pnfs_pertenece_nucleo, name="pnfs_pertenece_nucleo"),
     path('docentes_registrados/', views.docentes_registrados, name="docentes_registrados"),
     path('materias_registradas/', views.materias_registradas, name="materias_registradas"),
@@ -87,14 +92,7 @@ urlpatterns = [
     path('datos_autoridad/', views.datos_autoridad, name="datos_autoridad"),
     path('actualizar_datos_autoridad/', views.actualizar_datos_autoridad, name="actualizar_datos_autoridad"),
     path('modulo_autoridades/', views.modulo_autoridades, name="modulo_autoridades"),
-    
-    path('buscar_datos_usuario/', views.buscar_datos_usuario, name="buscar_datos_usuario"),
-    path('modulo_actualizar_usuarios/', views.modulo_actualizar_usuarios, name="modulo_actualizar_usuarios"),
-    
-    path('siguiente_trayecto/', views.siguiente_trayecto, name="siguiente_trayecto"),
-    path('trayectos_registrados/', views.trayectos_registrados, name="trayectos_registrados"),
-    path('modulo_trayecto/', views.modulo_trayecto, name="modulo_trayecto"),
-    
+
     path('aulas_registrados/', views.aulas_registrados, name="aulas_registrados"),
     path('aulas_almacenadas/', views.aulas_almacenadas, name="aulas_almacenadas"),
     path('datos_aula/', views.datos_aula, name="datos_aula"),

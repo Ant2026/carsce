@@ -12,7 +12,7 @@
             </div>
             <div class="contenedor">
                 <img src="{% static 'Imagenes/recuperar_credenciales.png' %}" 
-                alt="imagen de verificar si se encuentra r*ole4gistrado">
+                alt="imagen de verificar si se encuentra registrado">
 
                 <p>Este formulario está destinado exclusivamente para recuperar credenciales de acceso. Si tiene alguna duda, por favor contacte al administrador.</p>
             </div>
@@ -31,7 +31,7 @@
                         <option value="E">E</option>
                     </select>
 
-                    <input type="text" name="ci" id="cedula_identidad" autocomplete="off" class="control-entrada" placeholder="Selecciona la nacionalidad">
+                    <input type="text" name="cedula" id="cedula_identidad" autocomplete="off" class="control-entrada" placeholder="Selecciona la nacionalidad">
                 </div>
 
                 <button type="submit" class="boton-login">Enviar código de verificación</button>
@@ -45,6 +45,6 @@
 </section>
 
 <script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
-<script src="{% static 'Funciones_Asincronas/buscar_usuario.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Credenciales/buscar_usuario.js' %}"></script>
 
 {% endblock %}

@@ -3,6 +3,7 @@
 {% block content %}
 
 {% load static %}
+
 <section id="inicio_sesion">
     <div class="tarjeta_principal">
         <div class="login-left">
@@ -14,7 +15,6 @@
                 <h2 class="titulo">Inicio de Sesión</h2>
 
                 {% csrf_token %}
-
                 <div class="input-group">
                     <label class="icon-user icon-input"></label>
                     <input type="text" name="usuario" autocomplete="off" id="input_usuario" class="input-control" placeholder="Nombre de Usuario" required>
@@ -46,7 +46,6 @@
 </section>
 
 <script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
-<script src="{% static 'Funcionalidades/notificacion_inicio_sesion.js' %}"></script>
-<script src="{% static 'Funciones_Asincronas/autenticación.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Autenticacion/autenticacion.js' %}"></script>
 
 {% endblock %}
