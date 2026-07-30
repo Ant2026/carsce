@@ -30,8 +30,8 @@
 /* @import url('../inscripcion.css');  */
 /* @import url('../models_actualizar.css');  */
 
-/* @import url('inscripcion.css');
-@import url('continuacion.css'); */
+@import url('inscripcion.css'); 
+@import url('../continuacion.css'); 
 
 :root{
     --color-base: white; /* Para tarjetas y fondos en especifico */

@@ -126,7 +126,7 @@ def autenticacion_actualizar_correo(request):
 
         return respuesta
 
-def actualizar_datosusuario(request):
+def actualizar_datos_usuario(request):
     if request.method == "POST":
         cedula_identidad = request.session.get("cedula_usuario")
         perfil = request.session.get("perfil")
@@ -211,4 +211,4 @@ def actualizar_datosusuario(request):
             "descripcion": "Se encuentra vacío, por favor rellene los campos."
         })
     
-    return render(request, "Director_General/actualizar_datosusuario.html")
+    return render(request, "Actualizaciones/actualizar_registro_usuario.html")

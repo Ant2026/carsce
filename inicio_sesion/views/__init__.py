@@ -1,4 +1,5 @@
 from .autenticacion import *
+from .actualizar_datos_usuario import *
 from .recuperar_credenciales import *
 from .funciones_inicio_sesion import *
 from .pre_registro_personal import *

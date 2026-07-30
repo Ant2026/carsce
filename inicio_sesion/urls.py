@@ -81,7 +81,7 @@ urlpatterns = [
     path('correos_usuario/', views.correos_usuario, name="correos_usuario"),
     path('enviar_codigo_actualizar_correo/', views.enviar_codigo_actualizar_correo, name="enviar_codigo_actualizar_correo"),
     path('autenticacion_actualizar_correo/', views.autenticacion_actualizar_correo, name="autenticacion_actualizar_correo"),
-    path('actualizar_datosusuario/', views.actualizar_datosusuario, name="actualizar_datosusuario"),
+    path('actualizar_registro_usuario/', views.actualizar_datos_usuario, name="actualizar_datosusuario"),
     
     path('pnfs_pertenece_nucleo/', views.pnfs_pertenece_nucleo, name="pnfs_pertenece_nucleo"),
     path('docentes_registrados/', views.docentes_registrados, name="docentes_registrados"),
