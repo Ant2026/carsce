@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from django.db.models import Q
 
-from inicio_sesion.models import Usuario, Perfiles, Contacto, UsuarioAsignacion, CredencialesUsuario
+from inicio_sesion.models import Usuario, Perfiles, Contacto, Cuenta
 
 def panel_estudiantes(request):
     return render(request, 'Sesion/panel_estudiantes.html')
@@ -41,7 +41,7 @@ def verificar_nombre_usuario(request):
     if request.method == "POST":
         nombre_usuario = request.POST.get("nombre_usuario")
 
-        existe = CredencialesUsuario.objects.filter(nombre_usuario=nombre_usuario).exists()
+        existe = Cuenta.objects.filter(usuario=nombre_usuario).exists()
         if existe:
             return JsonResponse({ "existe": True })
 
@@ -52,8 +52,8 @@ def verificar_password(request):
         password = request.POST.get("password")
 
         existe = any(
-            check_password(password, credencial.clave)
-            for credencial in CredencialesUsuario.objects.only("clave")
+            check_password(password, cuenta.clave)
+            for cuenta in Cuenta.objects.only("clave")
         )
 
         return JsonResponse({
@@ -90,7 +90,7 @@ def registro_estudiantil(request):
         for valor, campo, mensaje in campos:
             if not valor:
                 return JsonResponse({
-                    "title": "Vacío",
+                    "title": campo,
                     "descripcion": mensaje,
                     "icon": "warning"
                 })
@@ -106,14 +106,13 @@ def registro_estudiantil(request):
         perfil = Perfiles.objects.get(perfil="Estudiante")
         if perfil is None:
             return JsonResponse({
+                "title": "Exito",
                 "title": "Error",
                 "icon": "error",
                 "descripcion": "No existe el perfil Estudiante."
             })
 
-        nuevo_asignacion = UsuarioAsignacion.objects.create(id_usuario=nuevo_usuario, id_perfil=perfil)
-
-        CredencialesUsuario.objects.create(nombre_usuario=usuario, clave=make_password(password), id_asignacion=nuevo_asignacion)
+        # CredencialesUsuario.objects.create(nombre_usuario=usuario, clave=make_password(password), id_asignacion=nuevo_asignacion)
 
         return JsonResponse({
             "title": "Exito",
@@ -155,21 +154,15 @@ def confirmar_registro_personal(request):
 
         perfil_estudiante = Perfiles.objects.get(perfil="Estudiante")
 
-        asignacion = UsuarioAsignacion.objects.filter(id_usuario=usuario).exclude(id_perfil=perfil_estudiante).first()
-        if not asignacion:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "descripcion": "El usuario no cuenta con un perfil asignado."
-            })
 
-        credenciales = CredencialesUsuario.objects.filter(id_asignacion=asignacion).first()
-        if credenciales:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "warning",
-                "descripcion": "El usuario ya posee credenciales registradas."
-            })
+
+        # credenciales = CredencialesUsuario.objects.filter(id_asignacion=asignacion).first()
+        # if credenciales:
+        #     return JsonResponse({
+        #         "estado": "fallo",
+        #         "icon": "warning",
+        #         "descripcion": "El usuario ya posee credenciales registradas."
+        #     })
         
         request.session["cedula_personal"] = cedula_identidad
 
@@ -182,7 +175,6 @@ def confirmar_registro_personal(request):
 # Verificado 
 def guardar_credenciales_personal(request):
     if request.method == "POST":
-        cedula_identidad = request.session.get('cedula_personal')
 
         nombre_usuario = request.POST.get("nombre_usuario")
         password = request.POST.get("password_usuario")
@@ -201,39 +193,26 @@ def guardar_credenciales_personal(request):
                 "descripcion": "Por favor, ingresa su contraseña."
             })
 
-        if CredencialesUsuario.objects.filter(nombre_usuario=nombre_usuario).exists():
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "descripcion": "Ya se encuentra un nombre de usuario similar."
-            })
+        # if CredencialesUsuario.objects.filter(nombre_usuario=nombre_usuario).exists():
+        #     return JsonResponse({
+        #         "estado": "fallo",
+        #         "icon": "error",
+        #         "descripcion": "Ya se encuentra un nombre de usuario similar."
+        #     })
 
-        credenciales = CredencialesUsuario.objects.all()
-        for credencial in credenciales:
-            if check_password(password, credencial.clave):
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "descripcion": "Ya existe una contraseña igual."
-                })
+        # credenciales = CredencialesUsuario.objects.all()
+        # for credencial in credenciales:
+        #     if check_password(password, credencial.clave):
+        #         return JsonResponse({
+        #             "estado": "fallo",
+        #             "icon": "error",
+        #             "descripcion": "Ya existe una contraseña igual."
+        #         })
 
-        usuario = Usuario.objects.get(cedula_identidad=cedula_identidad)
+        usuario = Usuario.objects.get(cedula_identidad=request.session.get('cedula_personal'))
 
-        perfil_estudiante = Perfiles.objects.get(perfil="Estudiante")
 
-        asignacion = UsuarioAsignacion.objects.filter(
-            id_usuario=usuario
-        ).exclude(
-            id_perfil=perfil_estudiante
-        ).first()
-        if not asignacion:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "warning",
-                "descripcion": "El usuario no cuenta con perfiles asignado."
-            })
-
-        CredencialesUsuario.objects.create(nombre_usuario=nombre_usuario, clave=make_password(password), id_asignacion=asignacion)
+        # CredencialesUsuario.objects.create(nombre_usuario=nombre_usuario, clave=make_password(password), id_asignacion=asignacion)
 
         del request.session["cedula_personal"]
 
@@ -278,12 +257,6 @@ def buscar_personal_registrado(request):
 
         perfil_estudiante = Perfiles.objects.get(pk=5)
 
-        if not UsuarioAsignacion.objects.filter(id_usuario=usuario, id_perfil=perfil_estudiante).exists():
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "descripcion": "El usuario no posee el perfil de estudiante."
-            })
 
         request.session['cedula_usuario'] = cedula_identidad
 
@@ -311,29 +284,27 @@ def credenciales_estudiante(request):
                 "descripcion": "Por favor, ingresa su contraseña."
             })
 
-        if CredencialesUsuario.objects.filter(nombre_usuario=nombre_usuario).exists():
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "descripcion": "Ya se encuentra un nombre de usuario similar."
-            })
+        # if CredencialesUsuario.objects.filter(nombre_usuario=nombre_usuario).exists():
+        #     return JsonResponse({
+        #         "estado": "fallo",
+        #         "icon": "error",
+        #         "descripcion": "Ya se encuentra un nombre de usuario similar."
+        #     })
         
-        credenciales = CredencialesUsuario.objects.all()
-        for credencial in credenciales:
-            if check_password(password, credencial.clave):
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "descripcion": "Ya existe una contraseña igual."
-                })
+        # credenciales = CredencialesUsuario.objects.all()
+        # for credencial in credenciales:
+        #     if check_password(password, credencial.clave):
+        #         return JsonResponse({
+        #             "estado": "fallo",
+        #             "icon": "error",
+        #             "descripcion": "Ya existe una contraseña igual."
+        #         })
             
         usuario = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario")).first()
 
         perfil_estudiante = Perfiles.objects.get(pk=5)
-                    
-        asignacion = UsuarioAsignacion.objects.get(id_usuario=usuario, id_perfil=perfil_estudiante)
-
-        CredencialesUsuario.objects.create(nombre_usuario=nombre_usuario, clave=password, id_asignacion=asignacion)
+      
+        # CredencialesUsuario.objects.create(nombre_usuario=nombre_usuario, clave=password, id_asignacion=asignacion)
 
         del request.session["cedula_personal"]
 
@@ -343,4 +314,4 @@ def credenciales_estudiante(request):
             "descripcion": "Se registraron las credenciales exitosamente."
         })
 
-    return render(request, "credenciales_estudiante.html")
+    return render(request, "Sesion/credenciales_estudiante.html")

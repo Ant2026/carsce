@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 
-from inicio_sesion.models import Usuario, Nucleos, Pnf, Contacto, PNFNucleo, UsuarioAsignacion, Nacimiento, Residencia, DatosPreofesion, Discapacidad, InformacionSecundaria, DocumentosEstudiante, PadresEstudiante, EstatusEstudiante, Perfiles
+from inicio_sesion.models import Usuario, Nucleos, Pnf, Contacto, PNFNucleo,  Nacimiento, Residencia, Perfiles
 
 import os
 from reportlab.platypus import Table, TableStyle
@@ -54,28 +54,28 @@ def datos_registrado(request):
         }
     })
 
-def verificar_cedula_representante(request):
-    if request.method == "POST":
-        nacionalidad = request.POST.get("nacionalidad")
-        cedula = request.POST.get("cedula")
+# def verificar_cedula_representante(request):
+#     if request.method == "POST":
+#         nacionalidad = request.POST.get("nacionalidad")
+#         cedula = request.POST.get("cedula")
 
-        cedula_identidad = f"{nacionalidad}-{cedula}"
+#         cedula_identidad = f"{nacionalidad}-{cedula}"
 
-        existe = PadresEstudiante.objects.filter(cedula_identidad=cedula_identidad).exists()
-        if existe:
-            return JsonResponse({ "existe": True })
+#         existe = PadresEstudiante.objects.filter(cedula_identidad=cedula_identidad).exists()
+#         if existe:
+#             return JsonResponse({ "existe": True })
 
-        return JsonResponse({ "existe": False })
+#         return JsonResponse({ "existe": False })
 
-def verificar_codigo_opsu(request):
-    if request.method == "POST":
-        codigo_opsu = request.POST.get("codigo_opsu")
+# def verificar_codigo_opsu(request):
+#     if request.method == "POST":
+#         codigo_opsu = request.POST.get("codigo")
 
-        existe = InformacionSecundaria.objects.filter(codigo_sni_opsu=codigo_opsu).exists()
-        if existe:
-            return JsonResponse({ "existe": True })
+#         existe = InformacionSecundaria.objects.filter(codigo_sni_opsu=codigo_opsu).exists()
+#         if existe:
+#             return JsonResponse({ "existe": True })
 
-        return JsonResponse({ "existe": False })
+#         return JsonResponse({ "existe": False })
 
 def completar_registro_personal(request):
     if request.method == "POST":
@@ -191,7 +191,7 @@ def completar_registro_personal(request):
 
         Residencia.objects.create(condicion_residencia=condicion_residencia, municipio=municipio_residencia, parroquia=parroquia_residencia, direccion_residencia=direccion_domicilio, id_usuario=usuario)
 
-        DatosPreofesion.objects.create(profesion_pregrado=profesion_pregrado, universidad_egreso_pregrado=universidad_pregrado, pais_profesion_pregrado=pais_profesion, id_usuario=usuario)
+        # DatosPreofesion.objects.create(profesion_pregrado=profesion_pregrado, universidad_egreso_pregrado=universidad_pregrado, pais_profesion_pregrado=pais_profesion, id_usuario=usuario)
         
         request.session['registro_completado'] = True
 
@@ -391,21 +391,21 @@ def completar_registro_estudiante(request):
         contacto.correo_alternativo = correo_electronico
         contacto.save()
 
-        PadresEstudiante.objects.create(nombres=nombres_representante, apellidos=apellidos_representante, cedula_identidad=ci_representante_principal, telefono=tlf_representante_principal, parentesco=parestencorepresentante, id_usuario=usuario)
+        # PadresEstudiante.objects.create(nombres=nombres_representante, apellidos=apellidos_representante, cedula_identidad=ci_representante_principal, telefono=tlf_representante_principal, parentesco=parestencorepresentante, id_usuario=usuario)
 
         Nacimiento.objects.create(pais=pais_nacimiento, estado=estado_nacimiento, municipio=municipio_nacimiento, parroquia=parroquia_nacimiento, direccion_nacimiento=direccion_nacimiento, fecha_nacimiento=fecha_nacimiento, id_usuario=usuario)
 
         Residencia.objects.create(condicion_residencia=condicion_residencia, municipio=municipio_residencia, parroquia=parroquia_residencia, direccion_residencia=direccion_domicilio, id_usuario=usuario)
 
-        InformacionSecundaria.objects.create(tipo_institucion=tipos_secundaria, nombre_institucion=nombre_secundaria, fecha_grado=fecha_graduacion, codigo_sni_opsu=codigo_opsu, id_usuario=usuario)
+        # InformacionSecundaria.objects.create(tipo_institucion=tipos_secundaria, nombre_institucion=nombre_secundaria, fecha_grado=fecha_graduacion, codigo_sni_opsu=codigo_opsu, id_usuario=usuario)
 
-        Discapacidad.objects.create(codigo_carnet_discapacidad=carnet_dispacidad, nro_registro_medico=registro_medico, tipo_discapacidad=tipo_discapacidad, grado_discapacidad=grado_discapacidad, causa_discapacidad=causa_discapacidad, id_usuario=usuario)
+        # Discapacidad.objects.create(codigo_carnet_discapacidad=carnet_dispacidad, nro_registro_medico=registro_medico, tipo_discapacidad=tipo_discapacidad, grado_discapacidad=grado_discapacidad, causa_discapacidad=causa_discapacidad, id_usuario=usuario)
 
         if nombres_otrorepresentante and apellidos_otrorepresentante and nacionalidad_otrorepresentante and ci_otrorepresentante and prefijo_num3 and telefono_otrorepresentante and parestencootrorepresentante:
             ci_representante_secundario = nacionalidad_otrorepresentante + "-" + ci_otrorepresentante
             telefono_representante_secundario = prefijo_num3 + telefono_otrorepresentante
 
-            PadresEstudiante.objects.create(nombres=nombres_otrorepresentante, apellidos=apellidos_otrorepresentante, cedula_identidad=ci_representante_secundario, telefono=telefono_representante_secundario, parentesco=parestencootrorepresentante, id_usuario=usuario)
+            # PadresEstudiante.objects.create(nombres=nombres_otrorepresentante, apellidos=apellidos_otrorepresentante, cedula_identidad=ci_representante_secundario, telefono=telefono_representante_secundario, parentesco=parestencootrorepresentante, id_usuario=usuario)
 
         nucleos = {
             "Barinas": request.POST.getlist("pnf_Barinas"),
@@ -414,8 +414,7 @@ def completar_registro_estudiante(request):
             "Pedraza": request.POST.getlist("pnf_Pedraza"),
         }
 
-        asignacion_base = UsuarioAsignacion.objects.filter(id_usuario=usuario, id_perfil_id=5).first()
-
+       
         primera_asignacion = True
         for nombre_nucleo, lista_pnfs in nucleos.items():
             if not lista_pnfs:
@@ -423,35 +422,7 @@ def completar_registro_estudiante(request):
 
             nucleo = Nucleos.objects.filter(municipio=nombre_nucleo).first()
 
-            for pnf_id in lista_pnfs:
-                pnf = Pnf.objects.filter(id_pnf=pnf_id).first()
-
-                if primera_asignacion and asignacion_base:
-                    asignacion_base.id_nucleo = nucleo
-                    asignacion_base.id_pnf = pnf
-                    asignacion_base.save()
-                    asignacion = asignacion_base
-                    primera_asignacion = False
-                else:
-                    perfil_estudiante = Perfiles.objects.get(perfil="Estudiante")
-
-                    asignacion = UsuarioAsignacion.objects.create(
-                        id_usuario=usuario,
-                        id_perfil=perfil_estudiante,
-                        id_nucleo=nucleo,
-                        id_pnf=pnf
-                    )
-                    
-                EstatusEstudiante.objects.create(
-                    estatus="Pre-Inscrito(a)",
-                    estado="Espera",
-                    ingreso="Bachiller",
-                    trayecto="Inicial",
-                    descripcion_ingreso="No ha presentado Inicial",
-                    fecha_ingreso=timezone.now().date(),
-                    id_asignacion=asignacion
-                )
-
+     
         nombre_estudiante = f"{usuario.nombres}_{usuario.apellidos}".replace(" ", "_")
 
         base_path = os.path.join(settings.BASE_DIR, "media", "documentosEstudiante", nombre_estudiante)
@@ -474,11 +445,11 @@ def completar_registro_estudiante(request):
                 filename = fs.save(nuevo_nombre, archivo)
 
                 file_path = os.path.join("media", "documentosEstudiante", nombre_estudiante, filename)
-                DocumentosEstudiante.objects.update_or_create(id_usuario=usuario, nombre_documento=nombre,
-                    defaults={
-                        "archivo": file_path
-                    }
-                )
+                # DocumentosEstudiante.objects.update_or_create(id_usuario=usuario, nombre_documento=nombre,
+                #     defaults={
+                #         "archivo": file_path
+                #     }
+                # )
 
         ruta_pdf = generar_documento_inscripcion(estudiante=usuario)
         
@@ -636,17 +607,17 @@ def completar_registro_pe(request):
 
         usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
 
-        PadresEstudiante.objects.create(nombres=nombres_representante, apellidos=apellidos_representante, cedula_identidad=ci_representante_principal, telefono=tlf_representante_principal, parentesco=parestencorepresentante, id_usuario=usuario)
+        # PadresEstudiante.objects.create(nombres=nombres_representante, apellidos=apellidos_representante, cedula_identidad=ci_representante_principal, telefono=tlf_representante_principal, parentesco=parestencorepresentante, id_usuario=usuario)
 
-        InformacionSecundaria.objects.create(tipo_institucion=tipos_secundaria, nombre_institucion=nombre_secundaria, fecha_grado=fecha_graduacion, codigo_sni_opsu=codigo_opsu, id_usuario=usuario)
+        # InformacionSecundaria.objects.create(tipo_institucion=tipos_secundaria, nombre_institucion=nombre_secundaria, fecha_grado=fecha_graduacion, codigo_sni_opsu=codigo_opsu, id_usuario=usuario)
 
-        Discapacidad.objects.create(codigo_carnet_discapacidad=carnet_dispacidad, nro_registro_medico=registro_medico, tipo_discapacidad=tipo_discapacidad, grado_discapacidad=grado_discapacidad, causa_discapacidad=causa_discapacidad, id_usuario=usuario)
+        # Discapacidad.objects.create(codigo_carnet_discapacidad=carnet_dispacidad, nro_registro_medico=registro_medico, tipo_discapacidad=tipo_discapacidad, grado_discapacidad=grado_discapacidad, causa_discapacidad=causa_discapacidad, id_usuario=usuario)
 
         if nombres_otrorepresentante and apellidos_otrorepresentante and nacionalidad_otrorepresentante and ci_otrorepresentante and prefijo_num3 and telefono_otrorepresentante and parestencootrorepresentante:         
             ci_otrorepresentante = nacionalidad_otrorepresentante + "-" + ci_otrorepresentante
             tlf_representante_principal = prefijo_num3 + telefono_otrorepresentante
             
-            PadresEstudiante.objects.create(nombres=nombres_otrorepresentante, apellidos=apellidos_otrorepresentante, cedula_identidad=ci_otrorepresentante, telefono=telefono_otrorepresentante, parentesco=parestencootrorepresentante, id_usuario=usuario)
+            # PadresEstudiante.objects.create(nombres=nombres_otrorepresentante, apellidos=apellidos_otrorepresentante, cedula_identidad=ci_otrorepresentante, telefono=telefono_otrorepresentante, parentesco=parestencootrorepresentante, id_usuario=usuario)
 
         nucleos = {
             "Barinas": request.POST.getlist("pnf_Barinas"),
@@ -655,44 +626,7 @@ def completar_registro_pe(request):
             "Pedraza": request.POST.getlist("pnf_Pedraza"),
         }
 
-        asignacion_base = UsuarioAsignacion.objects.filter(id_usuario=usuario, id_perfil_id=5).first()
-
-        primera_asignacion = True
-        for nombre_nucleo, lista_pnfs in nucleos.items():
-            if not lista_pnfs:
-                continue
-
-            nucleo = Nucleos.objects.filter(municipio=nombre_nucleo).first()
-
-            for pnf_id in lista_pnfs:
-                pnf = Pnf.objects.filter(id_pnf=pnf_id).first()
-
-                if primera_asignacion and asignacion_base:
-                    asignacion_base.id_nucleo = nucleo
-                    asignacion_base.id_pnf = pnf
-                    asignacion_base.save()
-                    asignacion = asignacion_base
-                    primera_asignacion = False
-                else:
-                    perfil_estudiante = Perfiles.objects.get(perfil="Estudiante")
-
-                    asignacion = UsuarioAsignacion.objects.create(
-                        id_usuario=usuario,
-                        id_perfil=perfil_estudiante,
-                        id_nucleo=nucleo,
-                        id_pnf=pnf
-                    )
-                    
-                EstatusEstudiante.objects.create(
-                    estatus="Pre-Inscrito(a)",
-                    estado="Espera",
-                    ingreso="Bachiller",
-                    trayecto="Inicial",
-                    descripcion_ingreso="No ha presentado Inicial",
-                    fecha_ingreso=timezone.now().date(),
-                    id_asignacion=asignacion
-                )
-            
+        
         nombre_estudiante = f"{usuario.nombres}_{usuario.apellidos}".replace(" ", "_")
 
         base_path = os.path.join(settings.BASE_DIR, "media", "documentosEstudiante", nombre_estudiante)
@@ -720,10 +654,10 @@ def completar_registro_pe(request):
                     nombre_estudiante,
                     filename)
 
-                DocumentosEstudiante.objects.update_or_create(id_usuario=usuario, nombre_documento=nombre,
-                    defaults={
-                        "archivo": file_path
-                    })
+                # DocumentosEstudiante.objects.update_or_create(id_usuario=usuario, nombre_documento=nombre,
+                #     defaults={
+                #         "archivo": file_path
+                #     })
 
         contacto = Contacto.objects.filter(id_usuario=usuario).first()
                 
@@ -837,57 +771,6 @@ def generar_documento_inscripcion(estudiante):
 
     contenido.append(cabecera)
     contenido.append(Spacer(1,20))
-
-    fecha_actual = timezone.now()
-
-    asignaciones = UsuarioAsignacion.objects.filter(
-        id_usuario=estudiante,
-        id_perfil_id=5
-    ).select_related("id_nucleo", "id_pnf")
-    detalle_pnf = []
-
-    for asignacion in asignaciones:
-        estatus = EstatusEstudiante.objects.filter(
-            id_asignacion=asignacion
-        ).first()
-
-        detalle_pnf.append(
-            f"el Programa Nacional de Formación (PNF) "
-            f"{asignacion.id_pnf.nombre_pnf}, correspondiente al núcleo "
-            f"{asignacion.id_nucleo.municipio}, con estatus "
-            f"'{estatus.estatus}' y estado '{estatus.estado}'"
-        )
-
-    parrafo_pnf = "; ".join(detalle_pnf) + "."
-
-    datos = [
-        (
-            f"La Universidad Politécnica Territorial del Estado Barinas "
-            f'"José Félix Ribas" certifica que el(la) ciudadano(a) '
-            f"{estudiante.nombres} {estudiante.apellidos}, titular de la cédula "
-            f"de identidad N.º {estudiante.cedula_identidad}, realizó "
-            f"satisfactoriamente el proceso de preinscripción académica a través "
-            f"de la Plataforma Digital para la Gestión de CARSCE."
-        ),
-
-        (
-            f"Como resultado del proceso, el estudiante quedó registrado en "
-            f"{parrafo_pnf}"
-        ),
-
-        (
-            f"El presente comprobante fue emitido el "
-            f"{fecha_actual.strftime('%d/%m/%Y')} a las "
-            f"{fecha_actual.strftime('%H:%M:%S')} y constituye una constancia "
-            f"electrónica del registro efectuado en el sistema institucional de "
-            f"la Universidad Politécnica Territorial del Estado Barinas "
-            f'"José Félix Ribas".'
-        )
-    ]
-
-    for dato in datos:
-        contenido.append(Paragraph(dato, estilo_datos))
-        contenido.append(Spacer(1, 10))
 
     contenido.append(Spacer(1, 20))
     contenido.append(

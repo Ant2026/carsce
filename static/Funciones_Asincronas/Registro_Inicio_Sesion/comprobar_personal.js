@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ocultar_credenciales(true);
             }
 
-            await Swal.fire({
+            Swal.fire({
                 text: resultado.descripcion,
                 icon: resultado.icon,
                 allowOutsideClick: false,

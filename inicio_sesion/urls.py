@@ -8,11 +8,11 @@ urlpatterns = [
     path('inicio_sesion/', views.autenticacion, name="inicio_sesion"),
     
     path('verificar_cedula_identidad/', views.verificar_cedula_identidad, name="verificar_cedula_identidad"),
-    path('verificar_cedula_representante/', views.verificar_cedula_representante, name="verificar_cedula_representante"),
+    # path('verificar_cedula_representante/', views.verificar_cedula_representante, name="verificar_cedula_representante"),
     path('verificar_correo_electronico/', views.verificar_correo_electronico, name="verificar_correo_electronico"),
     path('verificar_nombre_usuario/', views.verificar_nombre_usuario, name="verificar_nombre_usuario"),
     path('verificar_password/', views.verificar_password, name="verificar_password"),
-    path('verificar_codigo_opsu/', views.verificar_codigo_opsu, name="verificar_codigo_opsu"),
+    # path('verificar_codigo_opsu/', views.verificar_codigo_opsu, name="verificar_codigo_opsu"),
 
     path('buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
     path('comprobar_usuario/', views.comprobar_usuario, name="comprobar_usuario"),

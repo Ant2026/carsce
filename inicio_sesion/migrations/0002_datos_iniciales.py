@@ -12,8 +12,8 @@ PERIODOS_ACADEMICOS = [
 
 NUCLEOS = [
     {"municipio": "Barinas", "direccion": "Dirección Barinas"},
-    {"municipio": "Bolivar", "direccion": "Dirección Barinitas"},
-    {"municipio": "Antonio José de Sucre", "direccion": "Dirección Socopó"},
+    {"municipio": "Barinitas", "direccion": "Dirección Barinitas"},
+    {"municipio": "Socopo", "direccion": "Dirección Socopó"},
     {"municipio": "Pedraza", "direccion": "Dirección Ciudad Bolivia"},
 ]
 
@@ -41,19 +41,19 @@ PNF_NUCLEO = [
     {"municipio": "Barinas", "codigo": "CARRE002"},
     {"municipio": "Barinas", "codigo": "CARRE003"},
 
-    {"municipio": "Bolivar", "codigo": "CARRE004"},
-    {"municipio": "Bolivar", "codigo": "CARRE005"},
-    {"municipio": "Bolivar", "codigo": "CARRE006"},
-    {"municipio": "Bolivar", "codigo": "CARRE007"},
-    {"municipio": "Bolivar", "codigo": "CARRE008"},
-    {"municipio": "Bolivar", "codigo": "CARRE001"},
-    {"municipio": "Bolivar", "codigo": "CARRE003"},
+    {"municipio": "Barinitas", "codigo": "CARRE004"},
+    {"municipio": "Barinitas", "codigo": "CARRE005"},
+    {"municipio": "Barinitas", "codigo": "CARRE006"},
+    {"municipio": "Barinitas", "codigo": "CARRE007"},
+    {"municipio": "Barinitas", "codigo": "CARRE008"},
+    {"municipio": "Barinitas", "codigo": "CARRE001"},
+    {"municipio": "Barinitas", "codigo": "CARRE003"},
 
-    {"municipio": "Antonio José de Sucre", "codigo": "CARRE004"},
-    {"municipio": "Antonio José de Sucre", "codigo": "CARRE006"},
-    {"municipio": "Antonio José de Sucre", "codigo": "CARRE007"},
-    {"municipio": "Antonio José de Sucre", "codigo": "CARRE001"},
-    {"municipio": "Antonio José de Sucre", "codigo": "CARRE003"},
+    {"municipio": "Socopo", "codigo": "CARRE004"},
+    {"municipio": "Socopo", "codigo": "CARRE006"},
+    {"municipio": "Socopo", "codigo": "CARRE007"},
+    {"municipio": "Socopo", "codigo": "CARRE001"},
+    {"municipio": "Socopo", "codigo": "CARRE003"},
 
     {"municipio": "Pedraza", "codigo": "CARRE006"},
     {"municipio": "Pedraza", "codigo": "CARRE003"},

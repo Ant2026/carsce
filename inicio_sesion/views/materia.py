@@ -6,20 +6,14 @@ from inicio_sesion.models import  Pnf, Materia, PeriodoAcademico, CalendarioAcad
 def materias_almacenada(request):
    if request.method == "POST":
         pnf = request.POST.get("pnf")
-        trayecto = request.POST.get("trayecto")
 
         materias_query = Materia.objects.select_related(
-            "id_trayecto",
             "id_pnf"
         )
         
         if pnf and pnf != "ninguno":
             materias_query = materias_query.filter(id_pnf=pnf)
 
-        if trayecto and trayecto != "ninguno":
-            materias_query = materias_query.filter(
-                id_trayecto=trayecto
-            )
 
         materias = list(
             materias_query.values(
@@ -29,21 +23,9 @@ def materias_almacenada(request):
                 "tipo_materia",
                 "recuperacion",
                 "id_pnf",
-                "id_trayecto"
+                "trayecto"
             )
         )
-
-        # Agregar nombre del trayecto
-        for materia in materias:
-            trayecto_obj = TrayectoAcademico.objects.filter(
-                id_trayecto=materia["id_trayecto"]
-            ).first()
-
-            materia["trayecto"] = (
-                trayecto_obj.trayecto 
-                if trayecto_obj 
-                else ""
-            )
 
         pnfs = list(
             Pnf.objects.values(
@@ -66,7 +48,6 @@ def datos_materia(request):
         try:
             materia = Materia.objects.select_related(
                 "id_pnf",
-                "id_trayecto"
             ).get(id_materia=id_materia)
 
             return JsonResponse({
@@ -76,11 +57,8 @@ def datos_materia(request):
                     "nombre": materia.nombre,
                     "codigo": materia.codigo,
                     "tipo_materia": materia.tipo_materia,
-                    "recuperacion": materia.recuperacion
-                },
-                "trayecto": {
-                    "id_trayecto": materia.id_trayecto.id_trayecto,
-                    "trayecto": materia.id_trayecto.trayecto
+                    "recuperacion": materia.recuperacion,
+                    "trayecto": materia.trayecto
                 },
                 "pnf": {
                     "id_pnf": materia.id_pnf.id_pnf,
@@ -113,14 +91,11 @@ def guardar_actualizacion_materia(request):
             })
 
         try:
-
-            trayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto_materia)
-
             materia = Materia.objects.get(id_materia=id_materia)
             materia.nombre = nombre
             materia.codigo = codigo
             materia.tipo_materia = periodo_materia
-            materia.id_trayecto = trayecto
+            materia.trayecto = trayecto_materia
             materia.recuperacion = reparacion_materia
             materia.id_pnf_id = pnf_materia
             materia.save()
@@ -228,13 +203,12 @@ def modulo_materia(request):
         
         pnf_obj = Pnf.objects.get(id_pnf=pnf)
         
-        trayecto_obj = TrayectoAcademico.objects.get(id_trayecto=trayecto)
 
         materia = Materia.objects.create(
             nombre=nombre,
             codigo=codigo,
             tipo_materia=periodo_materia,
-            id_trayecto=trayecto_obj,
+            trayecto=trayecto,
             recuperacion=reparacion,
             id_pnf=pnf_obj
         )
@@ -326,4 +300,4 @@ def modulo_materia(request):
             "descripcion": "Materia registrada correctamente."
         })
 
-    return render(request, "materias.html")
+    return render(request, "Director_General/materias.html")

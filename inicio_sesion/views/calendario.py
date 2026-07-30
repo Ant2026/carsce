@@ -176,4 +176,4 @@ def modelo_calendario_academico(request):
             "descripcion": "Calendario académico actualizado correctamente."
         })
 
-    return render(request, "calendario_academico.html")
+    return render(request, "Director_General/calendario_academico.html")

@@ -124,4 +124,4 @@ def modulo_autoridades(request):
             "descripcion": "Se encuentra vacío al menos un campo."
         })
 
-    return render(request, "autoridades.html")
+    return render(request, "Director_General/autoridades.html")

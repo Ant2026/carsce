@@ -94,26 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function trayectos_registrados() {
-        try {
-            const respuesta = await fetch("/trayectos_registrados/");
-            const resultado = await respuesta.json();
-
-            select_registrar_trayecto.innerHTML = "<option value=''>Seleccionar el Trayecto</option>";
-        
-            resultado.trayectos.forEach(trayecto => {
-                if (nombre_pnf.toLowerCase().includes("veterinaria")) {
-                    agregar_trayecto(trayecto);
-                } else {
-                    if (trayecto.trayecto.toLowerCase() !== "trayecto v") {
-                        agregar_trayecto(trayecto);
-                    }
-                }
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     function agregar_trayecto(trayecto) {
         const option_trayecto_registrar = document.createElement("option");
@@ -173,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
         nombre_pnf = opcion_seleccionada.textContent
         periodo_academico = opcion_seleccionada.dataset.periodo_academico;
 
-        await trayectos_registrados();
     });
 
     select_registrar_trayecto.addEventListener("change", async () => {
@@ -194,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const respuesta = await fetch("/secciones_registradas/");
             const resultado = await respuesta.json();
+            console.log(resultado);
 
 
             contenedor_secciones.innerHTML = "";
@@ -207,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${seccion.seccion}</td>
                         <td>${seccion.id_nucleo__municipio}</td>
                         <td>${seccion.id_pnf__pnf}</td>
-                        <td>${seccion.id_trayecto__trayecto}</td>
+                        <td>${seccion.trayecto}</td>
                         <td>${seccion.turno}</td>
                         <td>${seccion.id_aula__nombre_aula}</td>
                     </tr>
@@ -366,29 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function cargarTrayectosConValidacion(nombrePnfActual, trayectoActualId = null) {
-        try {
-            const respuesta = await fetch("/trayectos_registrados/");
-            const resultado = await respuesta.json();
-
-            resultado.trayectos.forEach(trayecto => {
-                if (trayecto.id_trayecto === trayectoActualId) return; 
-
-                const esVeterinaria = nombrePnfActual.toLowerCase().includes("PNF en Medicina Veterinaria");
-                const esTrayectoV = trayecto.trayecto.toLowerCase() === "trayecto v";
-
-                if (esVeterinaria || !esTrayectoV) {
-                    const option = document.createElement("option");
-                    option.value = trayecto.id_trayecto;
-                    option.textContent = trayecto.trayecto;
-                    select_actualizar_trayecto.append(option);
-                }
-            });
-        } catch (error) {
-            console.error("Error al cargar trayectos:", error);
-        }
-    }
-
+ 
     async function cargarAulasPorNucleo(idNucleo, aulaActualId = null) {
         try {
             const formulario = new FormData();
@@ -466,7 +424,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     allowEscapeKey: false
                 });
 
-                await secciones_registradas();
             } else {
                 Swal.fire({
                     text: resultado.descripcion,

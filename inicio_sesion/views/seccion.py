@@ -12,7 +12,7 @@ def secciones_registradas(request):
             "turno",
             "id_nucleo__municipio",
             "id_pnf__pnf",
-            "id_trayecto__trayecto",
+            "trayecto",
             "id_aula__nombre_aula",
             "id_aula__nombre_edificio",
             "id_aula__piso_edificio"
@@ -82,13 +82,13 @@ def guardar_actualizacion_seccion(request):
             with transaction.atomic():
                 id_nucleo = Nucleos.objects.get(id_nucleo=nucleo)
                 id_pnf = Pnf.objects.get(id_pnf=pnf)
-                # id_trayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto)
+                trayecto = trayecto
                 id_aula = AulaAcademica.objects.get(id_aula=aula)
                 seccion = SeccionAcademica.objects.get(id_seccion=id_seccion)
 
                 seccion.id_nucleo = id_nucleo
                 seccion.id_pnf = id_pnf
-                # seccion.id_trayecto = id_trayecto
+                seccion.trayecto = trayecto
                 seccion.id_aula = id_aula
                 seccion.turno = turno
                 seccion.seccion = nuevo_seccion
@@ -126,10 +126,10 @@ def modulo_seccion(request):
         if nucleo and pnf and trayecto and aula and turno and seccion:
             id_nucleo = Nucleos.objects.get(id_nucleo=nucleo)
             id_pnf = Pnf.objects.get(id_pnf=pnf)
-            # id_trayecto = TrayectoAcademico.objects.get(id_trayecto=trayecto)
+            trayecto = trayecto
             id_aula = AulaAcademica.objects.get(id_aula=aula)
         
-            # SeccionAcademica.objects.create(id_nucleo=id_nucleo, id_pnf=id_pnf, id_trayecto=id_trayecto, id_aula=id_aula, turno=turno, seccion=seccion)
+            SeccionAcademica.objects.create(id_nucleo=id_nucleo, id_pnf=id_pnf, trayecto=trayecto, id_aula=id_aula, turno=turno, seccion=seccion)
 
             return JsonResponse({
                 "estado": "ok",
@@ -143,4 +143,4 @@ def modulo_seccion(request):
             "descripcion": "Se encuentra vacío al menos un campo."
         })
     
-    return render(request, "secciones.html")
+    return render(request, "Director_General/secciones.html")

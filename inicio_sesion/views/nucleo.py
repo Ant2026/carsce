@@ -98,4 +98,4 @@ def modulo_nucleo(request):
             "descripcion": "Se encuentra vacío al menos un campo."
         })
     
-    return render(request, "nucleos.html")
+    return render(request, "Director_General/nucleos.html")

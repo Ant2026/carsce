@@ -21,10 +21,14 @@
 @import url('../Logueo/logueado.css');
 @import url('../Logueo/panel_director_general.css');
 
-@import url('../models_actualizar.css');
-@import url('../horario_otros_modulo.css');
-/* @import url('models_actualizar.css');
-@import url('horario_otros_modulo.css'); */
+/* @import url('../models_actualizar.css'); */
+/* @import url('../horario_otros_modulo.css'); */
+/* @import url('../completar_registro_estudiante.css'); */
+/* @import url('../continuacion.css');  */
+/* @import url('../formulario_buscar_usuario.css');  */
+/* @import url('../horario_otros_modulo.css');  */
+/* @import url('../inscripcion.css');  */
+/* @import url('../models_actualizar.css');  */
 
 /* @import url('inscripcion.css');
 @import url('continuacion.css'); */
@@ -118,3 +122,5 @@
     cursor: not-allowed;
     opacity: .7;
 }
+
+

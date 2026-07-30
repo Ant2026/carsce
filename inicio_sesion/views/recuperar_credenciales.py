@@ -7,7 +7,7 @@ from datetime import timedelta
 from django.template.loader import render_to_string
 from django.contrib import messages
 
-from inicio_sesion.models import Usuario, Contacto, VerificacionCodigo, UsuarioAsignacion, CredencialesUsuario
+from inicio_sesion.models import Usuario, Contacto, VerificacionCodigo
 
 import secrets, string, json, uuid
 from math import ceil
@@ -476,27 +476,28 @@ def recuperar_contrasenia(request):
                 "descripcion": "Usuario no encontrado."
             })
 
-        asignacion = UsuarioAsignacion.objects.filter(id_usuario=usuario).first()
-        if not asignacion:
-            return JsonResponse({
-                "estado": "fallo",
-                "title": "Error",
-                "icon": "error",
-                "descripcion": "El usuario no tiene una asignación registrada."
-            })
+        # asignacion = UsuarioAsignacion.objects.filter(id_usuario=usuario).first()
+        # if not asignacion:
+        #     return JsonResponse({
+        #         "estado": "fallo",
+        #         "title": "Error",
+        #         "icon": "error",
+        #         "descripcion": "El usuario no tiene una asignación registrada."
+        #     })
 
-        credenciales = CredencialesUsuario.objects.filter(id_asignacion=asignacion).first()
-        if not credenciales:
-            return JsonResponse({
-                "estado": "fallo",
-                "title": "Error",
-                "icon": "error",
-                "descripcion": "No existen credenciales registradas."
-            })
+        # credenciales = CredencialesUsuario.objects.filter(id_asignacion=asignacion).first()
+
+        # if not credenciales:
+        #     return JsonResponse({
+        #         "estado": "fallo",
+        #         "title": "Error",
+        #         "icon": "error",
+        #         "descripcion": "No existen credenciales registradas."
+        #     })
 
         # Se guardaron la nuevas contraseña
-        credenciales.clave = password
-        credenciales.save()
+        # credenciales.clave = password
+        # credenciales.save()
 
         # Se reinicia los campos
         verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session["CI_usuario"]).first()
@@ -536,9 +537,9 @@ def recuperar_usuario(request):
     if not contacto or not contacto.correo_electronico:
         messages.error(request, "Ocurrio un error al momento de obtener los datos de contacto.")
     
-    credenciales = CredencialesUsuario.objects.filter(id_asignacion__id_usuario=usuario).select_related("id_asignacion").first()
-    if not credenciales:
-        messages.error(request, "Ocurrio un error al momento de obtener las credenciales.")
+    # credenciales = CredencialesUsuario.objects.filter(id_asignacion__id_usuario=usuario).select_related("id_asignacion").first()
+    # if not credenciales:
+    #     messages.error(request, "Ocurrio un error al momento de obtener las credenciales.")
 
     # Eliminar las variables de sesion
     del request.session["correo_verificado"]
@@ -546,22 +547,22 @@ def recuperar_usuario(request):
     del request.session["token_recuperacion"]
 
     # Plantillas utilizadas para el envio de datos
-    html = render_to_string(
-        "Email/recuperar_usuario.html",
-        {
-            "nombres": usuario.nombres,
-            "apellidos": usuario.apellidos,
-            "nombre_usuario": credenciales.nombre_usuario,
-        }
-    )
+    # html = render_to_string(
+    #     "Email/recuperar_usuario.html",
+    #     {
+    #         "nombres": usuario.nombres,
+    #         "apellidos": usuario.apellidos,
+    #         "nombre_usuario": credenciales.nombre_usuario,
+    #     }
+    # )
 
     # Validaciones de correo electronico
     send_mail(
         subject="Recuperación de usuario - UPT José Félix Ribas",
-        message=f"Su nombre de usuario es: {credenciales.nombre_usuario}",
+        # message=f"Su nombre de usuario es: {credenciales.nombre_usuario}",
         from_email="ejemplo@gmail.com",
         recipient_list=[contacto.correo_electronico],
-        html_message=html,
+        # html_message=html,
         fail_silently=False,
     )
 

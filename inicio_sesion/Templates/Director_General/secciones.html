@@ -20,7 +20,15 @@
                 <select name="registro_pnf" id="registro_pnf_registrado"></select>
 
                 <label for="registro_trayecto_registrado">Trayecto:</label>
-                <select name="registro_trayecto" id="registro_trayecto_registrado"></select>
+                <select name="registro_trayecto" id="registro_trayecto_registrado">
+                    <option value="">Seleccion de Trayecto</option>
+                    <option value="Inicial">Inicial</option>
+                    <option value="Trayecto I">Trayecto I</option>
+                    <option value="Trayecto II">Trayecto II</option>
+                    <option value="Trayecto III">Trayecto III</option>
+                    <option value="Trayecto IV">Trayecto IV</option>
+                    <option value="Trayecto V">Trayecto V</option>
+                </select>
 
                 <label for="registro_aula_registrado">Aula Académico:</label>
                 <select name="registro_aula" id="registro_aula_registrado"></select>
@@ -71,6 +79,6 @@
     </div>
 </dialog>
 
-<script src="{% static 'Funciones_Asincronas/modulo_seccion.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Director_General/modulo_seccion.js' %}"></script>
 
 {% endblock %}

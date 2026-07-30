@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
 from django.forms.models import model_to_dict
-from inicio_sesion.models import Usuario, Contacto, VerificacionCodigo, Discapacidad
+from inicio_sesion.models import Usuario, Contacto, VerificacionCodigo
 import json, uuid
 
 from .recuperar_credenciales import *
@@ -182,15 +182,15 @@ def actualizar_datosusuario(request):
                 residencia.direccion_residencia = direccion_domicilio
                 residencia.save()
 
-                if perfil == "Estudiante":
-                    discapacidad = Discapacidad.objects.get_or_create(id_usuario=usuario)
+                # if perfil == "Estudiante":
+                #     discapacidad = Discapacidad.objects.get_or_create(id_usuario=usuario)
 
-                    discapacidad.codigo_carnet_discapacidad = carnet_discapacidad
-                    discapacidad.nro_registro_medico = registro_medico
-                    discapacidad.tipo_discapacidad = tipos_discapacidad
-                    discapacidad.grado_discapacidad = grado_discapacidad
-                    discapacidad.causa_discapacidad = causa_discapacidad
-                    discapacidad.save()
+                #     discapacidad.codigo_carnet_discapacidad = carnet_discapacidad
+                #     discapacidad.nro_registro_medico = registro_medico
+                #     discapacidad.tipo_discapacidad = tipos_discapacidad
+                #     discapacidad.grado_discapacidad = grado_discapacidad
+                #     discapacidad.causa_discapacidad = causa_discapacidad
+                #     discapacidad.save()
 
                 return JsonResponse({
                     "estado": "ok",
@@ -211,4 +211,4 @@ def actualizar_datosusuario(request):
             "descripcion": "Se encuentra vacío, por favor rellene los campos."
         })
     
-    return render(request, "actualizar_datosusuario.html")
+    return render(request, "Director_General/actualizar_datosusuario.html")

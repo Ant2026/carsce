@@ -545,7 +545,6 @@
     width:650px;
     max-width:95%;
 
-    overflow:hidden;
 
     box-shadow:0 30px 70px rgba(0,0,0,.30);
 
@@ -893,7 +892,6 @@
 
     border-radius:16px;
 
-    overflow:hidden;
 
     border:1px solid #E5E7EB;
 
@@ -1009,7 +1007,6 @@
 
     border-radius:18px;
 
-    overflow:hidden;
 
     box-shadow:0 30px 70px rgba(0,0,0,.35);
 
@@ -1490,7 +1487,6 @@
 
     border-radius:18px;
 
-    overflow:hidden;
 
     box-shadow:0 35px 70px rgba(0,0,0,.35);
 
@@ -1793,7 +1789,6 @@
 
     border-collapse:collapse;
 
-    overflow:hidden;
 
     background:#FFF;
 
@@ -1911,7 +1906,6 @@
 
     border-radius:18px;
 
-    overflow:hidden;
 
     box-shadow:0 35px 70px rgba(0,0,0,.35);
 

@@ -1,140 +1,120 @@
-from django.contrib import admin
-from .models import Usuario, Contacto, CredencialesUsuario, Pnf, Nucleos, Perfiles, PNFNucleo, GacetaOficial, UsuarioAsignacion, PeriodoAcademico
-from django import forms
-from django.contrib.auth.hashers import make_password
-from django.forms import PasswordInput
+from django.contrib import admin, messages
+from django.core.management import call_command
+from django.db import transaction
+
+from .forms import ModeloDinamicoAdminForm, CampoModeloAdminForm, UsuarioAdminForm,CredencialesUsuarioAdminForm, PNFNucleoAdminForm, PnfAdminForm, NucleoAdminForm, PerfilAdminForm, PeriodoAcademicoAdminForm
+
+from .models import Usuario, Contacto, Pnf, Nucleos, Perfiles, PNFNucleo, PeriodoAcademico, Cuenta, ModeloDinamico, CampoModelo
+
+from .utils.crear_tabla_dinamica import crear_tabla_dinamica, eliminar_tabla_dinamica
+
+from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
-import re
 
-class UsuarioAdminForm(forms.ModelForm):
-   
-    GENERO_CHOICES = [
-        ('', 'Seleccione el Genero'),
-        ('Masculino', 'Masculino'),
-        ('Femenino', 'Femenino'),
-    ]
+class CampoModeloInlineFormSet(BaseInlineFormSet):
 
-    ESTADO_CIVIL_CHOICES = [
-        ('', 'Seleccione el Estado Civil'),
-        ('Soltero/a', 'Soltero/a'),
-        ('Casado/a', 'Casado/a'),
-        ('Viudo/a', 'Viudo/a'),
-        ('Divorciado/a', 'Divorciado/a'),
-    ]
+    def clean(self):
+        super().clean()
 
-    NACIONALIDAD_CHOICES = [
-        ('', 'Seleccione'),
-        ('V', 'V'),
-        ('E', 'E'),
-    ]
+        nombres = set()
+        pk = 0
+        campos_validos = 0
 
-    nacionalidad = forms.ChoiceField(
-        choices=NACIONALIDAD_CHOICES,
-        widget=forms.Select(attrs={
-            'id': 'nacionalidad',
-            'class': 'inline-select'
-        })
-    )
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
 
-    cedula_identidad = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'id': 'cedula_identidad',
-            'class': 'inline-input',
-        })
-    )
+            if form.cleaned_data.get("DELETE"):
+                continue
 
-    genero = forms.ChoiceField(
-        choices=GENERO_CHOICES
-    )
+            nombre = (form.cleaned_data.get("nombre") or "").strip().lower()
 
-    estado_civil = forms.ChoiceField(
-        choices=ESTADO_CIVIL_CHOICES
-    )
+            if not nombre:
+                continue
 
-    def clean_nombres(self):
-        nombres = self.cleaned_data['nombres'].strip()
+            campos_validos += 1
 
-        if len(nombres) < 3:
-            raise ValidationError(
-                "El nombre debe tener al menos 3 caracteres."
-            )
-
-        if len(nombres) > 30:
-            raise ValidationError(
-                "El nombre no puede superar los 30 caracteres."
-            )
-
-        if not re.match(r'^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$', nombres):
-            raise ValidationError(
-                "El nombre solo puede contener letras."
-            )
-
-        return nombres
-
-    def clean_apellidos(self):
-        apellidos = self.cleaned_data['apellidos'].strip()
-
-        if len(apellidos) < 3:
-            raise ValidationError(
-                "El apellido debe tener al menos 3 caracteres."
-            )
-
-        if len(apellidos) > 30:
-            raise ValidationError(
-                "El apellido no puede superar los 30 caracteres."
-            )
-
-        if not re.match(r'^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$', apellidos):
-            raise ValidationError(
-                "El apellido solo puede contener letras."
-            )
-
-        return apellidos
-
-    def clean_cedula_identidad(self):
-        cedula = self.cleaned_data['cedula_identidad'].strip()
-        nacionalidad = self.cleaned_data.get('nacionalidad')
-
-        if not cedula.isdigit():
-            raise ValidationError(
-                "La cédula solo puede contener números."
-            )
-
-        if nacionalidad == "V":
-            if len(cedula) < 7 or len(cedula) > 8:
+            if nombre in nombres:
                 raise ValidationError(
-                    "La cédula venezolana debe tener entre 7 y 8 dígitos."
+                    f"El campo '{nombre}' está repetido."
                 )
 
-        elif nacionalidad == "E":
-            if len(cedula) < 10 or len(cedula) > 11:
-                raise ValidationError(
-                    "La cédula de extranjero debe tener entre 10 y 11 dígitos."
-                )
+            nombres.add(nombre)
 
-        return cedula
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+            if form.cleaned_data.get("primary_key"):
+                pk += 1
 
-        if self.instance and self.instance.cedula_identidad:
-            if "-" in self.instance.cedula_identidad:
-                nacionalidad, cedula = self.instance.cedula_identidad.split("-", 1)
+        if campos_validos == 0:
+            raise ValidationError(
+                "Debe crear al menos un campo."
+            )
 
-                self.fields['nacionalidad'].initial = nacionalidad
-                self.fields['cedula_identidad'].initial = cedula 
+        if pk > 1:
+            raise ValidationError(
+                "Solo puede existir una llave primaria."
+            )
 
-class ContactoInline(admin.StackedInline):
-    model = Contacto
-    can_delete = False
+class CampoModeloInline(admin.TabularInline):
+    model = CampoModelo
+    form = CampoModeloAdminForm
+    formset = CampoModeloInlineFormSet
     extra = 1
-    exclude = ('id_contacto',)
+
+@admin.register(ModeloDinamico)
+class ModeloDinamicoAdmin(admin.ModelAdmin):
+
+    form = ModeloDinamicoAdminForm
+    inlines = [CampoModeloInline]
+
+
+    @transaction.atomic
+    def save_related(self, request, form, formsets, change):
+
+        print("Entró a save_related")
+
+        super().save_related(
+            request,
+            form,
+            formsets,
+            change
+        )
+
+        form.instance.refresh_from_db()
+
+        # Solo crea la tabla cuando es un registro nuevo
+        if not change:
+            crear_tabla_dinamica(
+                form.instance
+            )
+
+
+    @transaction.atomic
+    def delete_model(self, request, obj):
+
+        # Elimina la tabla física en PostgreSQL
+        eliminar_tabla_dinamica(obj)
+
+        # Elimina el registro en Django
+        super().delete_model(
+            request,
+            obj
+        )
+
+
+    @transaction.atomic
+    def delete_queryset(self, request, queryset):
+
+        # Eliminación múltiple desde la lista del Admin
+        for obj in queryset:
+            eliminar_tabla_dinamica(obj)
+
+        super().delete_queryset(
+            request,
+            queryset
+        )
 
 class UsuarioAdmin(admin.ModelAdmin):
     form = UsuarioAdminForm
-
-    inlines = [ContactoInline]
-
     fieldsets = (
         ('Datos de Identidad', {
             'fields': (
@@ -152,11 +132,6 @@ class UsuarioAdmin(admin.ModelAdmin):
         'apellidos',
         'cedula_identidad',
     )
-
-    class Media:
-        js = (
-            'Funcionalidades/password_admin.js',
-        )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -176,261 +151,45 @@ class UsuarioAdmin(admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-
-class CredencialesUsuarioAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = CredencialesUsuario
-        fields = "__all__"
-
-    def clean_nombre_usuario(self):
-
-        usuario = self.cleaned_data['nombre_usuario'].strip()
-
-        if len(usuario) < 4:
-            raise forms.ValidationError(
-                "El nombre de usuario debe tener al menos 4 caracteres."
-            )
-
-        if len(usuario) > 160:
-            raise forms.ValidationError(
-                "El nombre de usuario es demasiado largo."
-            )
-
-        existe = CredencialesUsuario.objects.filter(
-            nombre_usuario=usuario
-        )
-
-        if self.instance.pk:
-            existe = existe.exclude(pk=self.instance.pk)
-
-        if existe.exists():
-            raise forms.ValidationError(
-                "Este nombre de usuario ya existe."
-            )
-
-        return usuario
-
-    def clean_clave(self):
-
-        clave = self.cleaned_data['clave']
-
-        # Solo validar cuando no esté hasheada
-        if not clave.startswith('pbkdf2_'):
-
-            if len(clave) < 8:
-                raise forms.ValidationError(
-                    "La contraseña debe tener al menos 8 caracteres."
-                )
-
-        return clave
-    
 class CredencialesUsuarioAdmin(admin.ModelAdmin):
-
     form = CredencialesUsuarioAdminForm
 
     list_display = (
-        'nombre_usuario',
-        'id_asignacion',
+        'usuario',
     )
 
     search_fields = (
-        'nombre_usuario',
+        'usuario',
     )
 
-
-
-
-
-class PNFNucleoAdminForm(forms.ModelForm):
-    id_pnf = forms.ModelChoiceField(queryset=Pnf.objects.all(), label='PNF')
-    id_nucleo = forms.ModelChoiceField(queryset=Nucleos.objects.all(), label='Núcleo')
-
-    class Meta:
-        model = PNFNucleo
-        fields = '__all__'
+    class Media:
+        css = {
+            "all": ("Estilos/fontello.css", "Estilos/estilos_admin.css")
+        }
+        js = (
+            "Funcionalidades/password_admin.js",
+        )
 
 class PNFNucleoAdmin(admin.ModelAdmin):
     form = PNFNucleoAdminForm
 
-
-class UsuarioAsignacionAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = UsuarioAsignacion
-        fields = "__all__"
-
-    id_usuario = forms.ModelChoiceField(
-        queryset=Usuario.objects.all(),
-        label="Usuario"
-    )
-
-    id_perfil = forms.ModelChoiceField(
-        queryset=Perfiles.objects.all(),
-        label="Perfil"
-    )
-
-    id_nucleo = forms.ModelChoiceField(
-        queryset=Nucleos.objects.all(),
-        label="Núcleo",
-        required=False
-    )
-
-    id_pnf = forms.ModelChoiceField(
-        queryset=Pnf.objects.all(),
-        label="PNF",
-        required=False
-    )
-
-    def clean(self):
-
-        cleaned_data = super().clean()
-
-        nucleo = cleaned_data.get("id_nucleo")
-        pnf = cleaned_data.get("id_pnf")
-
-        if nucleo and pnf:
-
-            existe = PNFNucleo.objects.filter(
-                id_nucleo=nucleo,
-                id_pnf=pnf
-            ).exists()
-
-            if not existe:
-                raise forms.ValidationError(
-                    "El PNF seleccionado no pertenece al núcleo indicado."
-                )
-
-        return cleaned_data
-
-class UsuarioAsignacionAdmin(admin.ModelAdmin):
-    form = UsuarioAsignacionAdminForm
-
-    list_display = (
-        "id_usuario",
-        "id_perfil",
-        "id_nucleo",
-        "id_pnf",
-    )
-
-    search_fields = (
-        "id_usuario__nombres",
-        "id_usuario__apellidos",
-        "id_usuario__cedula_identidad",
-    )
-
-    list_filter = (
-        "id_perfil",
-        "id_nucleo",
-        "id_pnf",
-    )
- 
-
-class PnfAdminForm(forms.ModelForm):
-
-    PERIODO_ACADEMICO_CHOICES = [
-        ("", "Elije el Periodo Académico"),
-        ("Trimestre", "Trimestre"),
-        ("Semestre", "Semestre"),
-    ]
-
-    periodo_academico = forms.ChoiceField(
-        choices=PERIODO_ACADEMICO_CHOICES,
-        required=False
-    )
-
-    class Meta:
-        model = Pnf
-        fields = "__all__"
-
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre'].strip()
-
-        if len(nombre) < 5:
-            raise forms.ValidationError(
-                "El nombre del PNF debe tener al menos 5 caracteres."
-            )
-
-        return nombre
-
 class PnfAdmin(admin.ModelAdmin):
     form = PnfAdminForm
-
-
-class NucleoAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = Nucleos
-        fields = "__all__"
-
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre'].strip()
-
-        if len(nombre) < 3:
-            raise forms.ValidationError(
-                "El nombre del núcleo debe tener al menos 3 caracteres."
-            )
-
-        return nombre
 
 class NucleoAdmin(admin.ModelAdmin):
     form = NucleoAdminForm
 
-
-class PerfilAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = Perfiles
-        fields = "__all__"
-
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre'].strip()
-
-        if len(nombre) < 3:
-            raise forms.ValidationError(
-                "El nombre del perfil debe tener al menos 3 caracteres."
-            )
-
-        return nombre
-
 class PerfilAdmin(admin.ModelAdmin):
     form = PerfilAdminForm
 
-
-@admin.register(GacetaOficial)
-class GacetaOficialAdmin(admin.ModelAdmin):
-
-    list_display = (
-        'gaceta_oficial',
-        'fecha_gaceta_oficial',
-        'id_usuario'
-    )
-
-class PeriodoAcademicoAdminForm(forms.ModelForm):
-    class Meta:
-        model = Perfiles
-        fields = "__all__"
-
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre'].strip()
-
-        if len(nombre) < 3:
-            raise forms.ValidationError(
-                "El nombre del perfil debe tener al menos 3 caracteres."
-            )
-
-        return nombre
-    
 class PeriodoAcademicoAdmin(admin.ModelAdmin):
     form = PeriodoAcademicoAdminForm
 
 admin.site.register(PeriodoAcademico, PeriodoAcademicoAdmin)
-
 admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(Pnf, PnfAdmin)
 admin.site.register(Nucleos, NucleoAdmin)
 admin.site.register(Perfiles, PerfilAdmin)
-
-admin.site.register(CredencialesUsuario, CredencialesUsuarioAdmin)
+admin.site.register(Cuenta, CredencialesUsuarioAdmin)
 admin.site.register(PNFNucleo, PNFNucleoAdmin)
-admin.site.register(UsuarioAsignacion, UsuarioAsignacionAdmin)
+admin.site.register(Contacto)

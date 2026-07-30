@@ -251,7 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: formulario
             });
-            const resultado = await respuesta.json()
+            const resultado = await respuesta.json();
+            console.log(resultado);
 
             Swal.fire({
                 text: resultado.descripcion,
@@ -259,8 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             });
-
-            await cargar()
 
             formulario_registrar_pnf.reset()
         } catch (error) {

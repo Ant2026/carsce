@@ -1,0 +1,12 @@
+.contenedor-clave{
+    position: relative;
+    display: inline-block;
+}
+
+#toggleClave{
+    position: absolute;
+    right: 380px;
+    top: 40%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}

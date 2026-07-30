@@ -51,9 +51,8 @@ JAZZMIN_SETTINGS = {
         "inicio_sesion.Perfiles": "fas fa-id-card",
         "inicio_sesion.PNF": "fas fa-graduation-cap",
         "inicio_sesion.PNFNucleo": "fas fa-project-diagram",
-        "inicio_sesion.UsuarioAsignacion": "fas fas fa-sitemap",
         "inicio_sesion.GacetaOficial": "fas fa-file-alt",
-        "inicio_sesion.CredencialesUsuario": "fas fa-user-lock",
+        "inicio_sesion.Cuenta": "fas fa-user-lock",
         
         "auth.User": "fas fa-user-shield",
         "auth.Group": "fas fa-users",
@@ -97,7 +96,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'casrce',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': '31438140',
         'HOST': 'localhost',
         'PORT': '5432',
     }

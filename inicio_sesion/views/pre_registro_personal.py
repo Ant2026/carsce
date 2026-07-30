@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from inicio_sesion.models import Usuario, Perfiles, Nucleos, Contacto, PNFNucleo, UsuarioAsignacion
+from inicio_sesion.models import Usuario, Perfiles, Nucleos, Contacto, PNFNucleo
 
 import json
 
@@ -43,32 +43,32 @@ def validar_nucleos(request):
         nucleos = Nucleos.objects.all()
 
         # Solo va a validar el perfil de Encargado de control de estudio
-        if perfil.perfil == "Encargado de Control de Estudio":
+        # if perfil.perfil == "Encargado de Control de Estudio":
 
             # Obtiene todos los núcleos asignados
             # Con el parametro flat cambia la lista de id que viene en tuplas a listas
-            nucleos_ocupados = UsuarioAsignacion.objects.filter(
-                id_perfil__perfil="Encargado de Control de Estudio"
-            ).values_list(
-                "id_nucleo_id",
-                flat=True
-            )
+            # nucleos_ocupados = UsuarioAsignacion.objects.filter(
+            #     id_perfil__perfil="Encargado de Control de Estudio"
+            # ).values_list(
+            #     "id_nucleo_id",
+            #     flat=True
+            # )
 
             # Excluye los registrados, porque el operador _in espera una secuencia de valores
-            nucleos = nucleos.exclude(
-                id_nucleo__in=nucleos_ocupados
-            )
+            # nucleos = nucleos.exclude(
+            #     id_nucleo__in=nucleos_ocupados
+            # )
 
         # Envia a la vista la lista de los nucleos que aun no han sido asignado
-        resultado = list(
-            nucleos.values(
-                "id_nucleo",
-                "municipio"
-            )
-        )
+        # resultado = list(
+        #     nucleos.values(
+        #         "id_nucleo",
+        #         "municipio"
+        #     )
+        # )
 
         # Envia las listas filtradas
-        return JsonResponse({"nucleos": resultado})
+        # return JsonResponse({"nucleos": resultado})
 
 # Verificado
 def pnfs_nucleos(request):
@@ -86,32 +86,32 @@ def pnfs_nucleos(request):
         ).select_related("id_pnf") # Aprovecha la petición para buscar los datos de los pnfs
 
         # Solo para Coordinador de PNF se excluyen los PNF ya asignados
-        if perfil.perfil == "Coordinador de PNF":
+        # if perfil.perfil == "Coordinador de PNF":
 
             # Busca los pnfs ya registrados, especificando el perfil del Coordinador
             # Utiliza el operador flat para convertir la lista de tuplas a una lista
             # Con valores continuo
-            pnfs_ocupados = UsuarioAsignacion.objects.filter(
-                id_perfil=perfil,
-                id_nucleo_id=nucleo_id
-            ).values_list(
-                "id_pnf_id",
-                flat=True
-            )
+            # pnfs_ocupados = UsuarioAsignacion.objects.filter(
+            #     id_perfil=perfil,
+            #     id_nucleo_id=nucleo_id
+            # ).values_list(
+            #     "id_pnf_id",
+            #     flat=True
+            # )
 
             # Aquí excluye los registrados
-            pnfs = pnfs.exclude(id_pnf_id__in=pnfs_ocupados)
+            # pnfs = pnfs.exclude(id_pnf_id__in=pnfs_ocupados)
 
         # Convierte los datos a una lista de diccionario
-        resultado = []
-        for item in pnfs:
-            resultado.append({
-                "id_pnf": item.id_pnf.id_pnf,
-                "pnf": item.id_pnf.pnf
-            })
+        # resultado = []
+        # for item in pnfs:
+        #     resultado.append({
+        #         "id_pnf": item.id_pnf.id_pnf,
+        #         "pnf": item.id_pnf.pnf
+        #     })
 
         # Obtiene los pnfs filtados
-        return JsonResponse({ "pnfs": resultado })
+        # return JsonResponse({ "pnfs": resultado })
 
 # Verificado
 def pre_registro_personal(request):
@@ -209,39 +209,39 @@ def pre_registro_personal(request):
 
             Contacto.objects.create(correo_electronico=correo_principal, telefono_personal=telefono_principal, id_usuario=usuario)
 
-            for perfil_id in perfiles_asignados:
-                perfil = Perfiles.objects.get(pk=perfil_id)
+            # for perfil_id in perfiles_asignados:
+            #     perfil = Perfiles.objects.get(pk=perfil_id)
 
-                if perfil.perfil == "Encargado de Control de Estudio":
-                    for nucleo_id in nucleos_control:
-                        UsuarioAsignacion.objects.create(id_usuario=usuario, id_perfil=perfil, id_nucleo_id=nucleo_id)
+            #     if perfil.perfil == "Encargado de Control de Estudio":
+            #         for nucleo_id in nucleos_control:
+            #             UsuarioAsignacion.objects.create(id_usuario=usuario, id_perfil=perfil, id_nucleo_id=nucleo_id)
 
-                elif perfil.perfil == "Coordinador de PNF":
-                    for nucleo_id in nucleos_coordinador:
-                        for pnf_id in pnfs_coordinador:
-                            existe = PNFNucleo.objects.filter(
-                                id_nucleo_id=nucleo_id,
-                                id_pnf_id=pnf_id
-                            ).exists()
+            #     elif perfil.perfil == "Coordinador de PNF":
+            #         for nucleo_id in nucleos_coordinador:
+            #             for pnf_id in pnfs_coordinador:
+            #                 existe = PNFNucleo.objects.filter(
+            #                     id_nucleo_id=nucleo_id,
+            #                     id_pnf_id=pnf_id
+            #                 ).exists()
 
-                            if existe:
-                                UsuarioAsignacion.objects.create(id_usuario=usuario, id_perfil=perfil, id_nucleo_id=nucleo_id, id_pnf_id=pnf_id)
+            #                 if existe:
+            #                     UsuarioAsignacion.objects.create(id_usuario=usuario, id_perfil=perfil, id_nucleo_id=nucleo_id, id_pnf_id=pnf_id)
 
-                elif perfil.perfil == "Docente":
-                    for nucleo_id in nucleos_docente:
-                        for pnf_id in pnfs_docente:
-                            existe = PNFNucleo.objects.filter(
-                                id_nucleo_id=nucleo_id,
-                                id_pnf_id=pnf_id
-                            ).exists()
+                # elif perfil.perfil == "Docente":
+                #     for nucleo_id in nucleos_docente:
+                #         for pnf_id in pnfs_docente:
+                #             existe = PNFNucleo.objects.filter(
+                #                 id_nucleo_id=nucleo_id,
+                #                 id_pnf_id=pnf_id
+                #             ).exists()
 
-                            if existe:
-                                UsuarioAsignacion.objects.create(
-                                    id_usuario=usuario,
-                                    id_perfil=perfil,
-                                    id_nucleo_id=nucleo_id,
-                                    id_pnf_id=pnf_id
-                                )
+                #             if existe:
+                #                 UsuarioAsignacion.objects.create(
+                #                     id_usuario=usuario,
+                #                     id_perfil=perfil,
+                #                     id_nucleo_id=nucleo_id,
+                #                     id_pnf_id=pnf_id
+                #                 )
         return JsonResponse({
             "estado": "exito",
             "icon": "success",

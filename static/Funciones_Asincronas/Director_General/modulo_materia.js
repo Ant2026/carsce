@@ -51,43 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     pnfs_registrados();
 
-    async function trayectos_registrados() {
-        try {
-            const respuesta = await fetch("/trayectos_registrados/")
-            const resultado = await respuesta.json()
-            
-            select_registrar_trayecto.innerHTML = "<option value=''>Seleccionar el Trayecto</option>"
-            select_busqueda_trayecto.innerHTML = "<option value=''>Seleccionar el Trayecto</option>"
-            
-            resultado.trayectos.forEach(trayecto => {
-                const option_registrar = document.createElement("option")
-                option_registrar.value = trayecto.id_trayecto
-                option_registrar.textContent = trayecto.trayecto
-                select_registrar_trayecto.appendChild(option_registrar)
-                
-                const option_actualizar = document.createElement("option")
-                option_actualizar.value = trayecto.id_trayecto
-                option_actualizar.textContent = trayecto.trayecto
-                select_actualizar_trayecto.appendChild(option_actualizar)
-                
-                const option_buscar = document.createElement("option")
-                option_buscar.value = trayecto.id_trayecto
-                option_buscar.textContent = trayecto.trayecto
-                select_busqueda_trayecto.appendChild(option_buscar)
-            });
-        } catch (error) {
-            console.error(error)
-        }
-    }
-    trayectos_registrados();
-
     select_busqueda_pnf.addEventListener("change", async () => {
         pnf = select_busqueda_pnf.value;
-        await materias_registradas()
-    });
-
-    select_busqueda_trayecto.addEventListener("change", async () => {
-        trayecto = select_busqueda_trayecto.value;
         await materias_registradas()
     });
 
@@ -251,8 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
             select_actualizar_periodo_materia.appendChild(option_periodo_academico)
             
             const option_trayecto = document.createElement("option")
-            option_trayecto.value = resultado.trayecto.id_trayecto
-            option_trayecto.textContent = resultado.trayecto.trayecto
+            option_trayecto.value = resultado.materia.trayecto
+            option_trayecto.textContent = resultado.materia.trayecto
             option_trayecto.selected = true
             option_trayecto.hidden = true
             select_actualizar_trayecto.appendChild(option_trayecto)

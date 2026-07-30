@@ -9,13 +9,11 @@
     <link rel="stylesheet" href="{% static 'Estilos/fontello.css' %}">
     <link rel="stylesheet" href="{% static 'Estilos/Estructura/estilos.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-    
+    <link rel="stylesheet" href="{% static 'Librerias/sweetalert2/dist/sweetalert2.min.css' %}">
     <title>UPT José Félix Ribas</title>
 </head>
 <body class="{% if request.session.usuario_nombre %}body-logueado{% endif %}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{% static 'Librerias/sweetalert2/dist/sweetalert2.min.js' %}"></script>
     
     {% include 'Estructura/Encabezado.html' %}
 

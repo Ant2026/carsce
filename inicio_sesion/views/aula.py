@@ -125,4 +125,4 @@ def modulo_aula_academica(request):
             "descripcion": "Se encuentra vacío al menos un campo."
         })
 
-    return render(request, "aulas_academicas.html")
+    return render(request, "Director_General/aulas_academicas.html")

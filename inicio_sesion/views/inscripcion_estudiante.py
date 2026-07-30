@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.conf import settings
 
-from inicio_sesion.models import Usuario, Contacto, SeccionEstudiante, Nacimiento, Residencia, Discapacidad, InformacionSecundaria, DocumentosEstudiante, PadresEstudiante, EstatusEstudiante, SeccionAcademica
+from inicio_sesion.models import Usuario, Contacto, Nacimiento, Residencia, SeccionAcademica
 
 def obtener_pre_inscrito(request):
     if request.method == "POST":
@@ -17,55 +17,55 @@ def obtener_pre_inscrito(request):
                 "estudiantes": []
             })
 
-        secciones = []
-        for seccion in SeccionAcademica.objects.select_related(
-            "id_aula"
-        ).filter(
-            id_nucleo_id=id_nucleo,
-            id_pnf_id=id_pnf
-        ).order_by("seccion"):
+        # secciones = []
+        # for seccion in SeccionAcademica.objects.select_related(
+        #     "id_aula"
+        # ).filter(
+        #     id_nucleo_id=id_nucleo,
+        #     id_pnf_id=id_pnf
+        # ).order_by("seccion"):
 
-            cantidad_estudiantes = SeccionEstudiante.objects.filter(id_seccion=seccion).count()
+        #     cantidad_estudiantes = SeccionEstudiante.objects.filter(id_seccion=seccion).count()
 
-            if cantidad_estudiantes < 48:
-                secciones.append({
-                    "id_seccion": seccion.id_seccion,
-                    "seccion": seccion.seccion,
-                    "aula": seccion.id_aula.nombre_aula,
-                    "turno": seccion.turno,
-                    "cantidad_estudiantes": cantidad_estudiantes
-                })
+        #     if cantidad_estudiantes < 48:
+        #         secciones.append({
+        #             "id_seccion": seccion.id_seccion,
+        #             "seccion": seccion.seccion,
+        #             "aula": seccion.id_aula.nombre_aula,
+        #             "turno": seccion.turno,
+        #             "cantidad_estudiantes": cantidad_estudiantes
+        #         })
 
-        estudiantes = EstatusEstudiante.objects.select_related(
-            "id_asignacion",
-            "id_asignacion__id_usuario",
-            "id_asignacion__id_perfil",
-            "id_asignacion__id_pnf",
-            "id_asignacion__id_nucleo"
-        ).filter(
-            estatus="Pre-Inscrito(a)",
-            estado="Espera",
-            id_asignacion__id_perfil_id=5,
-            id_asignacion__id_nucleo_id=id_nucleo,
-            id_asignacion__id_pnf_id=id_pnf
-        )
+        # estudiantes = EstatusEstudiante.objects.select_related(
+        #     "id_asignacion",
+        #     "id_asignacion__id_usuario",
+        #     "id_asignacion__id_perfil",
+        #     "id_asignacion__id_pnf",
+        #     "id_asignacion__id_nucleo"
+        # ).filter(
+        #     estatus="Pre-Inscrito(a)",
+        #     estado="Espera",
+        #     id_asignacion__id_perfil_id=5,
+        #     id_asignacion__id_nucleo_id=id_nucleo,
+        #     id_asignacion__id_pnf_id=id_pnf
+        # )
 
-        datos = []
-        for estudiante in estudiantes:
-            usuario = estudiante.id_asignacion.id_usuario
+        # datos = []
+        # for estudiante in estudiantes:
+        #     usuario = estudiante.id_asignacion.id_usuario
 
-            datos.append({
-                "id_usuario": usuario.id_usuario,
-                "nombres": usuario.nombres,
-                "apellidos": usuario.apellidos,
-                "cedula": usuario.cedula_identidad
-            })
+        #     datos.append({
+        #         "id_usuario": usuario.id_usuario,
+        #         "nombres": usuario.nombres,
+        #         "apellidos": usuario.apellidos,
+        #         "cedula": usuario.cedula_identidad
+        #     })
 
-        return JsonResponse({
-            "estado": "exito",
-            "secciones": secciones,
-            "estudiantes": datos
-        })
+        # return JsonResponse({
+        #     "estado": "exito",
+        #     "secciones": secciones,
+        #     "estudiantes": datos
+        # })
 
     return JsonResponse({
         "estado": "error",
@@ -92,39 +92,39 @@ def obtener_datos_pre_inscrito(request):
 
         nacimiento = Nacimiento.objects.filter(id_usuario=usuario).values().first()
 
-        informacion_secundaria = InformacionSecundaria.objects.filter(id_usuario=usuario).values().first()
+        # informacion_secundaria = InformacionSecundaria.objects.filter(id_usuario=usuario).values().first()
 
-        discapacidad = Discapacidad.objects.filter(id_usuario=usuario).values().first()
+        # discapacidad = Discapacidad.objects.filter(id_usuario=usuario).values().first()
 
-        representantes = list(
-            PadresEstudiante.objects.filter(id_usuario=usuario).values()
-        )
+        # representantes = list(
+        #     PadresEstudiante.objects.filter(id_usuario=usuario).values()
+        # )
 
-        documentos = []
+        # documentos = []
 
-        for doc in DocumentosEstudiante.objects.filter(id_usuario=usuario):
-            if doc.archivo:
+        # for doc in DocumentosEstudiante.objects.filter(id_usuario=usuario):
+        #     if doc.archivo:
 
-                ruta = str(doc.archivo).replace("\\", "/")
+        #         ruta = str(doc.archivo).replace("\\", "/")
 
-                if ruta.startswith("media/"):
-                    ruta = ruta[6:]
+        #         if ruta.startswith("media/"):
+        #             ruta = ruta[6:]
 
-                documentos.append({
-                    "tipo_documento": doc.nombre_documento,
-                    "archivo": settings.MEDIA_URL + ruta
-                })
+        #         documentos.append({
+        #             "tipo_documento": doc.nombre_documento,
+        #             "archivo": settings.MEDIA_URL + ruta
+        #         })
 
-        return JsonResponse({
-            "usuario": datos_usuario,
-            "contacto": contacto,
-            "residencia": residencia,
-            "nacimiento": nacimiento,
-            "informacion_secundaria": informacion_secundaria,
-            "discapacidad": discapacidad,
-            "representantes": representantes,
-            "documentos": documentos
-        })
+        # return JsonResponse({
+        #     "usuario": datos_usuario,
+        #     "contacto": contacto,
+        #     "residencia": residencia,
+        #     "nacimiento": nacimiento,
+        #     "informacion_secundaria": informacion_secundaria,
+        #     "discapacidad": discapacidad,
+        #     "representantes": representantes,
+        #     "documentos": documentos
+        # })
 
     return JsonResponse({
         "estado": "fallo",
@@ -159,37 +159,37 @@ def inscripcion_estudiante(request):
                 "descripcion": "El estudiante no existe."
             })
 
-        estatus_estudiante = EstatusEstudiante.objects.select_related(
-            "id_asignacion"
-        ).filter(
-            id_asignacion__id_usuario=usuario,
-            id_asignacion__id_nucleo_id=id_nucleo,
-            id_asignacion__id_pnf_id=id_pnf,
-            id_asignacion__id_perfil_id=5,
-            estatus="Pre-Inscrito(a)",
-            estado="Espera"
-        ).first()
+        # estatus_estudiante = EstatusEstudiante.objects.select_related(
+        #     "id_asignacion"
+        # ).filter(
+        #     id_asignacion__id_usuario=usuario,
+        #     id_asignacion__id_nucleo_id=id_nucleo,
+        #     id_asignacion__id_pnf_id=id_pnf,
+        #     id_asignacion__id_perfil_id=5,
+        #     estatus="Pre-Inscrito(a)",
+        #     estado="Espera"
+        # ).first()
 
-        if not estatus_estudiante:
-            return JsonResponse({
-                "titulo": "¡Advertencia!",
-                "estado": "fallo",
-                "icon": "warning",
-                "descripcion": "No se encontró la preinscripción del estudiante."
-            })
+        # if not estatus_estudiante:
+        #     return JsonResponse({
+        #         "titulo": "¡Advertencia!",
+        #         "estado": "fallo",
+        #         "icon": "warning",
+        #         "descripcion": "No se encontró la preinscripción del estudiante."
+        #     })
 
-        # RECHAZAR
-        if accion == "rechazado":
+        # # RECHAZAR
+        # if accion == "rechazado":
 
-            estatus_estudiante.estado = "Rechazado"
-            estatus_estudiante.save()
+        #     estatus_estudiante.estado = "Rechazado"
+        #     estatus_estudiante.save()
 
-            return JsonResponse({
-                "titulo": "¡Éxito!",
-                "estado": "exito",
-                "icon": "success",
-                "descripcion": "La preinscripción fue rechazada."
-            })
+        #     return JsonResponse({
+        #         "titulo": "¡Éxito!",
+        #         "estado": "exito",
+        #         "icon": "success",
+        #         "descripcion": "La preinscripción fue rechazada."
+        #     })
 
         # ACEPTAR
         seccion = SeccionAcademica.objects.filter(
@@ -204,27 +204,27 @@ def inscripcion_estudiante(request):
                 "descripcion": "La sección seleccionada no existe."
             })
 
-        if SeccionEstudiante.objects.filter(
-            id_usuario=usuario,
-            fecha_final__isnull=True
-        ).exists():
+        # if SeccionEstudiante.objects.filter(
+        #     id_usuario=usuario,
+        #     fecha_final__isnull=True
+        # ).exists():
 
-            return JsonResponse({
-                "titulo": "¡Advertencia!",
-                "estado": "fallo",
-                "icon": "warning",
-                "descripcion": "El estudiante ya posee una sección activa."
-            })
+        #     return JsonResponse({
+        #         "titulo": "¡Advertencia!",
+        #         "estado": "fallo",
+        #         "icon": "warning",
+        #         "descripcion": "El estudiante ya posee una sección activa."
+        #     })
 
-        SeccionEstudiante.objects.create(
-            id_seccion=seccion,
-            id_usuario=usuario,
-            fecha_inicio=timezone.now().date()
-        )
+        # SeccionEstudiante.objects.create(
+        #     id_seccion=seccion,
+        #     id_usuario=usuario,
+        #     fecha_inicio=timezone.now().date()
+        # )
 
-        estatus_estudiante.estatus = "Inscrito(a)"
-        estatus_estudiante.estado = "Activo"
-        estatus_estudiante.save()
+        # estatus_estudiante.estatus = "Inscrito(a)"
+        # estatus_estudiante.estado = "Activo"
+        # estatus_estudiante.save()
 
         return JsonResponse({
             "titulo": "¡Éxito!",
@@ -233,4 +233,4 @@ def inscripcion_estudiante(request):
             "descripcion": "El estudiante fue inscrito correctamente."
         })
 
-    return render(request, "inscripcion_estudiante.html")
+    return render(request, "Director_General/inscripcion_estudiante.html")

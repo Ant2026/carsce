@@ -154,4 +154,4 @@ def modulo_pnf(request):
             "descripcion": "Se encuentra vacío al menos un campo."
         })
 
-    return render(request, "pnfs.html")
+    return render(request, "Director_General/pnfs.html")

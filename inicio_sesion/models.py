@@ -1,8 +1,9 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password
+from django.contrib.contenttypes.models import ContentType
 
 # Clases (Tablas) principales 
 
+# ESTATICO
 class Usuario(models.Model):
     id_usuario = models.AutoField(primary_key=True)
     nombres = models.CharField(max_length=100)
@@ -14,15 +15,21 @@ class Usuario(models.Model):
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
 
-class PadresEstudiante(models.Model):
-    id_representante = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=100)
-    cedula_identidad = models.CharField(max_length=15, unique=True)
-    telefono = models.CharField(max_length=15)
-    parentesco = models.CharField(max_length=25)
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='padresEstudiante')
+# ESTATICO
+class Cuenta(models.Model):
+    id_cuenta = models.AutoField(primary_key=True)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.CharField(max_length=160, unique=True)
+    clave = models.CharField(max_length=160)
+    tipo_cuenta = models.CharField(
+        max_length=20,
+        choices=[
+            ("ADMIN", "Administrativo"),
+            ("EST", "Estudiante"),
+        ]
+    )
 
+# ESTATICO
 class Residencia(models.Model):
     id_residencia = models.AutoField(primary_key=True)
     condicion_residencia = models.CharField(max_length=100)
@@ -31,6 +38,7 @@ class Residencia(models.Model):
     direccion_residencia = models.CharField(max_length=100)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='residencia')
 
+# ESTATICO
 class Contacto(models.Model):
     id_contacto = models.AutoField(primary_key=True)
     telefono_suplete = models.CharField(max_length=15, null=True, blank=True)
@@ -39,6 +47,7 @@ class Contacto(models.Model):
     correo_alternativo = models.EmailField(max_length=100, unique=True, null=True, blank=True)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='contacto')
 
+# ESTATICO
 class Nacimiento(models.Model):
     id_nacimiento = models.AutoField(primary_key=True)
     pais = models.CharField(max_length=100)
@@ -49,6 +58,7 @@ class Nacimiento(models.Model):
     fecha_nacimiento = models.DateField()
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='nacimiento')
 
+# ESTATICO
 class Pnf(models.Model):
     id_pnf = models.AutoField(primary_key=True)
     pnf = models.CharField(max_length=50)
@@ -58,6 +68,7 @@ class Pnf(models.Model):
     def __str__(self):
         return self.pnf
 
+# ESTATICO
 class Nucleos(models.Model):
     id_nucleo = models.AutoField(primary_key=True)
     municipio = models.CharField(max_length=50)
@@ -65,7 +76,8 @@ class Nucleos(models.Model):
 
     def __str__(self):
         return self.municipio
-    
+
+# ESTATICO
 class Perfiles(models.Model):
     id_pefil = models.AutoField(primary_key=True)
     perfil = models.CharField(max_length=50)
@@ -73,8 +85,7 @@ class Perfiles(models.Model):
     def __str__(self):
         return self.perfil
 
-# Clases (Tablas) relacionadas usuario general
-
+# ESTATICO
 class PNFNucleo(models.Model):
     id_pnf_nucleo = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
@@ -83,46 +94,7 @@ class PNFNucleo(models.Model):
     def __str__(self):
         return f"{self.id_pnf.pnf} - {self.id_nucleo.municipio}"
 
-class UsuarioAsignacion(models.Model):
-    id_asignacion = models.AutoField(primary_key=True)
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE)
-    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
-    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        pnf = self.id_pnf.pnf if self.id_pnf else "Sin PNF"
-        nucleo = self.id_nucleo.municipio if self.id_nucleo else "Sin Núcleo"
-
-        return f"{self.id_usuario.nombres} - {pnf} - {nucleo}"
-
-class CredencialesUsuario(models.Model):
-    nombre_usuario = models.CharField(max_length=160)
-    clave = models.CharField(max_length=160)
-    id_asignacion = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, related_name='perfil')
-
-    def save(self, *args, **kwargs):
-        if self.clave and not self.clave.startswith('pbkdf2_'):
-            self.clave = make_password(self.clave)
-        super().save(*args, **kwargs)
-
-# Clases (Tablas) para Docentes, Coordinadores de PNFs, Directores Generales y Control de estudio
-
-class DatosPreofesion(models.Model):
-    id_dato_academico = models.AutoField(primary_key=True)
-    profesion_pregrado = models.CharField(max_length=150)
-    universidad_egreso_pregrado = models.CharField(max_length=150)
-    pais_profesion_pregrado = models.CharField(max_length=150)
-    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='profesional')
-
-class GacetaOficial(models.Model):
-    id_gaceta = models.AutoField(primary_key=True)
-    gaceta_oficial = models.CharField(max_length=150)
-    fecha_gaceta_oficial = models.DateField()
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='gaceta')
-
-# Clases (Tablas) para Estudiantes
-
+# ESTATICO
 class AulaAcademica(models.Model):
     id_aula = models.AutoField(primary_key=True)
     nombre_aula = models.CharField(max_length=100)
@@ -130,52 +102,13 @@ class AulaAcademica(models.Model):
     piso_edificio = models.CharField(max_length=100)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
 
-class Discapacidad(models.Model):
-    id_discapacidad = models.AutoField(primary_key=True)
-    codigo_carnet_discapacidad = models.CharField(max_length=50)
-    nro_registro_medico = models.CharField(max_length=5)
-    tipo_discapacidad = models.CharField(max_length=20)
-    grado_discapacidad = models.CharField(max_length=50)
-    causa_discapacidad = models.CharField(max_length=50)
-    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='discapacidad')
-
-# Se elimino la relación con Trayecto
-class EstatusEstudiante(models.Model):
-    id_estatus_estudiante = models.AutoField(primary_key=True)
-    estatus = models.CharField(max_length=50)
-    estado = models.CharField(max_length=50)
-    ingreso = models.CharField(max_length=50)
-    descripcion_ingreso = models.CharField(max_length=30)
-    trayecto = models.CharField(max_length=10)
-    fecha_ingreso = models.DateField()
-    id_asignacion = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, related_name='estatus')
-
-class DocumentosEstudiante(models.Model):
-    id_documento = models.AutoField(primary_key=True)
-    nombre_documento = models.CharField(max_length=50)
-    archivo = models.FileField(upload_to="documentos_estudiante/")
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='documentos')
-
-class InformacionSecundaria(models.Model):
-    id_secundaria = models.AutoField(primary_key=True)
-    tipo_institucion = models.CharField(max_length=100)
-    nombre_institucion = models.CharField(max_length=100)
-    fecha_grado = models.DateField()
-    codigo_sni_opsu = models.CharField(max_length=100, unique=True)
-    id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='secundaria')
-
+# ESTATICO
 class CorteAcademico(models.Model):
     id_corte_academico = models.AutoField(primary_key=True)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
 
-# Clases (Tablas) relacionadas para estudiantes
-    
-class EstudianteCorte(models.Model):
-    id_estudiante_corte = models.AutoField(primary_key=True)
-    id_corte_academico = models.ForeignKey(CorteAcademico, on_delete=models.CASCADE, db_column='id_corte_academico')
-    id_perfil_pnf = models.ForeignKey(UsuarioAsignacion, on_delete=models.CASCADE, db_column='id_perfil_pnf')
-
+# ESTATICO
 class VerificacionCodigo(models.Model):
     id_codigo = models.AutoField(primary_key=True)
     cedula_identidad = models.CharField(max_length=12)
@@ -188,12 +121,12 @@ class VerificacionCodigo(models.Model):
     descripcion = models.CharField(max_length=100)
     fecha_expiracion = models.DateTimeField(null=True, blank=True)
 
-#
-
+# ESTATICO
 class PlanEspecial(models.Model):
     id_plan_especial = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=20)
 
+# ESTATICO
 class Autoridades(models.Model):
     id_autoridad = models.AutoField(primary_key=True)
     nombres = models.CharField(max_length=100)
@@ -203,13 +136,14 @@ class Autoridades(models.Model):
     cargo = models.CharField(max_length=100)
     resolucion = models.CharField(max_length=100, unique=True)
 
+# ESTATICO
 class Bitacora(models.Model):
     id_bitacora = models.AutoField(primary_key=True)
     nombre_usuario = models.CharField(max_length=50)
     fecha_hora = models.DateTimeField()
     accion = models.CharField(max_length=100)
 
-# Se elimino la relación con Trayecto
+# ESTATICO
 class Materia(models.Model):
     id_materia = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -219,19 +153,15 @@ class Materia(models.Model):
     recuperacion = models.CharField(max_length=100)
     id_pnf = models.ForeignKey(Pnf, models.CASCADE, db_column='id_pnf')
 
-class MateriaAsignada(models.Model):
-    id_materia_asignada = models.AutoField(primary_key=True)
-    id_materia = models.ForeignKey(Materia, models.CASCADE, db_column='id_materia')
-    id_asignacion = models.ForeignKey(UsuarioAsignacion, models.CASCADE, db_column='id_usuario')
-
-
+# ESTATICO
 class PeriodoAcademico(models.Model):
     id_periodo_academico = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
 
     def __str__(self):
         return self.nombre
-    
+
+# ESTATICO
 class CalendarioAcademico(models.Model):
     id_fecha_academica = models.AutoField(primary_key=True)
     periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.PROTECT)
@@ -239,10 +169,12 @@ class CalendarioAcademico(models.Model):
     fecha_final = models.DateField()
     activo = models.BooleanField(default=True) 
 
+# ESTATICO
 class PeriodoMateria(models.Model):
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
     periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.CASCADE)
 
+# ESTATICO
 class CalendarioMateria(models.Model):
     calendario = models.ForeignKey(CalendarioAcademico, on_delete=models.CASCADE)
     periodo_materia = models.ForeignKey(PeriodoMateria, on_delete=models.CASCADE)
@@ -255,7 +187,7 @@ class CalendarioMateria(models.Model):
             )
         ]
 
-# Se elimino la relación con Trayecto
+# ESTATICO
 class SeccionAcademica(models.Model):
     id_seccion = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
@@ -266,14 +198,7 @@ class SeccionAcademica(models.Model):
     seccion = models.CharField(max_length=5)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
-class SeccionEstudiante(models.Model):
-    id_seccion_estudiante = models.AutoField(primary_key=True)
-    id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE)
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    fecha_inicio = models.DateField()
-    fecha_final = models.DateField(null=True, blank=True)
-
-# Se elimino la relación con Trayecto
+# ESTATICO
 class HorarioAcademica(models.Model):
     id_horario = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
@@ -284,3 +209,63 @@ class HorarioAcademica(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     turno_academico = models.CharField(max_length=100)
     activo = models.BooleanField(default=True)
+
+# ESTATICO
+class ModeloDinamico(models.Model):
+    nombre_modelo = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.nombre_modelo}"
+    
+# ESTATICO
+class CampoModelo(models.Model):
+    modelo = models.ForeignKey(ModeloDinamico, on_delete=models.CASCADE, related_name="campos")
+    nombre = models.CharField(max_length=100)
+    tipo = models.CharField(
+        max_length=30,
+        choices=[
+            ("AutoField", "AutoField"),
+            ("CharField", "CharField"),
+            ("TextField", "TextField"),
+            ("EmailField", "EmailField"),
+            ("IntegerField", "IntegerField"),
+            ("PositiveIntegerField", "PositiveIntegerField"),
+            ("DecimalField", "DecimalField"),
+            ("FloatField", "FloatField"),
+            ("DateField", "DateField"),
+            ("DateTimeField", "DateTimeField"),
+            ("TimeField", "TimeField"),
+            ("BooleanField", "BooleanField"),
+            ("ForeignKey", "ForeignKey"),
+            ("OneToOneField", "OneToOneField"),
+            ("FileField", "FileField"),
+        ]
+    )
+    max_length = models.PositiveIntegerField(blank=True, null=True)
+    upload_to = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+    null = models.BooleanField(default=False)
+    blank = models.BooleanField(default=False)
+    unique = models.BooleanField(default=False)
+    primary_key = models.BooleanField(default=False)
+    relacion = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.tipo})"
+    
+# Reformular modelo
+# class UsuarioAsignacion(models.Model):
+#     id_asignacion = models.AutoField(primary_key=True)
+#     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+#     id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE)
+#     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
+#     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
+
+#     def __str__(self):
+#         pnf = self.id_pnf.pnf if self.id_pnf else "Sin PNF"
+#         nucleo = self.id_nucleo.municipio if self.id_nucleo else "Sin Núcleo"
+
+#         return f"{self.id_usuario.nombres} - {pnf} - {nucleo}"
