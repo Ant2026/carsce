@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
 from django.db.models import Q
 
-from inicio_sesion.models import Usuario, Perfiles, Contacto, Cuenta
+from inicio_sesion.models import Usuario, Contacto, Cuenta
 
 def panel_estudiantes(request):
     return render(request, 'Sesion/panel_estudiantes.html')
@@ -103,14 +103,14 @@ def registro_estudiantil(request):
 
         Contacto.objects.create(telefono_personal=telefono, correo_electronico=correo_electronico, id_usuario=nuevo_usuario)
 
-        perfil = Perfiles.objects.get(perfil="Estudiante")
-        if perfil is None:
-            return JsonResponse({
-                "title": "Exito",
-                "title": "Error",
-                "icon": "error",
-                "descripcion": "No existe el perfil Estudiante."
-            })
+        # perfil = Perfiles.objects.get(perfil="Estudiante")
+        # if perfil is None:
+        #     return JsonResponse({
+        #         "title": "Exito",
+        #         "title": "Error",
+        #         "icon": "error",
+        #         "descripcion": "No existe el perfil Estudiante."
+        #     })
 
         # CredencialesUsuario.objects.create(nombre_usuario=usuario, clave=make_password(password), id_asignacion=nuevo_asignacion)
 
@@ -152,7 +152,7 @@ def confirmar_registro_personal(request):
                 "descripcion": "El usuario no se encuentra registrado."
             })
 
-        perfil_estudiante = Perfiles.objects.get(perfil="Estudiante")
+        # perfil_estudiante = Perfiles.objects.get(perfil="Estudiante")
 
 
 
@@ -255,7 +255,7 @@ def buscar_personal_registrado(request):
     
         usuario = Usuario.objects.filter(cedula_identidad=cedula_identidad).first()
 
-        perfil_estudiante = Perfiles.objects.get(pk=5)
+        # perfil_estudiante = Perfiles.objects.get(pk=5)
 
 
         request.session['cedula_usuario'] = cedula_identidad
@@ -302,7 +302,7 @@ def credenciales_estudiante(request):
             
         usuario = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario")).first()
 
-        perfil_estudiante = Perfiles.objects.get(pk=5)
+        # perfil_estudiante = Perfiles.objects.get(pk=5)
       
         # CredencialesUsuario.objects.create(nombre_usuario=nombre_usuario, clave=password, id_asignacion=asignacion)
 

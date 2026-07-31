@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 
-from inicio_sesion.models import Usuario, Nucleos, Pnf, Contacto, PNFNucleo,  Nacimiento, Residencia, Perfiles
+from inicio_sesion.models import Usuario, Nucleos, Pnf, Contacto, PNFNucleo,  Nacimiento, Residencia
 
 import os
 from reportlab.platypus import Table, TableStyle

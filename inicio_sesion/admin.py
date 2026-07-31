@@ -2,9 +2,9 @@ from django.contrib import admin, messages
 from django.core.management import call_command
 from django.db import transaction
 
-from .forms import ModeloDinamicoAdminForm, CampoModeloAdminForm, UsuarioAdminForm,CredencialesUsuarioAdminForm, PNFNucleoAdminForm, PnfAdminForm, NucleoAdminForm, PerfilAdminForm, PeriodoAcademicoAdminForm
+from .forms import ModeloDinamicoAdminForm, CampoModeloAdminForm, UsuarioAdminForm,CredencialesUsuarioAdminForm, PNFNucleoAdminForm, PnfAdminForm, NucleoAdminForm
 
-from .models import Usuario, Contacto, Pnf, Nucleos, Perfiles, PNFNucleo, PeriodoAcademico, Cuenta, ModeloDinamico, CampoModelo
+from .models import Usuario, Contacto, Pnf, Nucleos, PNFNucleo, PeriodoAcademico, Cuenta, ModeloDinamico, CampoModelo
 
 from .utils.crear_tabla_dinamica import crear_tabla_dinamica, eliminar_tabla_dinamica
 
@@ -179,17 +179,17 @@ class PnfAdmin(admin.ModelAdmin):
 class NucleoAdmin(admin.ModelAdmin):
     form = NucleoAdminForm
 
-class PerfilAdmin(admin.ModelAdmin):
-    form = PerfilAdminForm
+# class PerfilAdmin(admin.ModelAdmin):
+#     form = PerfilAdminForm
 
-class PeriodoAcademicoAdmin(admin.ModelAdmin):
-    form = PeriodoAcademicoAdminForm
+# class PeriodoAcademicoAdmin(admin.ModelAdmin):
+#     form = PeriodoAcademicoAdminForm
 
-admin.site.register(PeriodoAcademico, PeriodoAcademicoAdmin)
+# admin.site.register(PeriodoAcademico, PeriodoAcademicoAdmin)
 admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(Pnf, PnfAdmin)
 admin.site.register(Nucleos, NucleoAdmin)
-admin.site.register(Perfiles, PerfilAdmin)
+# admin.site.register(Perfiles, PerfilAdmin)
 admin.site.register(Cuenta, CredencialesUsuarioAdmin)
 admin.site.register(PNFNucleo, PNFNucleoAdmin)
 admin.site.register(Contacto)

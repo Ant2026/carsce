@@ -1,5 +1,5 @@
 from django import forms
-from .models import Usuario, Contacto, Pnf, Nucleos, Perfiles, PNFNucleo, PeriodoAcademico, Cuenta, ModeloDinamico, CampoModelo
+from .models import Usuario, Contacto, Pnf, Nucleos, PNFNucleo, PeriodoAcademico, Cuenta, ModeloDinamico, CampoModelo
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 import re
@@ -480,33 +480,33 @@ class NucleoAdminForm(forms.ModelForm):
 
         return nombre
 
-class PerfilAdminForm(forms.ModelForm):
-    class Meta:
-        model = Perfiles
-        fields = "__all__"
+# class PerfilAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Perfiles
+#         fields = "__all__"
 
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre'].strip()
+#     def clean_nombre(self):
+#         nombre = self.cleaned_data['nombre'].strip()
 
-        if len(nombre) < 3:
-            raise forms.ValidationError(
-                "El nombre del perfil debe tener al menos 3 caracteres."
-            )
+#         if len(nombre) < 3:
+#             raise forms.ValidationError(
+#                 "El nombre del perfil debe tener al menos 3 caracteres."
+#             )
 
-        return nombre
+#         return nombre
 
-class PeriodoAcademicoAdminForm(forms.ModelForm):
-    class Meta:
-        model = Perfiles
-        fields = "__all__"
+# class PeriodoAcademicoAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Perfiles
+#         fields = "__all__"
 
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre'].strip()
+#     def clean_nombre(self):
+#         nombre = self.cleaned_data['nombre'].strip()
 
-        if len(nombre) < 3:
-            raise forms.ValidationError(
-                "El nombre del perfil debe tener al menos 3 caracteres."
-            )
+#         if len(nombre) < 3:
+#             raise forms.ValidationError(
+#                 "El nombre del perfil debe tener al menos 3 caracteres."
+#             )
 
-        return nombre
+#         return nombre
     

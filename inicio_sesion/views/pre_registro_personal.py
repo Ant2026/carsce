@@ -2,33 +2,33 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from inicio_sesion.models import Usuario, Perfiles, Nucleos, Contacto, PNFNucleo
+from inicio_sesion.models import Usuario, Nucleos, Contacto, PNFNucleo
 
 import json
 
 # Verificado
 def datos_registro(request):
     # Obtiene todos los perfiles excepto el perfil estudiante y director general
-    perfiles = Perfiles.objects.exclude(perfil__in=["Estudiante", "Director General"])
+    # perfiles = Perfiles.objects.exclude(perfil__in=["Estudiante", "Director General"])
 
     # Obtiene todos los nucleos registrados
     nucleos = Nucleos.objects.all()
 
     # Envia las dos lista con los perfiles filtrados y todos los nucleos
-    return JsonResponse({
-        "perfiles": list(
-            perfiles.values(
-                "id_pefil",
-                "perfil"
-            )
-        ),
-        "nucleos": list(
-            nucleos.values(
-                "id_nucleo",
-                "municipio"
-            )
-        )
-    })
+    # return JsonResponse({
+    #     "perfiles": list(
+    #         perfiles.values(
+    #             "id_pefil",
+    #             "perfil"
+    #         )
+    #     ),
+    #     "nucleos": list(
+    #         nucleos.values(
+    #             "id_nucleo",
+    #             "municipio"
+    #         )
+    #     )
+    # })
 
 # Verificado
 def validar_nucleos(request):
@@ -37,7 +37,7 @@ def validar_nucleos(request):
 
         perfil_id = data.get("id_perfil") # Obtiene solo el id del perfil
 
-        perfil = Perfiles.objects.get(pk=perfil_id) # Lo busca en la base de datos
+        # perfil = Perfiles.objects.get(pk=perfil_id) # Lo busca en la base de datos
 
         # Obtiene todos los nucleos registrados
         nucleos = Nucleos.objects.all()
@@ -78,7 +78,7 @@ def pnfs_nucleos(request):
         nucleo_id = data.get("id_nucleo") # Obtiene el núcleo seleccionado 
         perfil_id = data.get("id_perfil") # Obtiene el perfil seleccionado
 
-        perfil = Perfiles.objects.get(pk=perfil_id) # Busca el perfil a validar
+        # perfil = Perfiles.objects.get(pk=perfil_id) # Busca el perfil a validar
 
         # Busca los pnfs perteneciente al nucleo seleccionado, a través de la tabla intermedia
         pnfs = PNFNucleo.objects.filter(
@@ -154,51 +154,51 @@ def pre_registro_personal(request):
                     "icon": "warning"
                 })
             
-        perfiles = Perfiles.objects.filter(pk__in=perfiles_asignados)
+        # perfiles = Perfiles.objects.filter(pk__in=perfiles_asignados)
 
-        for perfil in perfiles:
-            if perfil.perfil == "Encargado de Control de Estudio":
-                if not nucleos_control:
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un núcleo para el perfil Encargado de Control de Estudio.",
-                        "icon": "warning"
-                    })
+        # for perfil in perfiles:
+        #     if perfil.perfil == "Encargado de Control de Estudio":
+        #         if not nucleos_control:
+        #             return JsonResponse({
+        #                 "estado": "fallo",
+        #                 "title": "Vacío",
+        #                 "descripcion": "Debe seleccionar al menos un núcleo para el perfil Encargado de Control de Estudio.",
+        #                 "icon": "warning"
+        #             })
 
-            elif perfil.perfil == "Coordinador de PNF":
-                if not nucleos_coordinador:
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un núcleo para el perfil Coordinador de PNF.",
-                        "icon": "warning"
-                    })
+        #     elif perfil.perfil == "Coordinador de PNF":
+        #         if not nucleos_coordinador:
+        #             return JsonResponse({
+        #                 "estado": "fallo",
+        #                 "title": "Vacío",
+        #                 "descripcion": "Debe seleccionar al menos un núcleo para el perfil Coordinador de PNF.",
+        #                 "icon": "warning"
+        #             })
 
-                if not pnfs_coordinador:
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un PNF para el perfil Coordinador de PNF.",
-                        "icon": "warning"
-                    })
+        #         if not pnfs_coordinador:
+        #             return JsonResponse({
+        #                 "estado": "fallo",
+        #                 "title": "Vacío",
+        #                 "descripcion": "Debe seleccionar al menos un PNF para el perfil Coordinador de PNF.",
+        #                 "icon": "warning"
+        #             })
 
-            elif perfil.perfil == "Docente":
-                if not nucleos_docente:
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un núcleo para el perfil Docente.",
-                        "icon": "warning"
-                    })
+        #     elif perfil.perfil == "Docente":
+        #         if not nucleos_docente:
+        #             return JsonResponse({
+        #                 "estado": "fallo",
+        #                 "title": "Vacío",
+        #                 "descripcion": "Debe seleccionar al menos un núcleo para el perfil Docente.",
+        #                 "icon": "warning"
+        #             })
 
-                if not pnfs_docente:
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un PNF para el perfil Docente.",
-                        "icon": "warning"
-                    })
+        #         if not pnfs_docente:
+        #             return JsonResponse({
+        #                 "estado": "fallo",
+        #                 "title": "Vacío",
+        #                 "descripcion": "Debe seleccionar al menos un PNF para el perfil Docente.",
+        #                 "icon": "warning"
+        #             })
 
         cedula_identidad = f"{nacionalidad}-{num_cedula}"
         correo_principal = f"{nombre_correo}{dominio}"

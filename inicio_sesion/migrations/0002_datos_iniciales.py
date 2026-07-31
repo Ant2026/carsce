@@ -17,14 +17,6 @@ NUCLEOS = [
     {"municipio": "Pedraza", "direccion": "Dirección Ciudad Bolivia"},
 ]
 
-PERFILES = [
-    {"perfil": "Director General"},
-    {"perfil": "Encargado de Control de Estudio"},
-    {"perfil": "Coordinador de PNF"},
-    {"perfil": "Docente"},
-    {"perfil": "Estudiante"},
-]
-
 PNF = [
     {"pnf": "PNF en Sistema e Informática", "codigo": "CARRE001", "periodo_academico": "Trimestre"},
     {"pnf": "PNF en Electrónica", "codigo": "CARRE002", "periodo_academico": "Trimestre"},
@@ -60,16 +52,10 @@ PNF_NUCLEO = [
 ]
 
 def crear_datos(apps, schema_editor):
-    Perfil = apps.get_model("inicio_sesion", "Perfiles")
     Nucleo = apps.get_model("inicio_sesion", "Nucleos")
     PeriodoAcademico = apps.get_model("inicio_sesion", "PeriodoAcademico")
     PNFNucleo = apps.get_model("inicio_sesion", "PNFNucleo")
     Pnf = apps.get_model("inicio_sesion", "Pnf")
-
-    for perfil in PERFILES:
-        Perfil.objects.get_or_create(
-            perfil=perfil["perfil"]
-        )
 
     for nucleo in NUCLEOS:
         Nucleo.objects.get_or_create(
@@ -108,15 +94,10 @@ def crear_datos(apps, schema_editor):
         )
 
 def eliminar_datos(apps, schema_editor):
-    Perfil = apps.get_model("inicio_sesion", "Perfiles")
     Nucleo = apps.get_model("inicio_sesion", "Nucleos")
     PeriodoAcademico = apps.get_model("inicio_sesion", "PeriodoAcademico")
     PNFNucleo = apps.get_model("inicio_sesion", "PNFNucleo")
     Pnf = apps.get_model("inicio_sesion", "Pnf")
-
-    Perfil.objects.filter(
-        perfil__in=[perfil["perfil"] for perfil in PERFILES]
-    ).delete()
 
     Nucleo.objects.filter(
         municipio__in=[nucleo["municipio"] for nucleo in NUCLEOS]

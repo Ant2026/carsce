@@ -78,14 +78,6 @@ class Nucleos(models.Model):
         return self.municipio
 
 # ESTATICO
-class Perfiles(models.Model):
-    id_pefil = models.AutoField(primary_key=True)
-    perfil = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.perfil
-
-# ESTATICO
 class PNFNucleo(models.Model):
     id_pnf_nucleo = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, db_column='id_nucleo')
@@ -256,16 +248,88 @@ class CampoModelo(models.Model):
     def __str__(self):
         return f"{self.nombre} ({self.tipo})"
     
-# Reformular modelo
-# class UsuarioAsignacion(models.Model):
-#     id_asignacion = models.AutoField(primary_key=True)
-#     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-#     id_perfil = models.ForeignKey(Perfiles, on_delete=models.CASCADE)
-#     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, null=True, blank=True)
-#     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE, null=True, blank=True)
+#ACTUALIZACION / PROPUESTA
 
-#     def __str__(self):
-#         pnf = self.id_pnf.pnf if self.id_pnf else "Sin PNF"
-#         nucleo = self.id_nucleo.municipio if self.id_nucleo else "Sin Núcleo"
+class RolAcademico(models.Model): # Modelo creado para no redundar en datos de 3 usuarios
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
+    pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE)
 
-#         return f"{self.id_usuario.nombres} - {pnf} - {nucleo}"
+    class Meta:
+        abstract = True
+
+class Estudiante(RolAcademico):
+    id_estudiante = models.AutoField(primary_key=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "nucleo", "pnf"],
+                name="uq_estudiante_usuario_nucleo_pnf"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.usuario}"
+
+
+class Docente(RolAcademico):
+    id_docente = models.AutoField(primary_key=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "nucleo", "pnf"],
+                name="uq_docente_usuario_nucleo_pnf"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.usuario}"
+
+
+class CoordinadorPNF(RolAcademico):
+    id_coordinador = models.AutoField(primary_key=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "nucleo", "pnf"],
+                name="uq_coordinadorpnf_usuario_nucleo_pnf"
+            )
+        ]
+    
+    def __str__(self):
+        return f"{self.usuario}"
+
+class ControlEstudio(models.Model):
+    id_control = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "nucleo"],
+                name="uq_control_usuario_nucleo"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.usuario}"
+
+
+class DirectorGeneral(models.Model):
+    id_director = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario"],
+                name="uq_director_usuario"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.usuario}"

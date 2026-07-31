@@ -163,6 +163,7 @@ def crear_tabla_dinamica(modelo_dinamico):
     print("TABLA CREADA:", nombre_tabla)
 
     return True
+
 def eliminar_tabla_dinamica(modelo_dinamico):
     nombre_tabla = (modelo_dinamico.nombre_modelo or "").strip()
 
