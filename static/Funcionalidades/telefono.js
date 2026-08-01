@@ -1,61 +1,62 @@
-document.addEventListener("DOMContentLoaded", function () {
-
-    const input_numerico_telefonico = document.getElementById("numero_telefonico");
-    const select_prefijo_telefonico = document.getElementById("prefijo_telefono");
+function configurarTelefono(inputTelefono, selectPrefijo) {
 
     const prefijos = ["0414", "0424", "0416", "0426", "0412", "0422"];
 
-    function prefijos_select() {
-        select_prefijo_telefonico.innerHTML = "<option value='' selected>TLF</option>";
-        input_numerico_telefonico.placeholder = "Número telefonico debe llevar 7 digitos";
+    function cargarPrefijos() {
+
+        selectPrefijo.innerHTML = "<option value='' selected>TLF</option>";
+
+        inputTelefono.placeholder = "Número telefónico debe llevar 7 dígitos";
 
         prefijos.forEach(prefijo => {
             const option = document.createElement("option");
-
             option.value = prefijo;
             option.textContent = prefijo;
-
-            select_prefijo_telefonico.appendChild(option);
-
+            selectPrefijo.appendChild(option);
         });
+
     }
 
-    prefijos_select();
+    selectPrefijo.addEventListener("change", function () {
+        inputTelefono.value = "";
 
-    select_prefijo_telefonico.addEventListener("change", function () {
-        input_numerico_telefonico.value = "";
-        input_numerico_telefonico.disabled = false;        
+        if (this.value === "") {
+            return;
+        }
+
+        inputTelefono.focus();
     });
 
-    input_numerico_telefonico.addEventListener("keydown", function (e) {
-        const caracter = e.key;
+    inputTelefono.addEventListener("keydown", function (e) {
+        const tecla = e.key;
 
-        const teclas_permitidas = [
+        const teclasPermitidas = [
             "Backspace",
+            "Delete",
             "ArrowLeft",
             "ArrowRight",
-            "Delete",
-            "Tab"
+            "Tab",
+            "Home",
+            "End"
         ];
 
-        if (teclas_permitidas.includes(caracter)) {
+        if (teclasPermitidas.includes(tecla)) {
             return;
         }
 
-        if (!/^\d$/.test(caracter)) {
+        if (!/^\d$/.test(tecla)) {
             e.preventDefault();
             return;
         }
 
-        if (input_numerico_telefonico.value.length >= 7) {
+        if (this.value.length >= 7) {
             e.preventDefault();
-            return;
         }
-
     });
 
-    input_numerico_telefonico.addEventListener("paste", function (e) {
+    inputTelefono.addEventListener("paste", function (e) {
         e.preventDefault();
     });
 
-});
+    cargarPrefijos();
+}

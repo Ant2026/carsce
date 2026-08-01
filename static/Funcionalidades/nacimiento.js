@@ -208,69 +208,13 @@ document.addEventListener("DOMContentLoaded", function () {
         "Zimbabue"
     ];
 
-    function cargarPaises() {
-        pais_nacimiento.innerHTML = "<option disabled selected hidden>Elija el País</option>";
-
-        paises.forEach(paises => {
-            const opcion = document.createElement("option");
-            opcion.value = paises;
-            opcion.textContent = paises;
-            pais_nacimiento.appendChild(opcion);
-        });
-    }
-    cargarPaises();
-
-    pais_nacimiento.addEventListener("change", function () {
-        let pais_seleccionado = pais_nacimiento.options[pais_nacimiento.selectedIndex];
-
-        let pais = pais_seleccionado.value;
-
-        if (pais !== "" && pais !== "Elije una opción") {
-
-            if (pais !== "Venezuela") {
-                estado_nacimiento.hidden = true;
-                municipio_nacimiento.hidden = true;
-                parroquia_nacimiento.hidden = true;
-
-                estado_nacimiento_nvzla.hidden = false;
-                municipio_nacimiento_nvzla.hidden = false;
-                parroquia_nacimiento_nvzla.hidden = false;
-
-                direccion_nacimiento.disabled = false;
-            } else {
-                estado_nacimiento.hidden = false;
-                municipio_nacimiento.hidden = false;
-                parroquia_nacimiento.hidden = false;
-
-                estado_nacimiento_nvzla.hidden = true;
-                municipio_nacimiento_nvzla.hidden = true;
-                parroquia_nacimiento_nvzla.hidden = true;
-
-                direccion_nacimiento.disabled = false;
-            }
-
-            estado_nacimiento.disabled = false;
-        }
-    });
-
-    const Estado = ["Amazonas", "Anzoátegui", "Apure", "Aragua", "Barinas", "Bolívar", "Carabobo", "Cojedes",
+    const Estado = [
+        "Amazonas", "Anzoátegui", "Apure", "Aragua", "Barinas", "Bolívar", "Carabobo", "Cojedes",
         "Delta Amacuro", "Distrito Capital", "Falcón", "Guárico", "Lara", "Mérida", "Miranda", "Monagas",
-        "Nueva Esparta", "Portuguesa", "Sucre", "Táchira", "Trujillo", "La Guaira", "Yaracuy", "Zulia", "Dependencias"];
+        "Nueva Esparta", "Portuguesa", "Sucre", "Táchira", "Trujillo", "La Guaira", "Yaracuy", "Zulia", "Dependencias"
+    ];
 
-    function cargarEstados() {
-        estado_nacimiento.innerHTML = "<option disabled selected hidden>Elije el Estado</option>";
-
-        Estado.forEach(estado => {
-            const opcion = document.createElement("option");
-            opcion.value = estado;
-            opcion.textContent = estado;
-            estado_nacimiento.appendChild(opcion);
-        });
-    }
-
-    cargarEstados();
-
-    /********************MUNICIPIO NACIMIENTO***********************/
+     /********************MUNICIPIO NACIMIENTO***********************/
 
     const municipiosPorEstado = {
         "Amazonas": [
@@ -381,28 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "Santa Rita", "Simón Bolívar", "Sucre", "Valmore Rodríguez"
         ]
     };
-
-    function cargarMunicipios() {
-        const estado = estado_nacimiento.value;
-
-        municipio_nacimiento.innerHTML = '<option disabled selected hidden>Elija el Municipio</option>';
-
-        if (estado && estado in municipiosPorEstado) {
-            municipiosPorEstado[estado].forEach(municipio => {
-                const option = document.createElement("option");
-                option.value = municipio;
-                option.textContent = municipio;
-                municipio_nacimiento.appendChild(option);
-            });
-            municipio_nacimiento.disabled = false;
-        } else {
-            municipio_nacimiento.disabled = true;
-        }
-    }
-    cargarMunicipios();
-
-    estado_nacimiento.addEventListener("change", cargarMunicipios);
-
 
     /********************PARROQUIA NACIMIENTO***********************/
 
@@ -727,34 +649,141 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    function cargarParroquias() {
+    function cargarPaises() {
+        pais_nacimiento.innerHTML = "<option disabled selected hidden>Elija el País</option>";
+
+        paises.forEach(pais => {
+            const opcion = document.createElement("option");
+            opcion.value = pais;
+            opcion.textContent = pais;
+            pais_nacimiento.appendChild(opcion);
+        });
+    }
+
+    cargarPaises();
+
+
+    // Selección de país
+    pais_nacimiento.addEventListener("change", () => {
+
+        const pais = pais_nacimiento.value;
+
+        // Limpiar controles inferiores
+        estado_nacimiento.innerHTML = "<option disabled selected hidden>Elija el Estado</option>";
+        municipio_nacimiento.innerHTML = "<option disabled selected hidden>Elija el Municipio</option>";
+        parroquia_nacimiento.innerHTML = "<option disabled selected hidden>Elija la Parroquia</option>";
+
+        estado_nacimiento.disabled = true;
+        municipio_nacimiento.disabled = true;
+        parroquia_nacimiento.disabled = true;
+
+        if (pais === "Venezuela") {
+
+            estado_nacimiento.hidden = false;
+            municipio_nacimiento.hidden = false;
+            parroquia_nacimiento.hidden = false;
+
+            estado_nacimiento_nvzla.hidden = true;
+            municipio_nacimiento_nvzla.hidden = true;
+            parroquia_nacimiento_nvzla.hidden = true;
+
+            cargarEstados();
+
+        } else {
+
+            estado_nacimiento.hidden = true;
+            municipio_nacimiento.hidden = true;
+            parroquia_nacimiento.hidden = true;
+
+            estado_nacimiento_nvzla.hidden = false;
+            municipio_nacimiento_nvzla.hidden = false;
+            parroquia_nacimiento_nvzla.hidden = false;
+        }
+
+    });
+
+
+    // Cargar estados
+    function cargarEstados() {
+
+        estado_nacimiento.innerHTML = "<option disabled selected hidden>Elija el Estado</option>";
+
+        Estado.forEach(estado => {
+
+            const opcion = document.createElement("option");
+            opcion.value = estado;
+            opcion.textContent = estado;
+
+            estado_nacimiento.appendChild(opcion);
+        });
+
+        estado_nacimiento.disabled = false;
+    }
+
+
+    // Selección de estado
+    estado_nacimiento.addEventListener("change", () => {
+
+        const estado = estado_nacimiento.value;
+
+        municipio_nacimiento.innerHTML = "<option disabled selected hidden>Elija el Municipio</option>";
+        parroquia_nacimiento.innerHTML = "<option disabled selected hidden>Elija la Parroquia</option>";
+
+        municipio_nacimiento.disabled = true;
+        parroquia_nacimiento.disabled = true;
+
+
+        if (estado && municipiosPorEstado[estado]) {
+
+            municipiosPorEstado[estado].forEach(municipio => {
+
+                const opcion = document.createElement("option");
+                opcion.value = municipio;
+                opcion.textContent = municipio;
+
+                municipio_nacimiento.appendChild(opcion);
+            });
+
+            municipio_nacimiento.disabled = false;
+        }
+
+    });
+
+
+    // Selección de municipio
+    municipio_nacimiento.addEventListener("change", () => {
         const estado = estado_nacimiento.value;
         const municipio = municipio_nacimiento.value;
 
-        parroquia_nacimiento.innerHTML = '<option disabled selected hidden>Elije una Parroquia</option>';
+        parroquia_nacimiento.innerHTML = "<option disabled selected hidden>Elija la Parroquia</option>";
+        parroquia_nacimiento.disabled = true;
 
-        if (estado && municipio && parroquiasPorMunicipio[estado] && parroquiasPorMunicipio[estado][municipio]) {
+        if (
+            estado &&
+            municipio &&
+            parroquiasPorMunicipio[estado] &&
+            parroquiasPorMunicipio[estado][municipio]
+        ) {
+
             parroquiasPorMunicipio[estado][municipio].forEach(parroquia => {
-                const option = document.createElement("option");
-                option.value = parroquia;
-                option.textContent = parroquia;
-                parroquia_nacimiento.appendChild(option);
+
+                const opcion = document.createElement("option");
+                opcion.value = parroquia;
+                opcion.textContent = parroquia;
+
+                parroquia_nacimiento.appendChild(opcion);
             });
 
             parroquia_nacimiento.disabled = false;
-            direccion.disabled = false;
-        } else {
-            parroquia_nacimiento.disabled = true;
-            direccion.disabled = true;
         }
 
-    }
-    cargarParroquias();
+    });
 
-    municipio_nacimiento.addEventListener("change", cargarParroquias);
 
-    estado_nacimiento.addEventListener("change", () => {
-        parroquia_nacimiento.innerHTML = '<option disabled selected hidden>Elije una Parroquia</option>';
-        parroquia_nacimiento.disabled = true;
+    parroquia_nacimiento.addEventListener("change", () => {
+        if (parroquia_nacimiento.value !== "") {
+            direccion.disabled = false;
+        }
+
     });
 });

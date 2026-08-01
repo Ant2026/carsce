@@ -1,49 +1,26 @@
-document.addEventListener("DOMContentLoaded", function () {
+function configurarCorreo(inputCorreo, selectDominio) {
 
-    const input_correo = document.getElementById("Correo");
-    const select_dominio_correo = document.getElementById("dominio");
+    if (!inputCorreo || !selectDominio) {
+        console.error("No existe el control del correo o dominio");
+        return;
+    }
 
-    input_correo.addEventListener("keydown", function (e) {
-        
-        let caracter = e.key;
+    const dominios = [
+        "@gmail.com",
+        "@outlook.com",
+        "@yahoo.com"
+    ];
 
-        let caracteres_denegado = [
-            "@", "com", "net", "edu", "gov", "org", "ve", "es", "ar", "mx",
-            " ", "(", ")", "[", "]", "{", "}", "<", ">", ",", ";", ":", "\\", "/",
-            "'", "\"", "|", "°", "¬", "¿", "?", "¡", "!", "#", "$", "%", "^", "&",
-            "*", "=", "+", "~", "`", "-", "´"
-        ];
+    const caracteresDenegados = [
+        "@", " ", "(", ")", "[", "]", "{", "}", "<", ">", ",", ";", ":",
+        "\\", "/", "'", "\"", "|", "°", "¬", "¿", "?", "¡", "!", "#",
+        "$", "%", "^", "&", "*", "=", "+", "~", "`", "-", "´"
+    ];
 
-        /* Bloquear caracteres no permitidos */
-        if (caracteres_denegado.includes(caracter)) {
+    function cargarDominios() {
 
-            e.preventDefault();
-            return;
-        }
-
-        if (caracter === "." && input_correo.value.includes(".")) {
-
-            e.preventDefault();
-            return;
-        }
-
-        if (caracter === "." && input_correo.value.length === 0) {
-
-            e.preventDefault();
-            return;
-        }
-
-    });
-
-    function DominioSelect() {
-        
-        const dominios = [
-            "@gmail.com",
-            "@outlook.com",
-            "@yahoo.com"
-        ];
-
-        select_dominio_correo.innerHTML = "<option value='' selected>DOMINIO</option>";
+        selectDominio.innerHTML =
+            "<option value='' selected>DOMINIO</option>";
 
         dominios.forEach(dominio => {
 
@@ -52,16 +29,53 @@ document.addEventListener("DOMContentLoaded", function () {
             option.value = dominio;
             option.textContent = dominio;
 
-            select_dominio_correo.appendChild(option);
+            selectDominio.appendChild(option);
 
         });
     }
 
-    DominioSelect();
+    inputCorreo.addEventListener("keydown", function (e) {
 
-    input_correo.addEventListener("paste", function (e) {
-        e.preventDefault();
-        return;
+        const tecla = e.key;
+
+        if (
+            [
+                "Backspace",
+                "Delete",
+                "Tab",
+                "ArrowLeft",
+                "ArrowRight",
+                "Home",
+                "End"
+            ].includes(tecla)
+        ) {
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9._]$/.test(tecla)) {
+            e.preventDefault();
+            return;
+        }
+
+        if (caracteresDenegados.includes(tecla)) {
+            e.preventDefault();
+            return;
+        }
+
+        if (tecla === "." && this.value.includes(".")) {
+            e.preventDefault();
+            return;
+        }
+
+        if (tecla === "." && this.value.length === 0) {
+            e.preventDefault();
+        }
+
     });
 
-});
+    inputCorreo.addEventListener("paste", function (e) {
+        e.preventDefault();
+    });
+
+    cargarDominios();
+}

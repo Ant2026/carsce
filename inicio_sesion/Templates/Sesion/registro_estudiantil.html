@@ -25,14 +25,14 @@
                 {% csrf_token %}
                 <h3>Registro Estudiante</h3>
                 
-                <label for="nombre">Nombres:</label>
+                <label for="nombres">Nombres:</label>
                 <div class="grupo-campo">
-                    <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese nombres completos" required>
+                    <input type="text" name="nombres" id="nombres" autocomplete="off" placeholder="Ingrese nombres completos">
                 </div>
                 
-                <label for="apellido">Apellidos:</label>
+                <label for="apellidos">Apellidos:</label>
                 <div class="grupo-campo">
-                    <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese apellidos completos" required>
+                    <input type="text" name="apellidos" id="apellidos" autocomplete="off" placeholder="Ingrese apellidos completos">
                 </div>
                 
                 <label for="cedula_identidad">Cedula Identidad:</label>
@@ -42,13 +42,13 @@
                         <option value="V">V</option>
                         <option value="E">E</option>
                     </select>
-                    <input type="text" name="cedula_identidad" id="cedula_identidad" class="cedula_identidad" autocomplete="off" required>
+                    <input type="text" name="cedula_identidad" id="cedula_identidad" class="cedula_identidad" autocomplete="off">
                 </div>
                 <small id="mensaje_cedula_identidad"></small>
 
-                <label for="Correo">Correo Electrónico (Principal):</label>
+                <label for="correo_electronico">Correo Electrónico (Principal):</label>
                 <div class="grupo-campo">
-                    <input type="text" name="correo_electronico" id="Correo" class="correo" maxlength="30" placeholder="Correo Electronico (30 caracteres maximo)" autocomplete="off" required>
+                    <input type="text" name="correo_electronico" id="correo_electronico" class="correo" maxlength="30" placeholder="Correo Electronico (30 caracteres maximo)" autocomplete="off">
                     <select name="dominio" id="dominio" class="dominio"></select>
                 </div>
                 <small id="mensaje_correo_electronico"></small>
@@ -56,18 +56,18 @@
                 <label for="numero_telefonico">Telefono (Principal):</label>
                 <div class="grupo-campo">
                     <select name="prefijo" id="prefijo_telefono" class="prefijo"></select>
-                    <input type="text" name="telefono" id="numero_telefonico" autocomplete="off" disabled required>
+                    <input type="text" name="telefono" id="numero_telefonico" autocomplete="off">
                 </div>
 
                 <label for="nombre_usuario">Nombre Usuario:</label>
                 <div class="grupo-campo">
-                    <input type="text" name="usuario" id="nombre_usuario" autocomplete="off" maxlength="10" placeholder="Nombre de Usuario (4-10 caracteres maximo)" required>
+                    <input type="text" name="usuario" id="nombre_usuario" autocomplete="off" maxlength="10" placeholder="Nombre de Usuario (4-10 caracteres maximo)">
                 </div>
                 <small id="mensaje_nombre_usuario"></small>
 
                 <label for="password">Contraseña:</label>
                 <div class="contrasenia grupo-campo">
-                    <input type="password" name="password" id="password" autocomplete="off" maxlength="10" placeholder="Contraseña (4-10 caracteres maximo)" required>
+                    <input type="password" name="password" id="password" autocomplete="off" maxlength="10" placeholder="Contraseña (4-10 caracteres maximo)">
                     <input type="checkbox" id="oculta_aparecer">
                     <label class="icon-eye-off eye_off" for="oculta_aparecer"></label>
                     <label class="icon-eye eye_on" for="oculta_aparecer"></label>

@@ -15,7 +15,7 @@
             <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese los nombres">
 
             <label for="apellido">Apellidos:</label>
-            <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese el apellido parteno y materno">
+            <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese los apellidos">
 
             <label for="cedula_identidad">Cedula Identidad:</label>
             <div class="grupo-campo">
@@ -28,31 +28,22 @@
             </div>
             <small id="mensaje_cedula_identidad"></small>
 
-            <label for="Correo">Correo Electrónico (Principal):</label>
+            <label for="correo_electronico">Correo Electrónico (Principal):</label>
             <div class="grupo-campo">
-                <input type="text" name="correo_electronico" id="Correo" autocomplete="off">
+                <input type="text" name="correo_electronico" id="correo_electronico" placeholder="Ejemplo: ejemplo123" autocomplete="off">
                 <select name="dominio" id="dominio"></select>
             </div>
+            <small id="mensaje_correo_electronico"></small>
 
             <label for="numero_telefonico">Telefono (Principal):</label>
             <div class="grupo-campo">
                 <select name="prefijo" id="prefijo_telefono"></select>
-                <input type="text" name="telefono" id="numero_telefonico" autocomplete="off" disabled>
+                <input type="text" name="telefono" id="numero_telefonico" autocomplete="off">
             </div>
 
             <div id="contenedor_perfiles">
                 <label>Perfiles:</label>
                 <div id="perfil"></div>
-            </div>
-            
-            <div id="contenedor_gaceta">
-                <label for="gaceta_oficial">Gaceta Oficial:</label>
-                <input type="text" name="gaceta_oficial" id="gaceta_oficial" autocomplete="off" placeholder="Ingrese el numero de gaceta oficial">
-            </div>
-
-            <div id="contenedor_fecha_gaceta">
-                <label for="fecha_gaceta">Fecha Gaceta:</label>
-                <input type="date" name="fecha_gaceta" id="fecha_gaceta">
             </div>
 
             <div id="contenedor_nucleos_encargado_control_estudios">

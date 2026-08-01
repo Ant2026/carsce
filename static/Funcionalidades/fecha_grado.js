@@ -1,8 +1,5 @@
-flatpickr("#fecha_grado", {
-    dateFormat: "Y-m-d",
-    enable: [
-        function(date) {
-            return date.getDate() === 15 && date.getMonth() === 6;
-        }
-    ]
-});
+function configurarFechaGrado(inputFecha, edadMinima) {
+    const anio = new Date().getFullYear() - edadMinima;
+
+    inputFecha.max = `${anio}-12-31`;
+}

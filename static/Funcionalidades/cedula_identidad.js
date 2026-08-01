@@ -1,35 +1,38 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const campo_cedula = document.getElementById("cedula_identidad");
-    const select_nacionalidad = document.getElementById("nacionalidad");
+function configurarCedula(selectNacionalidad, campoCedula) {
 
-    function longitud_identidad() {
-        const nacionalidad = select_nacionalidad.value;
+    function longitudIdentidad() {
+        const nacionalidad = selectNacionalidad.value;
 
-        campo_cedula.value = "";
+        campoCedula.value = "";
+
         if (nacionalidad === "") {
-            campo_cedula.disabled = true;
-            campo_cedula.placeholder = "Seleccione nacionalidad";
+            campoCedula.disabled = true;
+            campoCedula.placeholder = "Seleccione nacionalidad";
             return;
         }
 
-        campo_cedula.disabled = false;
+        campoCedula.disabled = false;
+
         switch (nacionalidad) {
             case "V":
-                campo_cedula.maxLength = 8;
-                campo_cedula.minLength = 7;
-                campo_cedula.placeholder = "Cédula de Identidad (7-8)";
+                campoCedula.maxLength = 8;
+                campoCedula.minLength = 7;
+                campoCedula.placeholder = "Cédula de Identidad (7-8)";
                 break;
+
             case "E":
-                campo_cedula.maxLength = 10;
-                campo_cedula.minLength = 8;
-                campo_cedula.placeholder = "Pasaporte/DNI (8-10)";
+                campoCedula.maxLength = 10;
+                campoCedula.minLength = 8;
+                campoCedula.placeholder = "Pasaporte/DNI (8-10)";
                 break;
         }
     }
-    campo_cedula.addEventListener("input", function () {
+
+    campoCedula.addEventListener("input", function () {
         this.value = this.value.replace(/\D/g, "");
     });
-    select_nacionalidad.addEventListener("change", longitud_identidad);
 
-    longitud_identidad();
-});
+    selectNacionalidad.addEventListener("change", longitudIdentidad);
+
+    longitudIdentidad();
+}

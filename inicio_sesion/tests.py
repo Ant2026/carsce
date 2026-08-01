@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from inicio_sesion.models import Contacto, Usuario, VerificacionCodigo
 
-
 class RecuperarUsuarioTests(TestCase):
     def test_recuperar_usuario_without_credentials_redirects(self):
         usuario = Usuario.objects.create(

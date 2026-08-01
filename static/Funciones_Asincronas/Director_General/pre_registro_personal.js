@@ -5,8 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const select_nacionalidad = document.getElementById("nacionalidad");
     const small_mensaje_cedula_identidad = document.getElementById("mensaje_cedula_identidad");
 
+    const input_correo_electronico = document.getElementById("correo_electronico");
+    const select_dominio = document.getElementById("dominio");
+    const small_mensaje_correo_electronico = document.getElementById("mensaje_correo_electronico");
+
+    const input_telefono = document.getElementById("numero_telefonico");
+    const select_prefijo = document.getElementById("prefijo_telefono");
+
     const btn_registro = document.getElementById("btn_registro");
   
+    configurarCedula(select_nacionalidad, input_cedula_identidad);
+    configurarCorreo(input_correo_electronico, select_dominio);
+    configurarTelefono(input_telefono, select_prefijo);
+
     async function validarCedula(selectNacionalidad, inputCedula, mensaje) {
         const nacionalidad = selectNacionalidad.value;
         const cedula = inputCedula.value.trim();
@@ -19,15 +30,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const valida = (nacionalidad === "V" && cedula.length >= 7 && cedula.length <= 8) || (nacionalidad === "E" && cedula.length >= 8 && cedula.length <= 10);
-        if (!valida) return;
-
         try {
             const formulario = new FormData();
             formulario.append("nacionalidad", nacionalidad);
             formulario.append("cedula", cedula);
 
-            const respuesta = await fetch("/verificar_cedula_representante/", {
+            const respuesta = await fetch("/validar_ci_usr/", {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
@@ -76,19 +84,68 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
+    async function validar_correos(correo, dominio, msg) {
+        try {
+            const formulario = new FormData();
+            formulario.append("correo", correo.value);
+            formulario.append("dominio", dominio.value);
+
+            const respuesta = await fetch("/validar_email/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: formulario
+            });
+            const resultado = await respuesta.json();
+            console.log(resultado);
+
+            if (resultado.existe) {
+                correo.setCustomValidity("Ya existe un usuario con este correo electrónico.");
+                correo.classList.add("is-invalid");
+                correo.classList.remove("is-valid");
+
+                msg.textContent = "Ya existe un usuario con este correo electrónico.";
+                msg.style.color = "#dc3545";
+
+                btn_registro.disabled = true;
+            } else {
+                correo.setCustomValidity("");
+                correo.classList.add("is-valid");
+                correo.classList.remove("is-invalid");
+
+                msg.textContent = "El correo electrónico está disponible.";
+                msg.style.color = "#198754";
+
+                btn_registro.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    input_correo_electronico.addEventListener("input", async () => {
+        validar_correos(input_correo_electronico, select_dominio, small_mensaje_correo_electronico);
+    });
+
+    select_dominio.addEventListener("change", async () => {
+        validar_correos(input_correo_electronico, select_dominio, small_mensaje_correo_electronico);
+    });
+
+
     formulario_registrar.addEventListener("submit", async function(e) {
         e.preventDefault();
         try {
             const formulario = new FormData(formulario_registrar);
 
-            const respuesta = await fetch("/pre_registro_personal/", {
+            const respuesta = await fetch("/pre_reg_personal/", {
                 method: "POST",
                 body: formulario
             });
             const resultado = await respuesta.json();
             console.log(resultado);
             
-            Swal.fire({
+            await Swal.fire({
                 title: resultado.title,
                 text: resultado.descripcion,
                 icon: resultado.icon,

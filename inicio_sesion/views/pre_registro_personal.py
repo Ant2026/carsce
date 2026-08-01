@@ -2,119 +2,105 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from inicio_sesion.models import Usuario, Nucleos, Contacto, PNFNucleo
+from inicio_sesion.models import Usuario, Nucleos, Contacto, PNFNucleo, Docente, CoordinadorPNF, ControlEstudio
 
 import json
 
-# Verificado
-def datos_registro(request):
-    # Obtiene todos los perfiles excepto el perfil estudiante y director general
-    # perfiles = Perfiles.objects.exclude(perfil__in=["Estudiante", "Director General"])
+PERFILES = {
+    "1": "Coordinador PNF",
+    "2": "Control de Estudio",
+    "3": "Docente"
+}
 
-    # Obtiene todos los nucleos registrados
-    nucleos = Nucleos.objects.all()
+def datos_perfiles(request):
+    perfiles = [
+        {
+            "id_perfil": 1,
+            "perfil": "Coordinador PNF"
+        },
+        {
+            "id_perfil": 2,
+            "perfil": "Control de Estudio"
+        },
+        {
+            "id_perfil": 3,
+            "perfil": "Docente"
+        }
+    ]
 
-    # Envia las dos lista con los perfiles filtrados y todos los nucleos
-    # return JsonResponse({
-    #     "perfiles": list(
-    #         perfiles.values(
-    #             "id_pefil",
-    #             "perfil"
-    #         )
-    #     ),
-    #     "nucleos": list(
-    #         nucleos.values(
-    #             "id_nucleo",
-    #             "municipio"
-    #         )
-    #     )
-    # })
+    nucleos = Nucleos.objects.values(
+        "id_nucleo",
+        "municipio"
+    )
 
-# Verificado
-def validar_nucleos(request):
-    if request.method == "POST": # Recibe la petición POST desde el frontend
-        data = json.loads(request.body) # Convierte los datos obtenidos en un diccionario
+    return JsonResponse({
+        "perfiles": perfiles,
+        "nucleos": list(nucleos)
+    })
 
-        perfil_id = data.get("id_perfil") # Obtiene solo el id del perfil
+def nucleos_disp(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        perfil = data.get("perfil")  # "Control de Estudio", "Docente", etc.
 
-        # perfil = Perfiles.objects.get(pk=perfil_id) # Lo busca en la base de datos
-
-        # Obtiene todos los nucleos registrados
         nucleos = Nucleos.objects.all()
 
-        # Solo va a validar el perfil de Encargado de control de estudio
-        # if perfil.perfil == "Encargado de Control de Estudio":
+        if perfil == "Control de Estudio":
+            nucleos_ocupados = ControlEstudio.objects.values_list(
+                "nucleo_id",
+                flat=True
+            )
 
-            # Obtiene todos los núcleos asignados
-            # Con el parametro flat cambia la lista de id que viene en tuplas a listas
-            # nucleos_ocupados = UsuarioAsignacion.objects.filter(
-            #     id_perfil__perfil="Encargado de Control de Estudio"
-            # ).values_list(
-            #     "id_nucleo_id",
-            #     flat=True
-            # )
+            nucleos = nucleos.exclude(
+                id_nucleo__in=nucleos_ocupados
+            )
 
-            # Excluye los registrados, porque el operador _in espera una secuencia de valores
-            # nucleos = nucleos.exclude(
-            #     id_nucleo__in=nucleos_ocupados
-            # )
+        return JsonResponse({
+            "nucleos": list(
+                nucleos.values(
+                    "id_nucleo",
+                    "municipio"
+                )
+            )
+        })
 
-        # Envia a la vista la lista de los nucleos que aun no han sido asignado
-        # resultado = list(
-        #     nucleos.values(
-        #         "id_nucleo",
-        #         "municipio"
-        #     )
-        # )
+def pnfs_disp(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
 
-        # Envia las listas filtradas
-        # return JsonResponse({"nucleos": resultado})
+        nucleo_id = data.get("id_nucleo")
+        perfil = data.get("perfil")
 
-# Verificado
-def pnfs_nucleos(request):
-    if request.method == "POST": # Solo acepta peticiones POST
-        data = json.loads(request.body) # Convierte la petición en un diccionario
-
-        nucleo_id = data.get("id_nucleo") # Obtiene el núcleo seleccionado 
-        perfil_id = data.get("id_perfil") # Obtiene el perfil seleccionado
-
-        # perfil = Perfiles.objects.get(pk=perfil_id) # Busca el perfil a validar
-
-        # Busca los pnfs perteneciente al nucleo seleccionado, a través de la tabla intermedia
         pnfs = PNFNucleo.objects.filter(
             id_nucleo_id=nucleo_id
-        ).select_related("id_pnf") # Aprovecha la petición para buscar los datos de los pnfs
+        ).select_related("id_pnf")
 
-        # Solo para Coordinador de PNF se excluyen los PNF ya asignados
-        # if perfil.perfil == "Coordinador de PNF":
+        if perfil == "Coordinador PNF":
 
-            # Busca los pnfs ya registrados, especificando el perfil del Coordinador
-            # Utiliza el operador flat para convertir la lista de tuplas a una lista
-            # Con valores continuo
-            # pnfs_ocupados = UsuarioAsignacion.objects.filter(
-            #     id_perfil=perfil,
-            #     id_nucleo_id=nucleo_id
-            # ).values_list(
-            #     "id_pnf_id",
-            #     flat=True
-            # )
+            pnfs_ocupados = CoordinadorPNF.objects.filter(
+                nucleo_id=nucleo_id
+            ).values_list(
+                "pnf_id",
+                flat=True
+            )
 
-            # Aquí excluye los registrados
-            # pnfs = pnfs.exclude(id_pnf_id__in=pnfs_ocupados)
+            pnfs = pnfs.exclude(
+                id_pnf_id__in=pnfs_ocupados
+            )
 
-        # Convierte los datos a una lista de diccionario
-        # resultado = []
-        # for item in pnfs:
-        #     resultado.append({
-        #         "id_pnf": item.id_pnf.id_pnf,
-        #         "pnf": item.id_pnf.pnf
-        #     })
+        resultado = [
+            {
+                "id_pnf": item.id_pnf.id_pnf,
+                "pnf": item.id_pnf.pnf
+            }
+            for item in pnfs
+        ]
 
-        # Obtiene los pnfs filtados
-        # return JsonResponse({ "pnfs": resultado })
+        return JsonResponse({
+            "pnfs": resultado
+        })
 
-# Verificado
-def pre_registro_personal(request):
+def pre_reg_personal(request):
     if request.method == "POST":
         nombres = request.POST.get("nombres")
         apellidos = request.POST.get("apellidos")
@@ -154,51 +140,56 @@ def pre_registro_personal(request):
                     "icon": "warning"
                 })
             
-        # perfiles = Perfiles.objects.filter(pk__in=perfiles_asignados)
+        for perfil_id in perfiles_asignados:
 
-        # for perfil in perfiles:
-        #     if perfil.perfil == "Encargado de Control de Estudio":
-        #         if not nucleos_control:
-        #             return JsonResponse({
-        #                 "estado": "fallo",
-        #                 "title": "Vacío",
-        #                 "descripcion": "Debe seleccionar al menos un núcleo para el perfil Encargado de Control de Estudio.",
-        #                 "icon": "warning"
-        #             })
+            perfil = PERFILES.get(perfil_id)
 
-        #     elif perfil.perfil == "Coordinador de PNF":
-        #         if not nucleos_coordinador:
-        #             return JsonResponse({
-        #                 "estado": "fallo",
-        #                 "title": "Vacío",
-        #                 "descripcion": "Debe seleccionar al menos un núcleo para el perfil Coordinador de PNF.",
-        #                 "icon": "warning"
-        #             })
+            if perfil == "Control de Estudio":
 
-        #         if not pnfs_coordinador:
-        #             return JsonResponse({
-        #                 "estado": "fallo",
-        #                 "title": "Vacío",
-        #                 "descripcion": "Debe seleccionar al menos un PNF para el perfil Coordinador de PNF.",
-        #                 "icon": "warning"
-        #             })
+                if not nucleos_control:
+                    return JsonResponse({
+                        "estado": "fallo",
+                        "title": "Vacío",
+                        "descripcion": "Debe seleccionar al menos un núcleo para el perfil Control de Estudio.",
+                        "icon": "warning"
+                    })
 
-        #     elif perfil.perfil == "Docente":
-        #         if not nucleos_docente:
-        #             return JsonResponse({
-        #                 "estado": "fallo",
-        #                 "title": "Vacío",
-        #                 "descripcion": "Debe seleccionar al menos un núcleo para el perfil Docente.",
-        #                 "icon": "warning"
-        #             })
 
-        #         if not pnfs_docente:
-        #             return JsonResponse({
-        #                 "estado": "fallo",
-        #                 "title": "Vacío",
-        #                 "descripcion": "Debe seleccionar al menos un PNF para el perfil Docente.",
-        #                 "icon": "warning"
-        #             })
+            elif perfil == "Coordinador PNF":
+
+                if not nucleos_coordinador:
+                    return JsonResponse({
+                        "estado": "fallo",
+                        "title": "Vacío",
+                        "descripcion": "Debe seleccionar al menos un núcleo para el perfil Coordinador PNF.",
+                        "icon": "warning"
+                    })
+
+                if not pnfs_coordinador:
+                    return JsonResponse({
+                        "estado": "fallo",
+                        "title": "Vacío",
+                        "descripcion": "Debe seleccionar al menos un PNF para el perfil Coordinador PNF.",
+                        "icon": "warning"
+                    })
+
+            elif perfil == "Docente":
+
+                if not nucleos_docente:
+                    return JsonResponse({
+                        "estado": "fallo",
+                        "title": "Vacío",
+                        "descripcion": "Debe seleccionar al menos un núcleo para el perfil Docente.",
+                        "icon": "warning"
+                    })
+
+                if not pnfs_docente:
+                    return JsonResponse({
+                        "estado": "fallo",
+                        "title": "Vacío",
+                        "descripcion": "Debe seleccionar al menos un PNF para el perfil Docente.",
+                        "icon": "warning"
+                    })
 
         cedula_identidad = f"{nacionalidad}-{num_cedula}"
         correo_principal = f"{nombre_correo}{dominio}"
@@ -209,44 +200,48 @@ def pre_registro_personal(request):
 
             Contacto.objects.create(correo_electronico=correo_principal, telefono_personal=telefono_principal, id_usuario=usuario)
 
-            # for perfil_id in perfiles_asignados:
-            #     perfil = Perfiles.objects.get(pk=perfil_id)
+            # Control de Estudio
+            if nucleos_control:
+                for nucleo_id in nucleos_control:
+                    ControlEstudio.objects.create(
+                        usuario=usuario,
+                        nucleo_id=nucleo_id
+                    )
+            # Coordinador PNF
+            if nucleos_coordinador:
+                for nucleo_id, pnf_id in zip(nucleos_coordinador, pnfs_coordinador):
 
-            #     if perfil.perfil == "Encargado de Control de Estudio":
-            #         for nucleo_id in nucleos_control:
-            #             UsuarioAsignacion.objects.create(id_usuario=usuario, id_perfil=perfil, id_nucleo_id=nucleo_id)
+                    if PNFNucleo.objects.filter(
+                        id_nucleo_id=nucleo_id,
+                        id_pnf_id=pnf_id
+                    ).exists():
 
-            #     elif perfil.perfil == "Coordinador de PNF":
-            #         for nucleo_id in nucleos_coordinador:
-            #             for pnf_id in pnfs_coordinador:
-            #                 existe = PNFNucleo.objects.filter(
-            #                     id_nucleo_id=nucleo_id,
-            #                     id_pnf_id=pnf_id
-            #                 ).exists()
+                        CoordinadorPNF.objects.create(
+                            usuario=usuario,
+                            nucleo_id=nucleo_id,
+                            pnf_id=pnf_id
+                        )
 
-            #                 if existe:
-            #                     UsuarioAsignacion.objects.create(id_usuario=usuario, id_perfil=perfil, id_nucleo_id=nucleo_id, id_pnf_id=pnf_id)
+            # Docente
+            if nucleos_docente:
+                for nucleo_id, pnf_id in zip(nucleos_docente, pnfs_docente):
 
-                # elif perfil.perfil == "Docente":
-                #     for nucleo_id in nucleos_docente:
-                #         for pnf_id in pnfs_docente:
-                #             existe = PNFNucleo.objects.filter(
-                #                 id_nucleo_id=nucleo_id,
-                #                 id_pnf_id=pnf_id
-                #             ).exists()
+                    if PNFNucleo.objects.filter(
+                        id_nucleo_id=nucleo_id,
+                        id_pnf_id=pnf_id
+                    ).exists():
 
-                #             if existe:
-                #                 UsuarioAsignacion.objects.create(
-                #                     id_usuario=usuario,
-                #                     id_perfil=perfil,
-                #                     id_nucleo_id=nucleo_id,
-                #                     id_pnf_id=pnf_id
-                #                 )
+                        Docente.objects.create(
+                            usuario=usuario,
+                            nucleo_id=nucleo_id,
+                            pnf_id=pnf_id
+                        )
+
         return JsonResponse({
             "estado": "exito",
             "icon": "success",
             "title": "Exito",
-            "descripcion": "Se registró exitosamente."
+            "descripcion": "Los datos del usuario se registraron exitosamente."
         })
     
     return render(request, 'Director_General/pre_registro_personal.html')

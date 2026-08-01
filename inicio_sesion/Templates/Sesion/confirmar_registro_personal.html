@@ -47,15 +47,18 @@
 
                 <label for="nombre_usuario" id="label_nombre_usuario" hidden>Ingrese el nombre de usuario</label>   
                 <input type="text" name="nombre_usuario" autocomplete="off" id="nombre_usuario" hidden>   
+                <small id="mensaje_nombre_usuario"></small>
+                
                 <div class="input-group password-group">
-                    <label for="password" id="label_password" hidden>Ingrese la contraseña</label>
+                    <label for="password" id="label_contrasenia" hidden>Ingrese la contraseña</label>
                     <input type="password" name="password_usuario" autocomplete="off" id="password" hidden>
                     <input type="checkbox" id="oculta_aparecer">
-                    <label class="icon-eye-off eye_off" for="oculta_aparecer" hidden></label>
-                    <label class="icon-eye eye_on" for="oculta_aparecer" hidden></label>
+                    <label class="icon-eye-off eye_off" id="ocultar_password" for="oculta_aparecer" hidden></label>
+                    <label class="icon-eye eye_on" id="mostrar_password" for="oculta_aparecer" hidden></label>
                 </div>
+                <small id="mensaje_password"></small>
                 
-                <input type="submit" id="guardar_credenciales" value="Guardar" hidden>
+                <input type="submit" id="btn_registro" value="Guardar" hidden>
             </form>
         </div>
     </div>
