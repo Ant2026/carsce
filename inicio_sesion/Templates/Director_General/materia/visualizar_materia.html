@@ -1,0 +1,28 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_materias">
+    <div class="contenedor_modulo_materias">
+        <h3>Materias UPT "José Félix Ribas"</h3>
+
+        <h4>Actuailizar Materias</h4>
+
+        <form method="post" id="buscar_materia">
+            {% csrf_token %}
+
+            <div class="campo_busqueda">
+                <label for="buscar_pnf">P.N.F:</label>
+                <select name="buscarpnf" id="buscar_pnf"></select>
+            </div>
+        </form>
+
+        <div id="contenedor_tablas_materia"></div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/Materia/visualizar_materia.js' %}"></script>
+
+{% endblock %}

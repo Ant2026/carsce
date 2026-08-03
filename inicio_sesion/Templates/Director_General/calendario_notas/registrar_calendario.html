@@ -1,0 +1,48 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_calendario">
+    <div class="contenedor_modulo_calendario">
+        <h3>Calendario Notas Académicas UPT "José Félix Ribas"</h3>
+
+        <div class="contenedor_registrar_calendario">
+            <h4>Registrar Calendario Notas Académicas</h4>
+
+            <form method="post" id="registrar_calendario">
+                {% csrf_token %}
+                <label for="fecha_Inicial_Trimestral">Inicial Trimestral:</label>
+                <input type="date" name="fechainicialtrimestral" id="fecha_Inicial_Trimestral">
+                
+                <label for="fecha_Inicial_Semestral">Inicial Semestral:</label>
+                <input type="date" name="fechainicialsemestral" id="fecha_Inicial_Semestral">
+                
+                <label for="fecha_Reparacion">Reparación:</label>
+                <input type="date" name="fechareparacion" id="fecha_Reparacion">
+                
+                <label for="fecha_TramoI">Tramo I:</label>
+                <input type="date" name="fechatramoI" id="fecha_TramoI">
+                
+                <label for="fecha_TramoII">Tramos II:</label>
+                <input type="date" name="fechatramoII" id="fecha_TramoII">
+                
+                <label for="fecha_TramoIII">Tramos III:</label>
+                <input type="date" name="fechatramoIII" id="fecha_TramoIII">
+                
+                <label for="fecha_SemestreI">Semestre I:</label>
+                <input type="date" name="fechasemestreI" id="fecha_SemestreI">
+                
+                <label for="fecha_SemestreII">Semestre II:</label>
+                <input type="date" name="fechasemestreII" id="fecha_SemestreII">
+
+                <input type="submit" value="Registrar Calendario Académcia">
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/Calendario_Notas/registrar_calendario.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="pnfs_registrado">
+    <div class="contenedor_pnfs_registrado">
+        <h3>Programa Nacional de Formación</h3>
+
+        <div id="tabla_pnfs">
+            <h4>PNFs Registrados</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>PNF</th>
+                        <th>Código</th>
+                        <th>PERIODO ACADEMICO</th>
+                    </tr>
+                </thead>
+                <tbody id="pnfs_registrados">
+                    <!-- Los datos de los PNFs se cargarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
+         </div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/PNF/visualizar_pnf.js' %}"></script>
+
+{% endblock %}

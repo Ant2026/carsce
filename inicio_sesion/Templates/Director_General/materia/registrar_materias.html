@@ -1,0 +1,78 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_materias">
+    <div class="contenedor_modulo_materias">
+        <h3>Materias UPT "José Félix Ribas"</h3>
+
+        <h4>Registrar Materia</h4>
+
+        <form method="post" id="formulario_registrar">
+            {% csrf_token %}
+
+            <label for="nombres_registrar_materias">Nombre de la Materia:</label>
+            <input type="text" name="nombresmaterias" id="nombres_registrar_materias" placeholder="Escribir el nombre de la materia" autocomplete="off" required>
+            <small id="mensaje_nombre_materia"></small>
+
+            <label for="codigos_registrar_materias">Código del Materia:</label>
+            <input type="text" name="codigosmaterias" id="codigos_registrar_materias" minlength="7" maxlength="7" pattern="[A-Z]{4}[0-9]{3}" title="Debe contener 4 letras mayúsculas y 3 números. Ejemplo: MATE001" autocomplete="off" placeholder="Escribir el código de la materia" autocomplete="off" required>
+            <small id="mensaje_codigo_materia"></small>
+
+            <label for="periodo_registrar_materia">Periodo de la Materia:</label>
+            <select name="periodomateria" id="periodo_registrar_materia" required>
+                <option value="">Seleccionar Periodo de Materia</option>
+                <optgroup label="Inicial">
+                    <option value="INICIAL_TRIMESTRE">Inicial Trimestre (P.I.U)</option>
+                    <option value="INICIAL_SEMESTRE">Inicial Semestre (P.I.U)</option>
+                </optgroup>
+                <optgroup label="Reparación">
+                    <option value="REPARACION">Reparación</option>
+                </optgroup>
+                <optgroup label="Tramo">
+                    <option value="TRIMESTRE">Trimestre</option>
+                    <option value="TRAMO_I">I Tramo</option>
+                    <option value="TRAMO_II">II Tramo</option>
+                    <option value="TRAMO_III">III Tramo</option>
+                    <option value="TRAMO_I_II">I y II Tramos</option>
+                    <option value="TRAMO_II_III">II y III Tramos</option>
+                    <option value="TRAMO_I_III">I y III Tramos</option>
+                </optgroup>
+                <optgroup label="Semestre">
+                    <option value="SEMESTRE">Semestre</option>
+                    <option value="SEMESTRE_I">I Semestre</option>
+                    <option value="SEMESTRE_II">II Semestre</option>
+                </optgroup>
+            </select>
+
+            <label for="trayecto_registrar_materia">Trayecto de la Materia:</label>
+            <select name="trayectomateria" id="trayecto_registrar_materia">
+                <option value="">Seleccionar el Trayecto</option>
+                <option value="Inicial">Inicial</option>
+                <option value="Trayecto I">Trayecto I</option>
+                <option value="Trayecto II">Trayecto II</option>
+                <option value="Trayecto III">Trayecto III</option>
+                <option value="Trayecto IV">Trayecto IV</option>
+                <option value="Trayecto V">Trayecto V</option>
+            </select>
+
+            <label for="reparacion_registrar_materia">Reparación Materia:</label>
+            <select name="reparacionmateria" id="reparacion_registrar_materia">
+                <option value="">Seleccionar Reparación</option>
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+            </select> 
+            
+            <label for="pnfs_registrar_materia">P.N.F que Pertenece la Materia:</label>
+            <select name="pnfmateria" id="pnfs_registrar_materia"></select> 
+
+            <input type="submit" id="btn_registrar" value="Registrar Materia">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/Materia/registrar_materia.js' %}"></script>
+
+{% endblock %}

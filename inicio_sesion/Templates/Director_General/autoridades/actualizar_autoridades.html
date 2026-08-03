@@ -1,0 +1,60 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_autoridades">
+    <div class="contenedor_modulo_autoridades">
+        <h2>Gestión de Autoridades</h2>
+
+        <h3>Buscar Autoridad</h3>
+        <form method="post" id="formulario_buscar">
+            {% csrf_token %}
+            <label for="cedula_actualizar">Cedula Identidad:</label>
+            <div class="grupo-campo">
+                <select name="nacionalidad" id="nacionalidad">
+                    <option value="">N</option>
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                </select>
+                <input type="text" name="cedula" id="cedula" autocomplete="off" required>
+            </div>
+
+            <input type="submit" value="Buscar Autoridad">
+        </form>
+
+        <h3>Actualizar Autoridades</h3>
+
+        <form method="post" id="formulario_actualizar">
+            {% csrf_token %}
+            <input type="hidden" name="usuarioseleccionado" id="usuario_seleccionado">
+
+            <label for="nombres_actualizar">Nombres:</label>
+            <input type="text" name="nombres_actualizar" id="nombres_actualizar" autocomplete="off" required>
+            
+            <label for="apellidos_actualizar">Apellidos:</label>
+            <input type="text" name="apellidos_actualizar" id="apellidos_actualizar" autocomplete="off" required>
+            
+            <label for="genero_actualizar">Genero:</label>
+            <select name="genero_actualizar" id="genero_actualizar">
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+            </select>
+    
+            <label for="cargo_actualizar">Cargo:</label>
+            <select name="cargo_actualizar" id="cargo_actualizar"></select>
+
+            <label for="resolucion_actualizar">Resolución:</label>
+            <input type="text" name="resolucion_actualizar" id="resolucion_actualizar" minlength="12" maxlength="12" pattern="[A-Z]{6}[0-9]{6}"  title="Debe contener exactamente 6 letras mayúsculas seguidas de 6 números." autocomplete="off" required>
+            <small id="msg_resolucion"></small>
+
+            <input type="submit" id="btn_actualizar" value="Actualizar Autoridades">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funcionalidades/cedula_identidad.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Director_General/Autoridad/actualizar_autoridad.js' %}"></script>
+
+{% endblock %}

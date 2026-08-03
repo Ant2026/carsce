@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
             limpiarMensajeCedula();
 
             if (cedula_auxiliar.value.trim() !== "") {
-                validar_cedula_auxiliar(nacionalidad_auxiliar, cedula_auxiliar);
+                await validar_cedula_auxiliar(nacionalidad_auxiliar, cedula_auxiliar);
             }
         });
     }

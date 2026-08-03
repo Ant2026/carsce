@@ -54,7 +54,7 @@ class Nacimiento(models.Model):
 class Pnf(models.Model):
     id_pnf = models.AutoField(primary_key=True)
     pnf = models.CharField(max_length=50)
-    codigo = models.CharField(max_length=40)
+    codigo = models.CharField(max_length=60)
     periodo_academico = models.CharField(max_length=40, null=True, blank=True)
     
     def __str__(self):
@@ -117,46 +117,57 @@ class Bitacora(models.Model):
     id_bitacora = models.AutoField(primary_key=True)
     nombre_usuario = models.CharField(max_length=50)
     fecha_hora = models.DateTimeField()
-    accion = models.CharField(max_length=100)
+    accion = models.TextField()
 
 class Materia(models.Model):
     id_materia = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=100)
-    tipo_materia = models.CharField(max_length=100)
     trayecto = models.CharField(max_length=10)
     recuperacion = models.CharField(max_length=100)
     id_pnf = models.ForeignKey(Pnf, models.CASCADE, db_column='id_pnf')
 
-class PeriodoAcademico(models.Model):
+class GrupoActividad(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
+
+class Actividad(models.Model):
+    grupo = models.ForeignKey(GrupoActividad, on_delete=models.PROTECT)
+    nombre = models.CharField(max_length=150)
+    predeterminada = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nombre
+
+class CalendarioAcademico(models.Model):
+    id_calendario = models.AutoField(primary_key=True)
+    actividad = models.ForeignKey(Actividad, models.CASCADE, db_column='id_actividad')
+    fecha_inicio = models.DateField()
+    fecha_final = models.DateField()
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.actividad.actividad
+
+class PeriodoCargarNotas(models.Model):
     id_periodo_academico = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
 
     def __str__(self):
         return self.nombre
 
-class CalendarioAcademico(models.Model):
-    id_fecha_academica = models.AutoField(primary_key=True)
-    periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.PROTECT)
+class CalendarioCargarNotas(models.Model):
+    id_fecha_carga_nota = models.AutoField(primary_key=True)
+    periodo = models.ForeignKey(PeriodoCargarNotas, on_delete=models.PROTECT)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
     activo = models.BooleanField(default=True) 
 
-class PeriodoMateria(models.Model):
+class PeriodoNotasMateria(models.Model):
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
-    periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.CASCADE)
-
-class CalendarioMateria(models.Model):
-    calendario = models.ForeignKey(CalendarioAcademico, on_delete=models.CASCADE)
-    periodo_materia = models.ForeignKey(PeriodoMateria, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["calendario", "periodo_materia"],
-                name="uq_calendario_periodo_materia"
-            )
-        ]
+    periodo = models.ForeignKey(PeriodoCargarNotas, on_delete=models.CASCADE)
 
 class SeccionAcademica(models.Model):
     id_seccion = models.AutoField(primary_key=True)
@@ -166,13 +177,12 @@ class SeccionAcademica(models.Model):
     trayecto = models.CharField(max_length=10)
     turno = models.CharField(max_length=20)
     seccion = models.CharField(max_length=5)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
 class HorarioAcademica(models.Model):
     id_horario = models.AutoField(primary_key=True)
     id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
     id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE)
-    id_periodo_academico = models.ForeignKey(PeriodoAcademico, on_delete=models.CASCADE)
+    id_periodo_academico = models.ForeignKey(PeriodoCargarNotas, on_delete=models.CASCADE)
     id_aula = models.ForeignKey(AulaAcademica, on_delete=models.CASCADE)
     trayecto = models.CharField(max_length=10)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -264,14 +274,8 @@ class EstudianteCorte(models.Model):
 
 class SeccionEstudiante(models.Model):
     id_seccion_estudiante = models.AutoField(primary_key=True)
-    seccion = models.ForeignKey(
-        SeccionAcademica,
-        on_delete=models.CASCADE
-    )
-    estudiante = models.ForeignKey(
-            Estudiante,
-            on_delete=models.CASCADE
-        )
+    seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE)
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
     fecha_final = models.DateField(null=True, blank=True)
 
@@ -324,11 +328,10 @@ class ControlEstudio(models.Model):
     def __str__(self):
         return f"{self.usuario}"
 
-
 class DirectorGeneral(models.Model):
     id_director = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, blank=True, null=True)
+    nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [

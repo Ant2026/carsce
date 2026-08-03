@@ -1,0 +1,32 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="aulas_academicas">
+    <div class="contenedor_aulas_academicas">
+        <h2>Aulas Académicas</h2>
+
+        <h3>Registrar Aulas Académicas</h3>
+
+        <form method="post" id="formulario_registrar">
+            {% csrf_token %}
+            <label for="registrar_nombre_aula">Nombre/Número del Aula:</label>
+            <input type="text" name="registrar_aula" id="registrar_nombre_aula" placeholder="Nombre del aula 20 caracteres max." maxlength="20" autocomplete="off" required>
+            <small id="mensaje_nombre_aula"></small>
+
+            <label for="registrar_nombre_edificio">Nombre del Edificio:</label>
+            <input type="text" name="registrar_edificio" id="registrar_nombre_edificio" placeholder="Edificio 20 caracteres max." maxlength="20" autocomplete="off" required>
+
+            <label for="registrar_piso_edificio">Piso del Edificio</label>
+            <input type="text" name="registrar_piso" id="registrar_piso_edificio" placeholder="Piso 20 caracteres max." maxlength="20" autocomplete="off" required>
+            
+            <input type="submit" id="btn_registrar" value="Registrar Aulas">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/Aula/registrar_aula.js' %}"></script>
+
+{% endblock %}

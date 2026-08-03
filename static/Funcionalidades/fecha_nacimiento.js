@@ -4,4 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const anio = new Date().getFullYear() - 18;
 
     fechaNacimiento.max = `${anio}-12-31`;
+
+    fechaNacimiento.addEventListener("keydown", e => e.preventDefault());
+    fechaNacimiento.addEventListener("paste", e => e.preventDefault());
 });

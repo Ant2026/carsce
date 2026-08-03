@@ -1,0 +1,40 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="pnfs_registrado">
+    <div class="contenedor_pnfs_registrado">
+        <h2>Programa Nacional de Formación</h2>
+
+        <div class="contenedor_registrar_pnf">
+            <h3>Registrar PNF</h3>
+
+            <form method="post" id="formulario_registrar">
+                {% csrf_token %}
+
+                <label for="registrar_nombre_pnf">Nombre del Programa Nacional de Formación:</label>
+                <input type="text" name="nombrepnf" id="registrar_nombre_pnf" autocomplete="off" required>
+                <small id="mensaje_nombre_pnf"></small>
+
+                <label for="registrar_codigo_pnf">Código del Programa Nacional de Formación:</label>
+                <input type="text" name="codigopnf" id="registrar_codigo_pnf" maxlength="8" minlength="8" pattern="[A-Z]{5}[0-9]{3}" title="Debe contener 5 letras mayúsculas y 3 números. Ejemplo: CARRE010" autocomplete="off" required>
+                <small id="mensaje_codigo_pnf"></small>
+
+                <label for="registrar_periodo_academico">Periodo Académico:</label>
+                <select name="periodoacademico" id="registrar_periodo_academico">
+                    <option value="">Elije el Periodo Académico</option>
+                    <option value="Trimestre">Trimestre</option>
+                    <option value="Semestre">Semestre</option>
+                </select>
+
+                <input type="submit" id="btn_registro" value="Registrar PNF">
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/PNF/registrar_pnfs.js' %}"></script>
+
+{% endblock %}

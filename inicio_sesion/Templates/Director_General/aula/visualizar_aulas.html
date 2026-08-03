@@ -8,27 +8,20 @@
     <div class="contenedor_aulas_academicas">
         <h2>Aulas Académicas</h2>
 
-        <form method="post" id="formulario_registro_aulas">
-            {% csrf_token %}
-            <label for="registrar_nombre_aula">Nombre/Número del Aula:</label>
-            <input type="text" name="registrar_aula" id="registrar_nombre_aula" autocomplete="off" required>
-            
-            <label for="registrar_nombre_edificio">Nombre del Edificio:</label>
-            <input type="text" name="registrar_edificio" id="registrar_nombre_edificio" autocomplete="off" required>
-            
-            <label for="registrar_piso_edificio">Piso del Edificio</label>
-            <input type="text" name="registrar_piso" id="registrar_piso_edificio" autocomplete="off" required>
-
-            <label for="registrar_nucleo_aula">Núcleo:</label>
-            <select name="registrar_nucleo" id="registrar_nucleo_aula"></select>
-
-            <input type="submit" value="Registrar Aulas">
-        </form>
-
         <div class="contenedor_busqueda_aulas">
             <h3>Busqueda Aulas Académicas</h3>
 
-            <div id="aulas_registradas"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>AULA</th>
+                        <th>EDIFICIO</th>
+                        <th>PISO</th>
+                    </tr>
+                </thead>
+                <tbody id="contenedor_aulas"></tbody>
+            </table>
         </div>
     </div>
 </section>
@@ -53,14 +46,11 @@
             <label for="actualizar_piso_edificio">Piso del Edificio</label>
             <input type="text" name="actualizar_piso" id="actualizar_piso_edificio" autocomplete="off" required>
 
-            <label for="actualizar_nucleo_aula">Núcleo:</label>
-            <select name="actualizar_nucleo" id="actualizar_nucleo_aula"></select>
-
             <input type="submit" value="Actualizar Aula">
         </form> 
     </div>
 </dialog>
 
-<script src="{% static 'Funciones_Asincronas/Director_General/modulo_aulas_academicas.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Director_General/Aula/visualizar_aula.js' %}"></script>
 
 {% endblock %}

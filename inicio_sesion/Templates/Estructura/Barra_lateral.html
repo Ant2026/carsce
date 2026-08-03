@@ -1,13 +1,60 @@
-{% if request.session.usuario_nombre %}
+{% if request.session.usuario_nombre and request.session.registro_completado %}
         <aside id="barra_lateral">
             <h3 class="menu-title">MENÚ</h3>    
             
             {% if "Director General" in request.session.rol %}
                 <a href="{% url 'panel_usuario' %}">Inicio</a>
                 <a href="{% url 'pre_reg_personal' %}">Pre Registro Personal</a>
+                <details>
+                    <summary>P.N.F</summary>
+
+                    <a href="{% url 'reg_pnf' %}">Registrar P.N.F</a>
+                    <a href="{% url 'ver_pnf' %}">Consultar P.N.F</a>
+                    <a href="{% url 'act_pnf' %}">Actualizar P.N.F</a>
+                </details>
+                <details>
+                    <summary>Calendario</summary>
+
+                    <a href="{% url 'reg_calendario' %}">Registrar Calendario</a>
+                    <a href="{% url 'calendario_datos' %}">Visualizar Calendario</a>
+                </details>
+                <details>
+                    <summary>Materia</summary>
+
+                    <a href="{% url 'reg_mat' %}">Registrar Materia</a>
+                    <a href="{% url 'mat_lista' %}">Visualizar Materia</a>
+                    <a href="{% url 'mat_guardar' %}">Actualizar Materia</a>
+                </details>
+                <details>
+                    <summary>Autoridad</summary>
+
+                    <a href="{% url 'reg_auts' %}">Registrar Autoridad</a>
+                    <a href="{% url 'vist_auts' %}">Visualizar Autoridad</a>
+                    <a href="{% url 'act_datos_aut' %}">Actualizar Autoridad</a>
+                    <a href="{% url 'reasig_cargo' %}">Reasignar Cargos</a>
+                </details>
+                <details>
+                    <summary>Aulas Académicas</summary>
+
+                    <a href="{% url 'reg_aula' %}">Registrar Aulas</a>
+                    <a href="{% url 'act_aula_acad' %}">Visualizar Aulas</a>
+                </details>
+                <details>
+                    <summary>Secciones Académicas</summary>
+
+                    <a href="{% url 'reg_sec' %}">Registrar Sección</a>
+                    <a href="{% url 'guardar_act_sec' %}">Visualizar Sección</a>
+                </details>
             {% endif %}
 
             {% if "Encargado de Control de Estudio" in request.session.rol %}
+                <details>
+                    <summary>Materia</summary>
+
+                    <a href="{% url 'reg_mat' %}">Registrar Materia</a>
+                    <a href="{% url 'mat_lista' %}">Visualizar Materia</a>
+                    <a href="{% url 'mat_guardar' %}">Actualizar Materia</a>
+                </details>
             {% endif %}
 
             {% if "Coordinador de PNF" in request.session.rol %}

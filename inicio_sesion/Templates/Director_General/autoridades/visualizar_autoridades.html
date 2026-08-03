@@ -1,0 +1,33 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_autoridades">
+    <div class="contenedor_modulo_autoridades">
+        <h2>Gestión de Autoridades</h2>
+
+        <h3>Buscar Autoridades</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Cédula de Identidad</th>
+                    <th>Cargo</th>
+                    <th>Resolución</th>
+                </tr>
+            </thead>
+            <tbody id="contenedor_autoridades">
+
+            </tbody>
+        </table>
+        
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/Autoridad/visualizar_autoridad.js' %}"></script>
+
+{% endblock %}

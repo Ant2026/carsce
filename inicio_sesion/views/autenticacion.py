@@ -91,10 +91,11 @@ def autenticacion(request):
         roles = obtener_roles(usuario)
         request.session["roles"] = roles
         request.session["rol"] = [r["rol"] for r in roles]
-        print(request.session["roles"])
-        registro_basico = Nacimiento.objects.filter(id_usuario=usuario).exists()
 
+        registro_basico = Nacimiento.objects.filter(id_usuario=usuario).exists()
         if registro_basico:
+            request.session['registro_completado'] = True
+
             return JsonResponse({
                 "estado": "exito",
                 "url": reverse("panel_usuario")

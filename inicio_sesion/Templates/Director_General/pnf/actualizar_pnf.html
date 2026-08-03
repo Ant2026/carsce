@@ -1,0 +1,41 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="pnfs_registrado">
+    <div class="contenedor_pnfs_registrado">
+        <h3>Programa Nacional de Formación</h3>
+
+        <h4>Modificar PNF</h4>
+
+        <form method="post" id="formulario_buscar">
+            {% csrf_token %}
+            <label for="codigo_pnf">Seleccione el PNF a Modificar:</label>
+            <input type="text" name="codigo" id="codigo_pnf" maxlength="8" minlength="8" pattern="[A-Z]{5}[0-9]{3}" title="Debe contener 5 letras mayúsculas y 3 números. Ejemplo: CARRE010" placeholder="Ingrese el código del PNF" autocomplete="off" required>
+
+            <input type="submit" value="Buscar PNF">
+        </form>
+
+        <form method="post" id="formulario_actualizar">
+            {% csrf_token %}
+            <input type="hidden" name="pnfseleccionado" id="pnf_seleccionado">
+
+            <label for="actualizar_nombre_pnf">Nombre del Programa Nacional de Formación:</label>
+            <input type="text" name="nombrepnf" id="actualizar_nombre_pnf" autocomplete="off">
+
+            <label for="actualizar_periodo_academico">Periodo Académico:</label>
+            <select name="periodoacademico" id="actualizar_periodo_academico">
+                <option value="Trimestre">Trimestre</option>
+                <option value="Semestre">Semestre</option>
+            </select>
+
+            <input type="submit" id="btn_actualizar" value="Actualizar PNF">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/PNF/actualizar_pnf.js' %}"></script>
+
+{% endblock %}

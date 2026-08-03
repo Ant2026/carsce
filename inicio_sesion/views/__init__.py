@@ -6,10 +6,9 @@ from .pre_registro_personal import *
 from .completar_registro import *
 from .inscripcion_estudiante import *
 from .pnf import *
-from .nucleo import *
 from .seccion import *
 from .materia import *
-from .calendario import *
+from .calendario_notas import *
 from .actualizar_datos_usuario import *
 from .asignacion_materia import *
 from .aula import *

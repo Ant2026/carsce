@@ -48,8 +48,8 @@ def datos_usr_admin(request):
             "nombres": datos_basicos.nombres,
             "apellidos": datos_basicos.apellidos,
             "cedula_identidad": datos_basicos.cedula_identidad,
-            "genero": datos_basicos.genero if contacto else "",
-            "estado_civil": datos_basicos.estado_civil if contacto else ""
+            "genero": datos_basicos.genero,
+            "estado_civil": datos_basicos.estado_civil
         },
         "contacto": {
             "telefono_personal": contacto.telefono_personal if contacto else "",
@@ -341,6 +341,14 @@ def comp_registro(request):
         
         correo_electronico2 = correo_secundaria + dominio_correo_secundaria
 
+        if correo_electronico1 == correo_electronico2:
+            return JsonResponse({
+                "estado": "fallo",
+                "title": "Error",
+                "descripcion": "Por favor, ingrese correos electronicos diferentes.",
+                "icon": "error"
+            })
+
         usuario = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario"))
 
         roles = []
@@ -380,7 +388,7 @@ def comp_registro(request):
             usuario.estado_civil = estado_civil
             usuario.save()
     
-            contacto = Contacto.objects.get(id_usuario=usuario)
+            contacto, _ = Contacto.objects.get_or_create(id_usuario=usuario)
             
             contacto.telefono_personal = telefono_principal
     
@@ -437,7 +445,6 @@ def comp_registro(request):
                     "icon": "warning"
                 })
 
-            
             documentos = {
                 "Cédula de Identidad": request.FILES.get("CI_estudiante"),
                 "Título de Bachiller": request.FILES.get("TBachiller_estudiante"),

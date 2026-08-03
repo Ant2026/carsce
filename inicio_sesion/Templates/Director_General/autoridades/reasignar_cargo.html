@@ -1,0 +1,35 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_autoridades">
+    <div class="contenedor_modulo_autoridades">
+        <h2>Gestión de Autoridades</h2>
+
+        <h3>Reeasignar Cargos</h3>
+        <form method="post" id="formulario_actualizar">
+            {% csrf_token %}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Cédula</th>
+                        <th>Cargo Actual</th>
+                        <th>Nuevo Cargo</th>
+                    </tr>
+                </thead>
+                <tbody id="contenedor_autoridades">
+                </tbody>
+            </table>
+            <input type="submit" value="Buscar Autoridad">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Director_General/Autoridad/reasignar_cargo.js' %}"></script>
+
+{% endblock %}
