@@ -1,103 +1,217 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
+from django.utils import timezone
 
-from inicio_sesion.models import PNFNucleo, Materia
-
-def pnfs_pertenece_nucleo(request):
-    if request.method == "POST":
-        nucleo = request.POST.get("nucleo")
-
-        pnfs = PNFNucleo.objects.filter(
-            id_nucleo=nucleo
-        ).values(
-            "id_pnf__id_pnf",
-            "id_pnf__pnf",
-            "id_pnf__periodo_academico"
-        )
-
-        lista = []
-
-        for pnf in pnfs:
-            lista.append({
-                "id_pnf": pnf["id_pnf__id_pnf"],
-                "pnf": pnf["id_pnf__pnf"],
-                "periodo_academico": pnf["id_pnf__periodo_academico"],
-            })
-
-        return JsonResponse({"pnfs": lista})
+from inicio_sesion.models import Materia, MateriaAsignada, DocenteAsignadoMateria, CoordinadorPNF, Docente, Bitacora, Materia, SeccionAcademica
     
-def docentes_registrados(request):
-    if request.method == "POST":
-        nucleo = request.POST.get("nucleo")
-        pnf = request.POST.get("pnf")
+def docs_reg(request):
+    try:
+        coordinador = CoordinadorPNF.objects.get(usuario__cedula_identidad=request.session.get("cedula_usuario"))
+    except CoordinadorPNF.DoesNotExist:
+        return JsonResponse({
+            "estado": "fallo",
+            "title": "Error",
+            "icon": "error",
+            "descripcion": "No cuenta con el rol de Coordinador de PNF.",
+            "usuarios": []
+        })
 
-        if not nucleo or not pnf:
-            return JsonResponse({
-                "estado": "error",
-                "usuarios": []
-            })
+    docentes = Docente.objects.filter(nucleo=coordinador.nucleo,pnf=coordinador.pnf).select_related("usuario")
 
-     
+    usuarios = [
+        {
+            "id_usuario": docente.usuario.id_usuario,
+            "nombre": str(docente.usuario)
+        }
+        for docente in docentes
+    ]
+
     return JsonResponse({
-        "estado": "error",
-        "usuarios": []
+        "estado": "exito",
+        "usuarios": usuarios
     })
 
-def materias_registradas(request):
+def busc_mat(request):
     if request.method == "POST":
-        pnf = request.POST.get("pnf")
+        materia = request.POST.get("nombre_materia", "").strip()
 
-        if not pnf:
+        resultados = Materia.objects.filter(nombre__icontains=materia)
+
+        if not resultados.exists():
             return JsonResponse({
-                "estado": "error",
-                "materias": []
+                "estado": "fallo",
+                "title": "Error",
+                "icon": "error",
+                "descripcion": "No se encontraron materias."
             })
 
-        materias = (
-            Materia.objects
-            .filter(id_pnf_id=pnf)
-            .values(
-                "id_materia",
-                "nombre",
-                "codigo",
-                "tipo_materia",
-                "recuperacion",
-                "id_trayecto__trayecto"
-            )
-            .order_by(
-                "id_trayecto__trayecto",
-                "nombre"
-            )
-        )
+        materias = []
+        for resultado in resultados:
+            materias.append({
+                "id": resultado.id_materia,
+                "nombre": resultado.nombre,
+                "codigo": resultado.codigo,
+                "trayecto": resultado.trayecto,
+                "recuperacion": resultado.recuperacion,
+                "htea": resultado.htea,
+                "htei": resultado.htei,
+                "thte": resultado.thte,
+                "uc": resultado.uc,
+                "pnf": resultado.id_pnf.pnf
+            })
 
         return JsonResponse({
             "estado": "exito",
-            "materias": list(materias)
+            "materias": materias
         })
+
+def mats_reg(request):
+    try:
+        coordinador = CoordinadorPNF.objects.get(
+            usuario__cedula_identidad=request.session.get("cedula_usuario")
+        )
+    except CoordinadorPNF.DoesNotExist:
+        return JsonResponse({
+            "estado": "fallo",
+            "title": "Error",
+            "icon": "error",
+            "descripcion": "No cuenta con el rol de Coordinador de PNF.",
+            "materias": []
+        })
+
+    materias = []
+
+    for materia in Materia.objects.filter(id_pnf=coordinador.pnf).order_by(
+        "trayecto",
+        "nombre"
+    ):
+
+        materia_asignada = MateriaAsignada.objects.filter(
+            materia=materia
+        ).first()
+
+        estado = "VERDE"
+
+        if materia_asignada:
+
+            roles = DocenteAsignadoMateria.objects.filter(
+                materia_asignada=materia_asignada,
+                activo=True
+            ).values_list("rol", flat=True)
+
+            tiene_principal = "PRINCIPAL" in roles
+            tiene_secundario = "SECUNDARIO" in roles
+
+            if tiene_principal and tiene_secundario:
+                estado = "ROJO"
+
+            elif tiene_principal:
+                estado = "AMARILLO"
+
+
+        materias.append({
+            "id_materia": materia.id_materia,
+            "nombre": materia.nombre,
+            "codigo": materia.codigo,
+            "trayecto": materia.trayecto,
+            "recuperacion": materia.recuperacion,
+            "htea": materia.htea,
+            "htei": materia.htei,
+            "estado": estado
+        })
+
 
     return JsonResponse({
-        "estado": "error",
-        "materias": []
+        "estado": "exito",
+        "materias": materias
     })
 
-def modulo_asignar_materia_docente(request):
+def asig_mat_doc(request):
     if request.method == "POST":
-        id_asignacion = request.POST.get("docentes")
-        materias = request.POST.getlist("materias")
+        docente = request.POST.get("docente")
+        rol_docente = request.POST.get("rol_docente")
+        seccion = request.POST.get("seccion")
+        materias = request.POST.getlist("materias[]")
 
-        if not id_asignacion or not materias:
+        controles = [
+            (docente, "Docente", "Debe seleccionar un docente."), 
+            (rol_docente, "Rol del Docente", "Debe seleccionar el rol del docente."), 
+            (seccion, "Sección Académico", "Debe seleccionar la sección académica."), 
+            (materias, "Materia Académico", "Debe seleccionar al meno una materia."), 
+        ]
+
+        for value, field_name, error_message in controles:
+            if not value:
+                return JsonResponse({
+                    "estado": "fallo",
+                    "icon": "warning",
+                    "title": field_name,
+                    "descripcion": error_message
+                })
+        
+        try:
+            docente = Docente.objects.get(pk=docente)
+        except Docente.DoesNotExist:
             return JsonResponse({
-                "estado": "error",
-                "descripcion": "Debe seleccionar un docente y al menos una materia.",
-                "icon": "warning"
+                "estado": "fallo",
+                "title": "Error",
+                "icon": "error",
+                "descripcion": "No se encontró el perfil de docente."
             })
 
+        with transaction.atomic():
+            for id_materia in materias:
+                try:
+                    materia = Materia.objects.get(pk=id_materia)
+                except Materia.DoesNotExist:
+                    continue
 
-        return JsonResponse({
-            "estado": "success",
-            "descripcion": "Las materias fueron asignadas correctamente al docente.",
-            "icon": "success"
-        })
+                asignacion, creada = MateriaAsignada.objects.get_or_create(materia=materia, seccion_id=seccion)
 
-    return render(request, "Director_General/asignar_materia.html")
+                # Validar que no exista otro docente con el mismo rol
+                if DocenteAsignadoMateria.objects.filter(
+                    materia_asignada=asignacion,
+                    rol=rol_docente,
+                    activo=True
+                ).exists():
+                    return JsonResponse({
+                        "estado": "fallo",
+                        "icon": "warning",
+                        "title": "Asignación existente",
+                        "descripcion": (
+                            f"La materia '{materia.nombre}' ya tiene asignado un "
+                            f"{'docente principal' if rol_docente == 'PRINCIPAL' else 'docente secundario'}."
+                        )
+                    })
+                
+                DocenteAsignadoMateria.objects.create(
+                    materia_asignada=asignacion,
+                    docente=docente,
+                    rol=rol_docente,
+                    activo=True
+                )
+
+                Bitacora.objects.create(
+                    nombre_usuario=request.session.get("usuario_nombre"),
+                    fecha_hora=timezone.now(),
+                    accion=(
+                        f"Asignó la materia '{materia.nombre}' al docente "
+                        f"{docente.usuario.nombres} {docente.usuario.apellidos} "
+                        f"como {'Docente Principal' if rol_docente == 'PRINCIPAL' else 'Docente Secundario'}."
+                    )
+                )
+
+            return JsonResponse({
+                "estado": "exito",
+                "title": "Éxito",
+                "icon": "success",
+                "descripcion": "Se asignaron las materias correctamente."
+            })
+
+    return render(request, "Coordinador_PNF/asignacion_materia/registrar_asignaciones.html")
+
+def act_asig(request):
+    return render(request, "Coordinador_PNF/asignacion_materia/visualizar_asignaciones.html")
+
+

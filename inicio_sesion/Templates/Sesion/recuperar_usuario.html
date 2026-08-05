@@ -18,7 +18,7 @@
     {% for message in messages %}
         <script>
             Swal.fire({
-                icon: "Error",
+                icon: "{{ message.tags }}",
                 text: "{{ message }}",
                 confirmButtonText: "Aceptar"
             });

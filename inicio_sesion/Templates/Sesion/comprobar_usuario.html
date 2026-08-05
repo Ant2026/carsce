@@ -18,20 +18,40 @@
                 
                 <label for="password">Código:</label>
                 <div class="grupo-campo">
-                    <input type="password" name="codigo" autocomplete="off" maxlength="6" minlength="6" id="password" placeholder="Ingresar código" required>
+                    <input type="password" name="codigo" autocomplete="off" maxlength="6" minlength="6" id="password" pattern="[A-Z0-9]{6}" title="La contraseña debe contener exactamente 6 caracteres en mayúsculas y números, sin símbolos." placeholder="Ingresar código" required>
                     <input type="checkbox" id="oculta_aparecer">
                     
                     <label class="icon-eye-off eye_off" for="oculta_aparecer"></label>
                     <label class="icon-eye eye_on" for="oculta_aparecer"></label>
                 </div>
                 <button type="submit">Verificar</button>
-
             </form>
             
             <button type="button" id="btn_reenviar_codigo" class="btn-reenvio" disabled>Reenviar código (<span id="contador_reenvio">60</span>s)</button>
         </div>
     </div>
 </section>
+
+<dialog id="dialogo_correos">
+    <div class="contenedor_correos_registrados">
+        <h4>Correos Electrónicos</h4>
+
+        <p>Seleccione el correo electrónico al que desea enviar el código de verificación.</p>
+
+        <form method="post" id="formulario_enviar">
+            {% csrf_token %}
+
+            <label for="correo_principal" id="label_correo_principal"></label>
+            <input type="radio" name="correo_verificacion" id="correo_principal" value="principal" checked>
+
+
+            <label for="correo_secundario" id="label_correo_secundario"></label>
+            <input type="radio" name="correo_verificacion" id="correo_secundario" value="secundario">
+
+            <input type="submit" value="Enviar Código">
+        </form>
+    </div>
+</dialog>
 
 <script src="{% static 'Funcionalidades/contrasenia.js' %}"></script>
 <script src="{% static 'Funciones_Asincronas/Credenciales/validar_codigo.js' %}"></script>

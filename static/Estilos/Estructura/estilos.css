@@ -127,3 +127,25 @@
 }
 
 
+/* Materia sin docente asignado */
+.materia-verde {
+    background-color: #d4edda;
+}
+
+/* Materia con docente principal */
+.materia-amarillo {
+    background-color: #fff3cd;
+}
+
+/* Materia con principal + secundario */
+.materia-rojo {
+    background-color: #f8d7da;
+}
+
+
+/* Opcional: mejorar visualización al pasar el mouse */
+.materia-verde:hover,
+.materia-amarillo:hover,
+.materia-rojo:hover {
+    filter: brightness(95%);
+}

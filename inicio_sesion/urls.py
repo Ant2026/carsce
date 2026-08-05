@@ -6,7 +6,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.foro, name="foro"),
     path('inicio_sesion/', views.autenticacion, name="inicio_sesion"),
-    path('buscar_usuario/', views.buscar_usuario, name="buscar_usuario"),
     path('panel_usuario/', views.panel_usuario, name="panel_usuario"),
     path('panel_registro/', views.panel_registro, name="panel_registro"),
     path('cerrar_sesion/', views.cerrar_sesion, name="cerrar_sesion"),
@@ -71,9 +70,32 @@ urlpatterns = [
     path('guardar_act_sec/', views.guardar_act_sec, name="guardar_act_sec"),
     path('reg_sec/', views.reg_sec, name="reg_sec"),
     path('val_sec/', views.val_sec, name="val_sec"),
-    path('bus_aula/', views.bus_aula, name="bus_aula"),
-    path('turno_sec/', views.turno_sec, name="turno_sec"),
-    path('act_turno/', views.act_turno, name="act_turno"),
+
+    path('docs_reg/', views.docs_reg, name="docs_reg"),
+    path('mats_reg/', views.mats_reg, name="mats_reg"),
+    path('asig_mat_doc/', views.asig_mat_doc, name="asig_mat_doc"),
+    path('busc_mat/', views.busc_mat, name="busc_mat"),
+    path('act_asig/', views.act_asig, name="act_asig"),
+    path('pnf_per_acad/', views.pnf_per_acad, name="pnf_per_acad"),
+
+    path('dat_usr/', views.dat_usr, name="dat_usr"),
+    path('corr_usr/', views.corr_usr, name="corr_usr"),
+    path('env_cod_act_corr/', views.env_cod_act_corr, name="env_cod_act_corr"),
+    path('aut_act_corr/', views.aut_act_corr, name="aut_act_corr"),
+    path('act_dat_usr/', views.act_dat_usr, name="act_dat_usr"),
+
+    path('bus_usr/', views.bus_usr, name="bus_usr"),
+    path('comp_usr/', views.comp_usr, name="comp_usr"),
+    path('env_cod_usr/', views.env_cod_usr, name="env_cod_usr"),
+    path('comp_cod_usr/', views.comp_cod_usr, name="comp_cod_usr"),
+    path('val_cod/', views.val_cod, name="val_cod"),
+    path('reenv_cod_btn/', views.reenv_cod_btn, name="reenv_cod_btn"),
+    path('env_cod_ver/', views.env_cod_ver, name="env_cod_ver"),
+    path('panel_rec_cred/', views.panel_rec_cred, name="panel_rec_cred"),
+    path('rec_cont/', views.rec_cont, name="rec_cont"),
+    path('rec_usr/', views.rec_usr, name="rec_usr"),
+    path('exist_cod/', views.exist_cod, name="exist_cod"),
+    path('corr_reg/', views.corr_reg, name="corr_reg"),
 
     #FORO
     path('Historia/', views.Historia, name="Historia"),

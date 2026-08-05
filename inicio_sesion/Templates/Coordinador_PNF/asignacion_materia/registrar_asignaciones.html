@@ -1,0 +1,36 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="asignar_materia">
+    <div class="contenedor_asignar_materia">
+        <h3>Asignar Materia a Docente</h3>
+
+        <form method="post" id="formulario_asignar_materia">
+            {% csrf_token %}
+
+            <label for="docentes_registrados">Docente</label>
+            <select name="docente" id="docentes_registrados" required></select>
+            
+            <label for="rol_docente">Rol del Docente</label>
+            <select name="rol_docente" id="rol_docente" required>
+                <option value="">Seleccione una opción</option>
+                <option value="PRINCIPAL">Docente Principal</option>
+                <option value="SECUNDARIO">Docente Secundario</option>
+            </select>
+
+            <label for="secciones_registradas">Sección Académica</label>
+            <select name="seccion" id="secciones_registradas" required></select>
+            
+            <div id="contenedor_materias"></div>
+
+            <input type="submit" value="Asignar Materia">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Coordinador_PNF/Asignacion_Materia/registrar_asignaciones.js' %}"></script>
+
+{% endblock %}

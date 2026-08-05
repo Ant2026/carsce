@@ -11,29 +11,29 @@ def obtener_roles(usuario):
     for estudiante in Estudiante.objects.filter(usuario=usuario).select_related("nucleo", "pnf"):
         roles.append({
             "rol": "Estudiante",
-            "nucleo": estudiante.nucleo.nombre if estudiante.nucleo else None,
-            "pnf": estudiante.pnf.nombre if estudiante.pnf else None,
+            "nucleo": estudiante.nucleo.municipio if estudiante.nucleo else None,
+            "pnf": estudiante.pnf.pnf if estudiante.pnf else None,
             "registro_completo": estudiante.nucleo is not None and estudiante.pnf is not None,
         })
 
     for docente in Docente.objects.filter(usuario=usuario).select_related("nucleo", "pnf"):
         roles.append({
             "rol": "Docente",
-            "nucleo": docente.nucleo.nombre,
-            "pnf": docente.pnf.nombre,
+            "nucleo": docente.nucleo.municipio,
+            "pnf": docente.pnf.pnf,
         })
 
     for coordinador in CoordinadorPNF.objects.filter(usuario=usuario).select_related("nucleo", "pnf"):
         roles.append({
             "rol": "Coordinador PNF",
-            "nucleo": coordinador.nucleo.nombre,
-            "pnf": coordinador.pnf.nombre,
+            "nucleo": coordinador.nucleo.municipio,
+            "pnf": coordinador.pnf.pnf,
         })
 
     for control in ControlEstudio.objects.filter(usuario=usuario).select_related("nucleo"):
         roles.append({
             "rol": "Control de Estudio",
-            "nucleo": control.nucleo.nombre,
+            "nucleo": control.nucleo.municipio,
         })
 
     if DirectorGeneral.objects.filter(usuario=usuario).exists():

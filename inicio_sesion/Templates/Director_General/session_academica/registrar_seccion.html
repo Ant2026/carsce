@@ -13,32 +13,18 @@
 
             <form method="post" id="formulario_registrar">
                 {% csrf_token %}
-                <label for="registro_pnf">P.N.F:</label>
-                <select name="registro_pnf" id="registro_pnf"></select>
-
-                <label for="registro_trayecto">Trayecto:</label>
-                <select name="registro_trayecto" id="registro_trayecto">
-                    <option value="">Seleccion de Trayecto</option>
-                    <option value="Inicial">Inicial</option>
-                    <option value="Trayecto I">Trayecto I</option>
-                    <option value="Trayecto II">Trayecto II</option>
-                    <option value="Trayecto III">Trayecto III</option>
-                    <option value="Trayecto IV">Trayecto IV</option>
-                    <option value="Trayecto V">Trayecto V</option>
-                </select>
-
-                <label for="registro_aula">Aula Académico:</label>
-                <select name="registro_aula" id="registro_aula"></select>
-
-                <label for="registro_turno">Turno:</label>
-                <select name="registro_turno" id="registro_turno">
-                    <option value="">Debe seleccionar el aula</option>
-                </select>
-                <small id="mensaje_aula_academica"></small>
-
                 <label for="registro_seccion">Sección:</label>
                 <input type="text" name="registro_seccion" placeholder="Nombre de Sección 5 maximo caracteres."  maxlength="5" autocomplete="off" id="registro_seccion">
                 <small id="mensaje_nombre_seccion"></small>
+
+                <label for="registro_turno">Turno:</label>
+                <select name="registro_turno" id="registro_turno">
+                    <option value="">Selecciona el Turno Académico</option>
+                    <option value="Diurno">Diurno</option>
+                    <option value="Nocturno">Nocturno</option>
+                    <option value="Fin de Semana">Fin de Semana</option>
+                </select>
+                <small id="mensaje_aula_academica"></small>
             
                 <input type="submit" id="btn_registro" value="Registrar Sección">
             </form>

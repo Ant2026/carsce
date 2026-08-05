@@ -14,11 +14,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>P.N.F</th>
-                    <th>AULA</th>
-                    <th>TRAYECTO</th>
-                    <th>TURNO</th>
                     <th>SECCIÓN</th>
+                    <th>TURNO</th>
                 </tr>
             </thead>
             <tbody id="contenedor_secciones"></tbody>
@@ -35,28 +32,12 @@
             {% csrf_token %}
             <input type="hidden" name="seccion" id="secciones_seleccionado">
 
-            <label for="actualizar_pnf_registrado">P.N.F:</label>
-            <select name="actualizar_pnf" id="actualizar_pnf_registrado"></select>
-
-            <label for="actualizar_trayecto_registrado">Trayecto:</label>
-            <select name="actualizar_trayecto" id="actualizar_trayecto_registrado">
-                <option value="Inicial">Inicial</option>
-                <option value="Trayecto I">Trayecto I</option>
-                <option value="Trayecto II">Trayecto II</option>
-                <option value="Trayecto III">Trayecto III</option>
-                <option value="Trayecto IV">Trayecto IV</option>
-                <option value="Trayecto V">Trayecto V</option>
-            </select>
-
-            <label for="actualizar_aula_registrado">Aula Académico:</label>
-            <select name="actualizar_aula" id="actualizar_aula_registrado"></select>
-
-            <label for="actualizar_turno_registrado">Turno:</label>
-            <select name="actualizar_turno" id="actualizar_turno_registrado"></select>
-
             <label for="actualizar_seccion_registrado">Sección:</label>
             <input type="text" name="actualizar_seccion" id="actualizar_seccion_registrado">
             <small id="mensaje_actualizar_seccion"></small>
+
+            <label for="actualizar_turno_registrado">Turno:</label>
+            <select name="actualizar_turno" id="actualizar_turno_registrado"></select>
             
             <input type="submit" id="btn_actualizar" value="Actualizar Sección">
         </form>

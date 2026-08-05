@@ -1,12 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
     const formulario_buscar = document.getElementById("formulario_buscar_usuario");
 
-    formulario_buscar.addEventListener("submit", async function(e) {
+    const nacionalidad = document.getElementById("nacionalidad");
+    const cedula_identidad = document.getElementById("cedula_identidad");
+
+    configurarCedula(nacionalidad, cedula_identidad);
+
+    formulario_buscar.addEventListener("submit", async (e) => {
         e.preventDefault()
         try {
             const formulario = new FormData(formulario_buscar);
 
-            const respuesta = await fetch("/buscar_usuario/", {
+            const respuesta = await fetch("/bus_usr/", {
                 method: "POST",
                 body: formulario
             });
@@ -14,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(resultado);
             
             if (resultado.estado === "exito") {
-                window.location.href = "/comprobar_usuario/";
+                window.location.href = "/comp_usr/";
             } else {
                 Swal.fire({
                     title: resultado.title,
@@ -25,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
 
-            formulario_buscar.reset()
+            formulario_buscar.reset();
         } catch (error) {
             console.error(error);
         }

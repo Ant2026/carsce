@@ -122,10 +122,20 @@ class Bitacora(models.Model):
 class Materia(models.Model):
     id_materia = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
-    codigo = models.CharField(max_length=100)
-    trayecto = models.CharField(max_length=10)
+    codigo = models.CharField(max_length=20)
+    trayecto = models.CharField(max_length=50)
     recuperacion = models.CharField(max_length=100)
+    htea = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
+    htei = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
     id_pnf = models.ForeignKey(Pnf, models.CASCADE, db_column='id_pnf')
+
+    @property
+    def thte(self):
+        return self.htea + self.htei
+
+    @property
+    def uc(self):
+        return self.thte // 25
 
 class GrupoActividad(models.Model):
     nombre = models.CharField(max_length=100)
@@ -171,12 +181,12 @@ class PeriodoNotasMateria(models.Model):
 
 class SeccionAcademica(models.Model):
     id_seccion = models.AutoField(primary_key=True)
-    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
-    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE)
-    id_aula = models.ForeignKey(AulaAcademica, on_delete=models.CASCADE)
-    trayecto = models.CharField(max_length=10)
+    nombre = models.CharField(max_length=5)
     turno = models.CharField(max_length=20)
-    seccion = models.CharField(max_length=5)
+    activa = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Sección {self.nombre}"
 
 class HorarioAcademica(models.Model):
     id_horario = models.AutoField(primary_key=True)
@@ -295,8 +305,21 @@ class Docente(RolAcademico):
 
 class MateriaAsignada(models.Model):
     id_materia_asignada = models.AutoField(primary_key=True)
-    materia = models.ForeignKey(Materia, models.CASCADE)
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
+    seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, blank=True, null=True)
+
+class DocenteAsignadoMateria(models.Model):
+    materia_asignada = models.ForeignKey(MateriaAsignada, on_delete=models.CASCADE, related_name="docentes")
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE)
+    rol = models.CharField(max_length=20,
+        choices=[
+            ("PRINCIPAL", "Docente Principal"),
+            ("SECUNDARIO", "Docente Secundario"),
+        ]
+    )
+    activo = models.BooleanField(default=True)
+    fecha_asignacion = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    fecha_suspension = models.DateTimeField(null=True, blank=True)
 
 class CoordinadorPNF(RolAcademico):
     id_coordinador = models.AutoField(primary_key=True)

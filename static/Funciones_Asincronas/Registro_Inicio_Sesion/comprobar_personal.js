@@ -65,94 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
     ocultar_credenciales(true);
-
-    async function validar_usuario(input_nombre_usuario, msg_nombre_usuario) {
-        try {
-            const formulario = new FormData();
-            formulario.append("nombre_usuario", input_nombre_usuario.value)
-
-            const respuesta = await fetch("/val_usuario/", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
-                body: formulario
-            });
-            const resultado = await respuesta.json();
-            console.log(resultado);
-        
-            if (resultado.existe) {
-                input_nombre_usuario.setCustomValidity("Ya se encuentra un usuario con el mismo nombre de usuario.");
-                input_nombre_usuario.classList.add("is-invalid");
-                input_nombre_usuario.classList.remove("is-valid");
-
-                msg_nombre_usuario.textContent = "Ya se encuentra un usuario con el mismo nombre de usuario.";
-                msg_nombre_usuario.style.color = "#dc3545";
-
-                btn_registro.disabled = true;
-            } else {
-                input_nombre_usuario.setCustomValidity("");
-                input_nombre_usuario.classList.add("is-valid");
-                input_nombre_usuario.classList.remove("is-invalid");
-
-                msg_nombre_usuario.textContent = "El nombre de usuario está disponible.";
-                msg_nombre_usuario.style.color = "#198754";
-
-                btn_registro.disabled = false;
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    
-    input_nombre_usuario.addEventListener("input", async function () {
-        await validar_usuario(input_nombre_usuario, msg_nombre_usuario);
-    });
-
-    async function validar_contrasenia(input_password, msg_password) {
-        try {
-            const formulario = new FormData();
-            formulario.append("password", input_password.value)
-
-            const respuesta = await fetch("/val_password/", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                },
-                body: formulario
-            });
-            const resultado = await respuesta.json();
-            console.log(resultado);
-        
-            if (resultado.existe) {
-                input_password.setCustomValidity("Ya se encuentra un usuario con la misma contraseña.");
-                input_password.classList.add("is-invalid");
-                input_password.classList.remove("is-valid");
-
-                msg_password.textContent = "Ya se encuentra un usuario con la misma contraseña.";
-                msg_password.style.color = "#dc3545";
-
-                btn_registro.disabled = true;
-            } else {
-                input_password.setCustomValidity("");
-                input_password.classList.add("is-valid");
-                input_password.classList.remove("is-invalid");
-
-                msg_password.textContent = "La contraseña está disponible.";
-                msg_password.style.color = "#198754";
-
-                btn_registro.disabled = false;
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    
-    input_password.addEventListener("input", async function () {
-        await validar_contrasenia(input_password, msg_password);
-    });
 
     formulario_buscar_usuario.addEventListener("submit", async function (e) {
         e.preventDefault()
@@ -186,17 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
    formulario_registrar_credenciales.addEventListener("submit", async function (e) {
         e.preventDefault();
-
-        Swal.fire({
-            title: "Registrando credenciales...",
-            html: "Espere un momento por favor.",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
         try {
             const datos = new FormData(formulario_registrar_credenciales);
 
@@ -204,10 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 body: datos
             });
-
             const resultado = await respuesta.json();
-
-            Swal.close(); // Cierra el loading
 
             if (resultado.estado === "exito") {
                 ocultar_busqueda(false);
@@ -224,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         } catch (error) {
-            Swal.close();
             console.error(error);
         }
     });

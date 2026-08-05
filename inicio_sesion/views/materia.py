@@ -2,9 +2,74 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 from django.utils import timezone
+from decimal import Decimal
 
-from inicio_sesion.models import Usuario, Bitacora, Pnf, Materia, PeriodoCargarNotas, PeriodoNotasMateria, DirectorGeneral, ControlEstudio
+from inicio_sesion.models import Usuario, PNFNucleo, Bitacora, Pnf, Materia, PeriodoCargarNotas, PeriodoNotasMateria, DirectorGeneral, ControlEstudio
 
+def pnf_per_acad(request):
+    if request.method == "POST":
+        periodo_materia = request.POST.get("periodo_academico")
+        usuario = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario"))
+
+        if DirectorGeneral.objects.filter(usuario=usuario).exists():
+            nucleos = DirectorGeneral.objects.filter(
+                usuario=usuario
+            ).values_list("nucleo_id", flat=True)
+
+        elif ControlEstudio.objects.filter(usuario=usuario).exists():
+            nucleos = ControlEstudio.objects.filter(
+                usuario=usuario
+            ).values_list("nucleo_id", flat=True)
+
+        # Si es reparación muestra todos los PNF del núcleo
+        if periodo_materia == "REPARACION":
+            pnfs = PNFNucleo.objects.filter(
+                id_nucleo__in=nucleos
+            ).select_related(
+                "id_pnf"
+            )
+        else:
+            if (
+                periodo_materia == "INICIAL_TRIMESTRE" or
+                periodo_materia.startswith("TRAMO") or
+                periodo_materia == "TRIMESTRE"
+            ):
+                tipo_periodo = "Trimestre"
+            elif (
+                periodo_materia == "INICIAL_SEMESTRE" or
+                periodo_materia.startswith("SEMESTRE")
+            ):
+                tipo_periodo = "Semestre"
+
+            pnfs = PNFNucleo.objects.filter(
+                id_nucleo__in=nucleos,
+                id_pnf__periodo_academico=tipo_periodo
+            ).select_related(
+                "id_pnf"
+            )
+
+        datos = {}
+        for pnf_nucleo in pnfs:
+            nucleo = pnf_nucleo.id_nucleo.municipio
+            if nucleo not in datos:
+                datos[nucleo] = []
+
+            datos[nucleo].append({
+                "id_pnf": pnf_nucleo.id_pnf.id_pnf,
+                "pnf": pnf_nucleo.id_pnf.pnf
+            })
+
+        return JsonResponse({
+            "estado": "exito",
+            "nucleos": [ 
+                {
+                    "nucleo": nucleo,
+                    "pnfs": lista
+                }
+                for nucleo, lista in datos.items()
+            ]
+        })
+    
 def mat_lista(request):
     if request.method == "POST":
         cedula_usuario = request.session.get("cedula_usuario")
@@ -56,6 +121,8 @@ def mat_lista(request):
                 "id_materia",
                 "nombre",
                 "codigo",
+                "htea",
+                "htei",
                 "recuperacion",
                 "id_pnf",
                 "trayecto"
@@ -95,11 +162,13 @@ def mat_datos(request):
             })
         
         return JsonResponse({
-            "estado": "ok",
+            "estado": "exito",
             "materia": {
                 "id_materia": materia.id_materia,
                 "nombre": materia.nombre,
                 "recuperacion": materia.recuperacion,
+                "htea": materia.htea,
+                "htei": materia.htei,
                 "trayecto": materia.trayecto
             },
             "pnf": {
@@ -113,6 +182,8 @@ def mat_guardar(request):
     if request.method == "POST":
         id_materia = request.POST.get("materiaseleccionado")
         nombre = request.POST.get("nombresmaterias")
+        thea = request.POST.get("THEA")
+        thei = request.POST.get("THEI")
         reparacion_materia = request.POST.get("reparacionmateria")
         pnf_materia = request.POST.get("pnfmateria")
 
@@ -120,6 +191,8 @@ def mat_guardar(request):
             (nombre, "Nombre de la Materia", "Por favor, debe ingresar el nombre de la materia."),
             (reparacion_materia, "Reparación de la Materia", "Por favor, seleccione si la materia hay la posibilidad de haber o no reparación."),
             (pnf_materia, "PNF de la Materia", "Por favor, seleccione el pnf que pertenecera la materia."),
+            (thea, "Hora Trabajo Estudio Acompañado (HTEA)", "Por favor, debe ingresar las hotas totales de estudio acompañado."),
+            (thei, "Hora Trabajo Estudio Independiente (HTEI)", "Por favor, debe ingresar las hotas totales de estudio independiente.")
         ]
 
         for value, field_name, error_message in controles:
@@ -144,6 +217,8 @@ def mat_guardar(request):
 
             materia.nombre = nombre
             materia.recuperacion = reparacion_materia
+            materia.htea=int(thea)
+            materia.htei=int(thei)
             materia.id_pnf_id = pnf_materia
             materia.save()
 
@@ -187,6 +262,8 @@ def reg_mat(request):
         nombre = request.POST.get("nombresmaterias")
         codigo = request.POST.get("codigosmaterias")
         periodo_materia = request.POST.get("periodomateria")
+        thea = request.POST.get("THEA")
+        thei = request.POST.get("THEI")
         trayecto = request.POST.get("trayectomateria")
         reparacion = request.POST.get("reparacionmateria")
         pnf = request.POST.get("pnfmateria")
@@ -197,6 +274,8 @@ def reg_mat(request):
             (periodo_materia, "Periodo Académico", "Por favor, debe seleccionar el periodo académico."),
             (trayecto, "Trayecto Académico", "Por favor, debe seleccionar el taryecto académico."),
             (reparacion, "Reparación", "Por favor, debe seleccionar la posibilidad de reparación."),
+            (thea, "Hora Trabajo Estudio Acompañado (HTEA)", "Por favor, debe ingresar las hotas totales de estudio acompañado."),
+            (thei, "Hora Trabajo Estudio Independiente (HTEI)", "Por favor, debe ingresar las hotas totales de estudio independiente."),
             (pnf, "P.N.F", "Por favor, debe seleccionar el PNF.")
         ]
 
@@ -249,6 +328,8 @@ def reg_mat(request):
                 nombre=nombre,
                 codigo=codigo,
                 trayecto=trayecto,
+                htea = Decimal(thea.replace(",", ".")),
+                htei = Decimal(thei.replace(",", ".")),
                 recuperacion=reparacion,
                 id_pnf=pnf_obj
             )

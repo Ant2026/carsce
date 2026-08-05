@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const formulario = new FormData(formulario_registro);
 
-            const respuesta = await fetch("/recuperar_contrasenia/", {
+            const respuesta = await fetch("/rec_cont/", {
                 method: "POST",
                 body: formulario
             });

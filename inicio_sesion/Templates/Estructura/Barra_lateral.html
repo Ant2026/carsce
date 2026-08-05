@@ -47,7 +47,7 @@
                 </details>
             {% endif %}
 
-            {% if "Encargado de Control de Estudio" in request.session.rol %}
+            {% if "Control de Estudio" in request.session.rol %}
                 <details>
                     <summary>Materia</summary>
 
@@ -57,11 +57,17 @@
                 </details>
             {% endif %}
 
-            {% if "Coordinador de PNF" in request.session.rol %}
+            {% if "Coordinador PNF" in request.session.rol %}
+                <details>
+                    <summary>Asignar Materias</summary>
+
+                    <a href="{% url 'asig_mat_doc' %}">Registrar Asignación</a>
+                    <a href="{% url 'act_asig' %}">Visualizar Asignación</a>
+                </details>
             {% endif %}
 
             {% if "Docente" in request.session.rol %}
-                
+               
             {% endif %}
 
             {% if "Estudiante" in request.session.rol %}

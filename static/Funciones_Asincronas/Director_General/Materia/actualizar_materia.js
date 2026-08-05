@@ -10,7 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const select_actualizar_recuperacion = document.getElementById("reparacion_actualizar_materia");
     const select_actualizar_pnf = document.getElementById("pnfs_actualizar_materia");
 
+    const input_thea = document.getElementById("THEA");
+    const input_thei = document.getElementById("THEI");
+
     const btn_registrar = document.getElementById("btn_registrar");
+
+    document.querySelectorAll("#THEA, #THEI").forEach(input => {
+        input.addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, "").slice(0, 2);
+        });
+    });
 
     async function pnfs_registrados() {
         try {
@@ -36,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
         input_actualizar_nombre,
         select_actualizar_recuperacion,
         select_actualizar_pnf,
+        input_thea,
+        input_thei,
         btn_registrar
     ]
 
@@ -75,6 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             input_materia_oculta.value = resultado.materia.id_materia;
             input_actualizar_nombre.value = resultado.materia.nombre;
+            
+            input_thea.value = resultado.materia.htea;
+            input_thei.value = resultado.materia.htei;
 
             const option_reparacion = document.createElement("option");
             option_reparacion.value = resultado.materia.recuperacion;

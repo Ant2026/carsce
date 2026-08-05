@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mensaje_nombre_aula = document.getElementById("mensaje_nombre_aula");
     const btn_registrar = document.getElementById("btn_registrar");
 
-    async function validar_seccion() {
+    async function validar_aula() {
         try {
             const formulario = new FormData();
             formulario.append("aula", registrar_nombre_aula.value);
@@ -21,11 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(resultado);
             
             if (resultado.existe) {
-                registrar_nombre_aula.setCustomValidity("Ya existe un pnf con el mismo nombre.");
+                registrar_nombre_aula.setCustomValidity("Ya existe una aula con el mismo nombre.");
                 registrar_nombre_aula.classList.add("is-invalid");
                 registrar_nombre_aula.classList.remove("is-valid");
 
-                mensaje_nombre_aula.textContent = "Ya existe un pnf con el mismo nombre.";
+                mensaje_nombre_aula.textContent = "Ya existe una aula con el mismo nombre.";
                 mensaje_nombre_aula.style.color = "#dc3545";
 
                 btn_registrar.disabled = true;
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 registrar_nombre_aula.classList.add("is-valid");
                 registrar_nombre_aula.classList.remove("is-invalid");
 
-                mensaje_nombre_aula.textContent = "El nombre del PNF está disponible.";
+                mensaje_nombre_aula.textContent = "El nombre de la aula está disponible.";
                 mensaje_nombre_aula.style.color = "#198754";
 
                 btn_registrar.disabled = false;
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ""
         );
 
-        await validar_seccion();
+        await validar_aula();
     });
 
     registrar_nombre_aula.addEventListener("paste", async () => {

@@ -72,6 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <td>${index + 1}</td>
                             <td>${materia.nombre}</td>
                             <td>${materia.codigo}</td>
+                            <td>${materia.htea}</td>
+                            <td>${materia.htei}</td>
                             <td>${materia.trayecto}</td>
                             <td>${materia.recuperacion}</td>
                         </tr>
@@ -87,6 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <th>ID</th>
                             <th>Materia</th>
                             <th>Código</th>
+                            <th>HTEA</th>
+                            <th>HTEI</th>
                             <th>Trayecto</th>
                             <th>Recuperación</th>
                         </tr>

@@ -1,19 +1,21 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
+from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from django.template.loader import render_to_string
 from django.contrib import messages
 
-from inicio_sesion.models import Usuario, Contacto, VerificacionCodigo
+from inicio_sesion.models import Usuario, Contacto, VerificacionCodigo, Cuenta
 
 import secrets, string, json, uuid
 from math import ceil
 
 # Verificado
-def buscar_usuario(request):
+
+def bus_usr(request):
     if request.method == "POST":
         nacionalidad = request.POST.get("nacionalidad")
         num_cedula = request.POST.get("cedula")
@@ -36,16 +38,17 @@ def buscar_usuario(request):
 
         cedula_identidad = nacionalidad + "-" + num_cedula
         
-        existe = Usuario.objects.filter(cedula_identidad=cedula_identidad).exists()
-        if not existe:
+        try:
+            Usuario.objects.filter(cedula_identidad=cedula_identidad)
+        except Usuario.DoesNotExist:
             return JsonResponse({
                 "estado": "fallo",
                 "title": "Error",
                 "icon": "error",
-                "descripcion": "No se encuentra registrado el usuario."
+                "descripcion": "El usuario no se encuentra registrado."
             })
         
-        request.session['CI_usuario'] = cedula_identidad
+        request.session['cedula_usuario'] = cedula_identidad
 
         request.session['flujo_verificacion'] = True
         
@@ -55,68 +58,107 @@ def buscar_usuario(request):
         
     return render(request, 'Sesion/buscar_usuario.html')
 
-# Verificado
-def comprobar_usuario(request):
-    return render(request, "Sesion/comprobar_usuario.html")
+def exist_cod(request):
+    usuario = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario"))
 
-def enviar_codigo_usuario(request):
-    # Obtener el id del usuario
-    usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
-
-    # Obtener el correo electronico
-    contacto = Contacto.objects.filter(id_usuario=usuario).first()
-
-    # Crear un token de seguridad
     token_sesion = request.session.get("token_recuperacion")
 
-    # Aquí se verifica si el usuario esta o no registrado
     verificacion = VerificacionCodigo.objects.filter(
-        cedula_identidad=usuario.cedula_identidad, 
+        cedula_identidad=usuario.cedula_identidad,
         token=token_sesion
     ).first()
 
+    # No existe un código activo
     if not verificacion:
-        # Si no esta, se registra
-        enviar_codigo_verificacion(
-            usuario.nombres,
-            usuario.apellidos,
-            contacto.correo_electronico,
-            usuario.cedula_identidad,
-            token_sesion
-        )
-
-        # Se obtiene el id del registro
-        verificacion = VerificacionCodigo.objects.filter(
-            cedula_identidad=usuario.cedula_identidad, 
-            token=token_sesion
-        ).first()
-
         return JsonResponse({
-            "estado": "exito",
-            "title": "Enviado",
-            "icon": "info",
-            "descripcion": "Se ha enviado al correo electronico el código de seguridad.",
-            "fecha_expiracion": int(verificacion.fecha_expiracion.timestamp())
+            "estado": "no_exite",
+            "icon": "error",
+            "title": "Error",
+            "descripcion": "No existe un código de verificación vigente, selecciona uno de los correos registrados."
         })
-    else:
-        # Aquí se comprueba si el código perdio su vigencia
-        if verificacion and verificacion.fecha_expiracion < timezone.now():
-            return JsonResponse({
-                "estado": "fallo",
-                "title": "Error",
-                "icon": "error",
-                "descripcion": "El código ha expirado, debe solicitar el código a través del botón de reenviar código",
-            })
-        
+
+    # El código expiró
+    if verificacion.fecha_expiracion <= timezone.now():
+        return JsonResponse({
+            "estado": "expirado",
+            "icon": "warning",
+            "title": "Expiro Código",
+            "descripcion": "El código ha expirado, debera presionar el botón reenviar código."
+        })
+
+    # El código sigue vigente
     return JsonResponse({
-        "estado": "exito",
-        "title": "Código enviado",
-        "icon": "info",
-        "descripcion": "Ya existe un código de verificación vigente en su correo electrónico.",
+        "estado": "vigente",
         "fecha_expiracion": int(verificacion.fecha_expiracion.timestamp())
     })
 
-def comprobar_codigo_usuario(request):
+def corr_reg(request):
+    # Obtener el id del usuario
+    usuario = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario"))
+
+    contacto = Contacto.objects.get(id_usuario=usuario)
+
+    correos = {}
+    if contacto.correo_electronico:
+        correos["correo_principal"] = contacto.correo_electronico
+
+    if contacto.correo_alternativo:
+        correos["correo_secundario"] = contacto.correo_alternativo
+
+    return JsonResponse({ "correos": correos })
+
+# Verificado
+def comp_usr(request):
+    return render(request, "Sesion/comprobar_usuario.html")
+
+def env_cod_usr(request):
+
+    if request.method != "POST":
+        return JsonResponse({
+            "estado": "fallo",
+            "title": "Error",
+            "icon": "error",
+            "descripcion": "Método no permitido"
+        }, status=405)
+
+
+    correo_seleccionado = request.POST.get("correo_verificacion")
+
+    if not correo_seleccionado:
+        return JsonResponse({
+            "estado": "fallo",
+            "title": "Error",
+            "icon": "error",
+            "descripcion": "Debe seleccionar un correo electrónico"
+        })
+
+
+    usuario = Usuario.objects.filter(
+        cedula_identidad=request.session.get("cedula_usuario")
+    ).first()
+
+
+    if not usuario:
+        return JsonResponse({
+            "estado": "fallo",
+            "title": "Error",
+            "icon": "error",
+            "descripcion": "Usuario no encontrado"
+        })
+
+
+    resultado = env_cod_ver(
+        usuario.nombres,
+        usuario.apellidos,
+        correo_seleccionado,
+        usuario.cedula_identidad,
+        request.session.get("token_recuperacion")
+    )
+
+    return resultado
+
+# Verificado
+def comp_cod_usr(request):
     if request.method == "POST": # Se obtiene el código registrado por el usuario
         codigo_ingresado = request.POST.get("codigo") # Verifica si no se encuentra vacio
 
@@ -130,7 +172,7 @@ def comprobar_codigo_usuario(request):
             })
 
         # Obtener el id del usuario
-        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
+        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
 
         # Crear un token de seguridad
         token_sesion = request.session.get("token_recuperacion")
@@ -151,7 +193,7 @@ def comprobar_codigo_usuario(request):
             })
 
         # Se obtiene la respuesta del servidor si esta o no correcto el código
-        respuesta = validar_codigo(
+        respuesta = val_cod(
             codigo_ingresado,
             usuario.cedula_identidad,
             token_sesion
@@ -175,7 +217,7 @@ def comprobar_codigo_usuario(request):
         return respuesta
 
 # Verificado
-def validar_codigo(codigo, cedula_identidad, token):
+def val_cod(codigo, cedula_identidad, token):
     # Se busca el código creado de acuerdo a los valores
     verificacion = VerificacionCodigo.objects.filter(cedula_identidad=cedula_identidad, token=token, activo=1).first()
     if not verificacion:
@@ -250,48 +292,49 @@ def validar_codigo(codigo, cedula_identidad, token):
     })
 
 # Verificado
-def reenviar_codigo_btn(request):
-    # Aquí se valida si realizaron las validaciones por la cedula y el correo electronico 
-    if not request.session.get("flujo_verificacion"):
-        return JsonResponse({
-            "estado": "reenviar",
-            "icon": "error",
-            "title": "Error",
-            "descripcion": "Debe de pasar en la validación para comprobar si esta registrado.",
-            "url": reverse("buscar_usuario")
-        })
+def reenv_cod_btn(request):
+    if request.method == "POST": # Se obtiene el código registrado por el usuario
+        codigo_seleccionado = request.POST.get("correo_verificacion") # Verifica si no se encuentra vacio
 
-    # Se buscan todos los datos necesarios
-    usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
+        # Aquí se valida si realizaron las validaciones por la cedula y el correo electronico 
+        if not request.session.get("flujo_verificacion"):
+            return JsonResponse({
+                "estado": "reenviar",
+                "icon": "error",
+                "title": "Error",
+                "descripcion": "Debe de pasar en la validación para comprobar si esta registrado.",
+                "url": reverse("bus_usr")
+            })
 
-    contacto = Contacto.objects.filter(id_usuario_id=usuario.id_usuario).first()
+        # Se buscan todos los datos necesarios
+        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
 
-    verificacion = VerificacionCodigo.objects.filter(cedula_identidad=usuario.cedula_identidad, token=request.session.get("token_recuperacion")).first()
+        verificacion = VerificacionCodigo.objects.filter(cedula_identidad=usuario.cedula_identidad, token=request.session.get("token_recuperacion")).first()
 
-    # Aquí se calcula el tiempo que debe esperar el usuario
-    if (verificacion and verificacion.bloqueado_hasta and timezone.now() < verificacion.bloqueado_hasta):
-        tiempo_restante = (verificacion.bloqueado_hasta - timezone.now())
-        minutos_restantes = ceil(tiempo_restante.total_seconds() / 60)
-        return JsonResponse({
-            "estado": "fallo",
-            "icon": "error",
-            "title": "Error",
-            "descripcion": f"Demasiados intentos. Intente nuevamente en {minutos_restantes} minuto(s)"
-        })
+        # Aquí se calcula el tiempo que debe esperar el usuario
+        if (verificacion and verificacion.bloqueado_hasta and timezone.now() < verificacion.bloqueado_hasta):
+            tiempo_restante = (verificacion.bloqueado_hasta - timezone.now())
+            minutos_restantes = ceil(tiempo_restante.total_seconds() / 60)
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "error",
+                "title": "Error",
+                "descripcion": f"Demasiados intentos. Intente nuevamente en {minutos_restantes} minuto(s)"
+            })
 
-    # Se reenvia el código nuevamente
-    resultado = reenviar_codigo(
-        usuario.nombres,
-        usuario.apellidos,
-        contacto.correo_electronico,
-        usuario.cedula_identidad,
-        request.session.get("token_recuperacion")
-    )
+        # Se reenvia el código nuevamente
+        resultado = reenv_cod(
+            usuario.nombres,
+            usuario.apellidos,
+            codigo_seleccionado,
+            usuario.cedula_identidad,
+            request.session.get("token_recuperacion")
+        )
 
-    return resultado
+        return resultado
 
 # Verificado
-def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
+def reenv_cod(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
     # Se obtiene los datos registrados
     verificacion = VerificacionCodigo.objects.filter(cedula_identidad=cedula_identidad, token=token).first()
 
@@ -337,6 +380,7 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
             bloqueado_hasta=None,
             descripcion=f"Código de verificación para recuperación de credenciales al usuario {nombres_usuario} {apellidos_usuario}"
         )
+
     # Plantilla utilizado para el envío de código al correo electronico
     html = render_to_string(
         "Email/reenviar_codigo.html",
@@ -347,6 +391,7 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
             "numero_intento": numero_intento,
         }
     )
+
     # Envio al correo electronico
     send_mail(
         subject="Nuevo código de autenticación - UPT José Félix Ribas",
@@ -355,16 +400,18 @@ def reenviar_codigo(nombres_usuario, apellidos_usuario, correo_electronico, cedu
         recipient_list=[correo_electronico],
         html_message=html,
     )
+
     # Notificación
     return JsonResponse({
         "estado": "exito",
         "title": "Código",
         "icon": "info",
-        "descripcion": "Se ha enviado un nuevo código de verificación"
+        "descripcion": "Se ha enviado un nuevo código de verificación",
+        "fecha_expiracion": fecha_expiracion.isoformat()
     })
 
 # Verificado
-def enviar_codigo_verificacion(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
+def env_cod_ver(nombres_usuario, apellidos_usuario, correo_electronico, cedula_identidad, token):
     # Generar el código que se enviara al correo electronico
     codigo_generado = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
     fecha_expiracion = timezone.now() + timedelta(minutes=5)
@@ -402,11 +449,12 @@ def enviar_codigo_verificacion(nombres_usuario, apellidos_usuario, correo_electr
         "estado": "codigo_enviado",
         "title": "Enviado",
         "icon": "info",
-        "descripcion": "Se ha enviado un código de verificación a su correo electrónico"
+        "descripcion": "Se ha enviado un código de verificación a su correo electrónico",
+        "fecha_expiracion": fecha_expiracion.isoformat()
     })
 
 # Verificado
-def panel_recuperar_credenciales(request):
+def panel_rec_cred(request):
     # Se verififca si paso por las todas las validaciones
     if not request.session.get("flujo_verificacion"):
         return redirect("buscar_usuario")
@@ -420,23 +468,23 @@ def panel_recuperar_credenciales(request):
     # Comprobar si el codigo esta verificado o no
     verificacion = VerificacionCodigo.objects.filter(token=token, activo=0).first()
     if not verificacion:
-        return redirect("buscar_usuario")
+        return redirect("bus_usr")
     
     return render(request, 'Sesion/panel_recuperar_credenciales.html')
 
 # Verificado
-def recuperar_contrasenia(request):
+def rec_cont(request):
     if not request.session.get("flujo_verificacion"):
-        return redirect("buscar_usuario")
+        return redirect("bus_usr")
     
     if not request.session.get("correo_verificado"):
-        return redirect("comprobar_usuario")
+        return redirect("comp_usr")
     
     token = request.session.get("token_recuperacion")
 
     verificacion = VerificacionCodigo.objects.filter(token=token, activo=0).first()
     if not verificacion:
-        return redirect("buscar_usuario")
+        return redirect("bus_usr")
 
     if request.method == "POST":
         password = request.POST.get("nueva_contrasenia")
@@ -467,104 +515,108 @@ def recuperar_contrasenia(request):
                 "descripcion": "No coincide las contraseñas."
             })
 
-        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("CI_usuario")).first()
-        if not usuario:
+        usuario = Usuario.objects.filter(cedula_identidad=request.session.get("cedula_usuario")).first()
+        
+        credenciales = Cuenta.objects.filter(id_usuario=usuario).first()
+        if not credenciales:
             return JsonResponse({
                 "estado": "fallo",
                 "title": "Error",
                 "icon": "error",
-                "descripcion": "Usuario no encontrado."
+                "descripcion": "No existen credenciales registradas."
             })
 
-        # asignacion = UsuarioAsignacion.objects.filter(id_usuario=usuario).first()
-        # if not asignacion:
-        #     return JsonResponse({
-        #         "estado": "fallo",
-        #         "title": "Error",
-        #         "icon": "error",
-        #         "descripcion": "El usuario no tiene una asignación registrada."
-        #     })
-
-        # credenciales = CredencialesUsuario.objects.filter(id_asignacion=asignacion).first()
-
-        # if not credenciales:
-        #     return JsonResponse({
-        #         "estado": "fallo",
-        #         "title": "Error",
-        #         "icon": "error",
-        #         "descripcion": "No existen credenciales registradas."
-        #     })
-
         # Se guardaron la nuevas contraseña
-        # credenciales.clave = password
-        # credenciales.save()
+        credenciales.clave = make_password(password)
+        credenciales.save()
 
         # Se reinicia los campos
-        verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session["CI_usuario"]).first()
+        verificacion = VerificacionCodigo.objects.filter(cedula_identidad=request.session["cedula_usuario"]).first()
         if verificacion:
             verificacion.token = ""
             verificacion.save()
 
         # Se elimina las variables de sesión
         del request.session["correo_verificado"]
-        del request.session["CI_usuario"]
+        del request.session["cedula_usuario"]
         del request.session["token_recuperacion"]
 
         return JsonResponse({
             "estado": "exito",
             "title": "Exito",
             "icon": "success",
-            "descripcion": "Contraseña actualizada correctamente"
+            "descripcion": "Contraseña actualizada correctamente."
         })
 
     return render(request, "Sesion/recuperar_contrasenia.html")
 
 # Verificado
-def recuperar_usuario(request):
-    # Verificar si se realizaron las validaciones busqueda de usuario y correo electronico
+def rec_usr(request):
+    # Verificar que el flujo de recuperación sea válido
     if not request.session.get("flujo_verificacion"):
-        return redirect("buscar_usuario")
-    
+        return redirect("bus_usr")
+
     if not request.session.get("correo_verificado"):
-        return redirect("comprobar_usuario")
+        return redirect("comp_usr")
 
-    usuario = Usuario.objects.get(cedula_identidad=request.session.get("CI_usuario"))
-    if not usuario:
-        messages.success(request, "Ocurrio un error al momento de buscar los datos del usuario.")
+    try:
+        usuario_reg = Usuario.objects.get(cedula_identidad=request.session.get("cedula_usuario"))
+    except Usuario.DoesNotExist:
+        messages.error(
+            request,
+            "Ocurrió un error al momento de buscar los datos del usuario."
+        )
+        return redirect("bus_usr")
 
-    # Mensajes si ha ocurrido un error
-    contacto = Contacto.objects.filter(id_usuario=usuario).first()
+    contacto = Contacto.objects.filter(id_usuario=usuario_reg).first()
     if not contacto or not contacto.correo_electronico:
-        messages.error(request, "Ocurrio un error al momento de obtener los datos de contacto.")
-    
-    # credenciales = CredencialesUsuario.objects.filter(id_asignacion__id_usuario=usuario).select_related("id_asignacion").first()
-    # if not credenciales:
-    #     messages.error(request, "Ocurrio un error al momento de obtener las credenciales.")
+        messages.error(
+            request,
+            "Ocurrió un error al momento de obtener el correo electrónico registrado."
+        )
+        return redirect("bus_usr")
 
-    # Eliminar las variables de sesion
-    del request.session["correo_verificado"]
-    del request.session["CI_usuario"]
-    del request.session["token_recuperacion"]
+    credenciales = Cuenta.objects.filter(id_usuario=usuario_reg).first()
+    if not credenciales:
+        messages.error(
+            request,
+            "Ocurrió un error al momento de obtener las credenciales del usuario."
+        )
+        return redirect("bus_usr")
 
-    # Plantillas utilizadas para el envio de datos
-    # html = render_to_string(
-    #     "Email/recuperar_usuario.html",
-    #     {
-    #         "nombres": usuario.nombres,
-    #         "apellidos": usuario.apellidos,
-    #         "nombre_usuario": credenciales.nombre_usuario,
-    #     }
-    # )
-
-    # Validaciones de correo electronico
-    send_mail(
-        subject="Recuperación de usuario - UPT José Félix Ribas",
-        # message=f"Su nombre de usuario es: {credenciales.nombre_usuario}",
-        from_email="ejemplo@gmail.com",
-        recipient_list=[contacto.correo_electronico],
-        # html_message=html,
-        fail_silently=False,
+    # Generar plantilla del correo
+    html = render_to_string(
+        "Email/recuperar_usuario.html",
+        {
+            "nombres": usuario_reg.nombres,
+            "apellidos": usuario_reg.apellidos,
+            "nombre_usuario": credenciales.usuario,
+        },
     )
 
+    try:
+        send_mail(
+            subject="Recuperación de usuario - UPT José Félix Ribas",
+            message=f"Su nombre de usuario es: {credenciales.usuario}",
+            from_email="ejemplo@gmail.com",
+            recipient_list=[contacto.correo_electronico],
+            html_message=html,
+            fail_silently=False,
+        )
+    except Exception:
+        messages.error(
+            request,
+            "Ocurrió un error al enviar el correo electrónico."
+        )
+        return redirect("buscar_usuario")
+
+    # Eliminar variables de sesión
+    request.session.pop("correo_verificado", None)
+    request.session.pop("cedula_usuario", None)
+    request.session.pop("token_recuperacion", None)
+    request.session.pop("flujo_verificacion", None)
+
     return render(request, "Sesion/recuperar_usuario.html")
+
+
 

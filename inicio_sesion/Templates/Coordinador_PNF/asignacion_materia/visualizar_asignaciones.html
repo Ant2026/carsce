@@ -1,0 +1,36 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="asignar_materia">
+    <div class="contenedor_asignar_materia">
+        <h3>Asignar Materia a Docente</h3>
+
+        <div id="contenedor_materias"></div>
+    </div>
+</section>
+
+<dialog id="dialogo_actualizar">
+    <div class="contenedor_docente_asignado_materia">
+        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
+        
+        <h4>Docentes Asignado a Materia</h4>
+
+        <form method="post" id="formulario_actualizar">
+            {% csrf_token %}
+            <input type="hidden" name="materia_seleccionada" id="materia_seleccionada">
+
+            <label for="docentes_asignados">Docentes Asignados:</label>
+            <select name="docentes_asignados" id="docentes_asignados"></select>
+
+
+            <input type="submit" value="Actualizar la Asignación">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/Coordinador_PNF/Asignacion_Materia/visualizar_asignaciones.js' %}"></script>
+
+{% endblock %}

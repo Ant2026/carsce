@@ -87,6 +87,40 @@ ACTIVIDADES = [
     {"grupo": "Días Especiales", "actividad": "Día del Estudiante"},
 ]
 
+AULAS = [
+    {"nombre_aula": "Aula 10", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 11", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 12", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 13", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 14", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 15", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 16", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 17", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 18", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 19", "nombre_edificio": "Edificio A", "piso_edificio": "Primer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 20", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 21", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 22", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 23", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 24", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 25", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 26", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 27", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 28", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 29", "nombre_edificio": "Edificio A", "piso_edificio": "Segundo Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 30", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 31", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 32", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 33", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 34", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 35", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 36", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 37", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 38", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 39", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+    {"nombre_aula": "Aula 40", "nombre_edificio": "Edificio A", "piso_edificio": "Tercer Piso", "nucleo": "Barinas",},
+]
+
 def crear_datos(apps, schema_editor):
     Nucleo = apps.get_model("inicio_sesion", "Nucleos")
     PeriodoCargarNotas = apps.get_model("inicio_sesion", "PeriodoCargarNotas")
@@ -94,7 +128,8 @@ def crear_datos(apps, schema_editor):
     PNFNucleo = apps.get_model("inicio_sesion", "PNFNucleo")    
     GrupoActividad = apps.get_model("inicio_sesion", "GrupoActividad")
     Actividad = apps.get_model("inicio_sesion", "Actividad")
-
+    AulaAcademica = apps.get_model("inicio_sesion", "AulaAcademica")
+    Nucleos = apps.get_model("inicio_sesion", "Nucleos")
     # Núcleos
     for nucleo in NUCLEOS:
         Nucleo.objects.get_or_create(
@@ -152,6 +187,13 @@ def crear_datos(apps, schema_editor):
             nombre=dato["actividad"]
         )
 
+    for aula in AULAS:
+        AulaAcademica.objects.create(
+            nombre_aula=aula["nombre_aula"],
+            nombre_edificio=aula["nombre_edificio"],
+            piso_edificio=aula["piso_edificio"],
+            id_nucleo=Nucleos.objects.get(municipio=aula["nucleo"]),
+        )
 
 def eliminar_datos(apps, schema_editor):
     Nucleo = apps.get_model("inicio_sesion", "Nucleos")
@@ -160,7 +202,9 @@ def eliminar_datos(apps, schema_editor):
     Pnf = apps.get_model("inicio_sesion", "Pnf")
     GrupoActividad = apps.get_model("inicio_sesion", "GrupoActividad")
     Actividad = apps.get_model("inicio_sesion", "Actividad")
-
+    AulaAcademica = apps.get_model("inicio_sesion", "AulaAcademica")
+    SeccionAcademica = apps.get_model("inicio_sesion", "SeccionAcademica")
+    
     PNFNucleo.objects.all().delete()
 
     Pnf.objects.filter(
@@ -181,6 +225,10 @@ def eliminar_datos(apps, schema_editor):
 
     GrupoActividad.objects.filter(
         nombre__in=[g["nombre"] for g in GRUPOS_ACTIVIDADES]
+    ).delete()
+
+    AulaAcademica.objects.filter(
+        nombre_aula__in=[g["nombre_aula"] for g in AULAS]
     ).delete()
 
 class Migration(migrations.Migration):

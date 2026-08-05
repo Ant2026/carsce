@@ -14,28 +14,28 @@
             <div id="contenedor_actualizar_Contacto">
                 <h4>Datos de Contacto</h4>
 
-                <label for="prefijo_telefono2">Telefono (Principal):</label>
+                <label for="prefijo_principal">Telefono (Principal):</label>
                 <div class="campo_horizontal">
-                    <select name="prefijo_telefono_principal" id="prefijo_telefono2"></select>
-                    <input type="text" name="num_telefono_principal" id="numero_telefonico2" autocomplete="off">                        
+                    <select name="prefijo_principal" id="prefijo_principal"></select>
+                    <input type="text" name="telefono_principal" id="telefono_principal" autocomplete="off">                        
                 </div>
 
-                <label for="prefijo_telefono3">Telefono (Secundaria):</label>
+                <label for="prefijo_secundario">Telefono (Secundaria) Opcional:</label>
                 <div class="campo_horizontal">
-                    <select name="prefijo_telefono_secundaria" id="prefijo_telefono3"></select>
-                    <input type="text" name="num_telefono_secundaria" id="numero_telefonico3" autocomplete="off">                        
+                    <select name="prefijo_secundario" id="prefijo_secundario"></select>
+                    <input type="text" name="telefono_secundario" id="telefono_secundario" autocomplete="off">                        
                 </div>
 
-                <label for="Correo_num2">Correo Electronico (Principal) Opcional:</label>
+                <label for="correo_principal">Correo Electronico (Principal):</label>
                 <div class="campo_horizontal">
-                    <input type="text" name="correo_principal" id="Correo_num2" autocomplete="off">
-                    <select name="dominio_correo_principal" id="dominio_num2"></select>
+                    <input type="text" name="correo_principal" id="correo_principal" autocomplete="off">
+                    <select name="dominio_principal" id="dominio_principal"></select>
                 </div>
 
-                <label for="Correo_num3">Correo Electronico (Secundaria):</label>
+                <label for="correo_secundario">Correo Electronico (Secundaria):</label>
                 <div class="campo_horizontal">
-                    <input type="text" name="correo_secundaria" id="Correo_num3" autocomplete="off">
-                    <select name="dominio_correo_secundaria" id="dominio_num3"></select>
+                    <input type="text" name="correo_secundario" id="correo_secundario" autocomplete="off">
+                    <select name="dominio_secundario" id="dominio_secundario"></select>
                 </div>
             </div>
 
@@ -59,7 +59,7 @@
                 <textarea name="direcciondomicilio" id="direccion_domicilio"></textarea>
             </div>
 
-            {% if request.session.perfil == 'Estudiante' %}
+            {% if "Estudiante" in request.session.rol %}
                 <div id="contenedor_actualizar_Discapacidad">
                     <h4>Datos de Discapacidad</h4>
 
@@ -132,7 +132,9 @@
     <div class="contenedor_autenticacion_correo">
         <h4>Verificar Código</h4>
 
-        <p>Se le envio un código al correo seleccionado, verifique e ingrese el código.</p>
+        <p>Se le envio un código al correo seleccionado, verifique e ingrese el código tiempo de expiracion es (<span id="contador_envio">60</span>s).</p>
+
+        <P id="mensaje_correo"></P>
 
         <form method="post" id="formulario_autenticacion">
             {% csrf_token %}
@@ -150,9 +152,8 @@
 </dialog>
 
 <script src="{% static 'Funcionalidades/residencia.js' %}"></script>
-<script src="{% static 'Funcionalidades/correo_electronico_num2.js' %}"></script>
-<script src="{% static 'Funcionalidades/telefono_num2.js' %}"></script>
-
-<script src="{% static 'Funciones_Asincronas/actualizar_datosusuario.js' %}"></script>
+<script src="{% static 'Funcionalidades/correo_electronico.js' %}"></script>
+<script src="{% static 'Funcionalidades/telefono.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Actualizacion_Datos/datos_basicos.js' %}"></script>
 
 {% endblock %}

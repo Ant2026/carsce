@@ -18,8 +18,14 @@
             <small id="mensaje_nombre_materia"></small>
 
             <label for="codigos_registrar_materias">Código del Materia:</label>
-            <input type="text" name="codigosmaterias" id="codigos_registrar_materias" minlength="7" maxlength="7" pattern="[A-Z]{4}[0-9]{3}" title="Debe contener 4 letras mayúsculas y 3 números. Ejemplo: MATE001" autocomplete="off" placeholder="Escribir el código de la materia" autocomplete="off" required>
+            <input type="text" name="codigosmaterias" id="codigos_registrar_materias" minlength="7" maxlength="7" pattern="[A-Z]{4}[0-9]{3}" title="Debe contener 4 letras mayúsculas y 3 números. Ejemplo: MATE001" placeholder="Escribir el código de la materia" autocomplete="off" required>
             <small id="mensaje_codigo_materia"></small>
+            
+            <label for="THEA">Hora Trabajo Estudio Acompañado:</label>
+            <input type="text" name="THEA" id="THEA" pattern="[0-9]{1,2}(,[0-9])?" maxlength="4" inputmode="decimal" placeholder="Hora de Trabajo de Estudio Acompañado" autocomplete="off" required>
+            
+            <label for="THEI">Hora Trabajo Estudio Independiente:</label>
+            <input type="text" name="THEI" id="THEI" pattern="[0-9]{1,2}(,[0-9])?" maxlength="4" inputmode="decimal" placeholder="Hora de Trabajo de Estudio Independiente" autocomplete="off" required>
 
             <label for="periodo_registrar_materia">Periodo de la Materia:</label>
             <select name="periodomateria" id="periodo_registrar_materia" required>
@@ -49,13 +55,7 @@
 
             <label for="trayecto_registrar_materia">Trayecto de la Materia:</label>
             <select name="trayectomateria" id="trayecto_registrar_materia">
-                <option value="">Seleccionar el Trayecto</option>
-                <option value="Inicial">Inicial</option>
-                <option value="Trayecto I">Trayecto I</option>
-                <option value="Trayecto II">Trayecto II</option>
-                <option value="Trayecto III">Trayecto III</option>
-                <option value="Trayecto IV">Trayecto IV</option>
-                <option value="Trayecto V">Trayecto V</option>
+                <option value="">Seleccionar Primero Perido Académico</option>
             </select>
 
             <label for="reparacion_registrar_materia">Reparación Materia:</label>
