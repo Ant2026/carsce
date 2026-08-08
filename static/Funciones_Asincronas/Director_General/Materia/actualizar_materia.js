@@ -17,7 +17,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll("#THEA, #THEI").forEach(input => {
         input.addEventListener("input", function () {
-            this.value = this.value.replace(/\D/g, "").slice(0, 2);
+            let valor = this.value.replace(/[^0-9,]/g, "");
+
+            // Permitir una sola coma
+            const partes = valor.split(",");
+            if (partes.length > 2) {
+                valor = partes[0] + "," + partes.slice(1).join("");
+            }
+
+            if (valor.includes(",")) {
+                let [entero, decimal] = valor.split(",");
+                valor = entero.slice(0, 2) + "," + decimal.slice(0, 1);
+            } else {
+                valor = valor.slice(0, 2);
+            }
+
+            this.value = valor;
         });
     });
 
@@ -81,14 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 return;
             }
-
             bloquear_controles(controles, false);
 
             input_materia_oculta.value = resultado.materia.id_materia;
             input_actualizar_nombre.value = resultado.materia.nombre;
             
-            input_thea.value = resultado.materia.htea;
-            input_thei.value = resultado.materia.htei;
+            input_thea.value = String(resultado.materia.htea).replace(".", ",");
+            input_thei.value = String(resultado.materia.htei).replace(".", ",");
 
             const option_reparacion = document.createElement("option");
             option_reparacion.value = resultado.materia.recuperacion;

@@ -183,7 +183,6 @@ class SeccionAcademica(models.Model):
     id_seccion = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=5)
     turno = models.CharField(max_length=20)
-    activa = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Sección {self.nombre}"
@@ -208,7 +207,6 @@ class DatosPreofesion(models.Model):
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='id_profesional')
 
 #ACTUALIZACION / PROPUESTA
-
 class RolAcademico(models.Model): # Modelo creado para no redundar en datos de 3 usuarios
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE, blank=True, null=True)
@@ -276,11 +274,7 @@ class InformacionSecundaria(models.Model):
 class EstudianteCorte(models.Model):
     id_estudiante_corte = models.AutoField(primary_key=True)
     corte_academico = models.ForeignKey(CorteAcademico, on_delete=models.CASCADE)
-    estudiante = models.ForeignKey(
-        Estudiante,
-        on_delete=models.CASCADE,
-        related_name="cortes"
-    )
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name="cortes")
 
 class SeccionEstudiante(models.Model):
     id_seccion_estudiante = models.AutoField(primary_key=True)
@@ -305,21 +299,53 @@ class Docente(RolAcademico):
 
 class MateriaAsignada(models.Model):
     id_materia_asignada = models.AutoField(primary_key=True)
-    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
-    seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, blank=True, null=True)
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name="asignaciones")
+    seccion = models.ForeignKey(SeccionAcademica, on_delete=models.CASCADE, related_name="materias_asignadas")
+    activo = models.BooleanField(default=True)
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
+    fecha_suspension = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["materia", "seccion"],
+                condition=models.Q(activo=True),
+                name="uq_materia_seccion_activa"
+            )
+        ]
+        
 class DocenteAsignadoMateria(models.Model):
     materia_asignada = models.ForeignKey(MateriaAsignada, on_delete=models.CASCADE, related_name="docentes")
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE)
-    rol = models.CharField(max_length=20,
+    rol = models.CharField(
+        max_length=20,
         choices=[
             ("PRINCIPAL", "Docente Principal"),
             ("SECUNDARIO", "Docente Secundario"),
         ]
     )
     activo = models.BooleanField(default=True)
-    fecha_asignacion = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
     fecha_suspension = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["materia_asignada"],
+                condition=models.Q(
+                    rol="PRINCIPAL",
+                    activo=True
+                ),
+                name="uq_docente_principal_activo"
+            ),
+            models.UniqueConstraint(
+                fields=["materia_asignada"],
+                condition=models.Q(
+                    rol="SECUNDARIO"
+                ),
+                name="uq_docente_secundario"
+            ),
+        ]
 
 class CoordinadorPNF(RolAcademico):
     id_coordinador = models.AutoField(primary_key=True)

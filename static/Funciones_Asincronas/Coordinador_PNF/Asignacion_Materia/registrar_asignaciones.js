@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const input_nombre_materia = document.getElementById("nombre_materia");
     const contenedor_materias = document.getElementById("contenedor_materias");
     
+    let seccion = "";
+
     async function obtener_docentes_registrados() {
         try {
             const respuesta = await fetch("/docs_reg/");
@@ -47,14 +49,30 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     obtener_secciones_registrados();
     
+    select_secciones_registradas.addEventListener("change", async () => {
+        await obtener_materias_registradas();
+    });
+
     async function obtener_materias_registradas() {
         try {
-            const respuesta = await fetch("/mats_reg/");
+            const seccion = select_secciones_registradas.value;
+
+            const formulario = new FormData();
+            if (seccion) {
+                formulario.append("seccion", seccion);
+            }
+
+            const respuesta = await fetch("/mats_reg/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                },
+                body: formulario
+            });
             const resultado = await respuesta.json();
             console.log(resultado);
 
             contenedor_materias.innerHTML = "";
-
             if (resultado.estado !== "exito") {
                 contenedor_materias.innerHTML = `<p>${resultado.descripcion}</p>`;
                 return;
@@ -64,15 +82,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 contenedor_materias.innerHTML = "<p>No hay materias registradas.</p>";
                 return;
             }
-
-            // Agrupar materias por trayecto
-            const materiasPorTrayecto = {};
-
+            
+            const materiasPorTrayecto = {}; // Agrupar materias por trayecto
             resultado.materias.forEach(materia => {
                 if (!materiasPorTrayecto[materia.trayecto]) {
                     materiasPorTrayecto[materia.trayecto] = [];
                 }
-
                 materiasPorTrayecto[materia.trayecto].push(materia);
             });
 
@@ -84,13 +99,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const tabla = document.createElement("table");
                 tabla.classList.add("tabla-materias");
-
                 tabla.innerHTML = `
                     <thead>
                         <tr>
                             <th style="width:60px; text-align:center;">
                                 Asignar
                             </th>
+
                             <th>
                                 Materia
                             </th>
@@ -99,15 +114,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     <tbody></tbody>
                 `;
-
                 const tbody = tabla.querySelector("tbody");
 
                 materiasPorTrayecto[trayecto].forEach(materia => {
                     const fila = document.createElement("tr");
-
-                    // Color según estado de asignación
-                    switch (materia.estado) {
-
+                    
+                    switch (materia.estado) { // Color según estado
                         case "VERDE":
                             fila.classList.add("materia-verde");
                             break;
@@ -120,14 +132,20 @@ document.addEventListener("DOMContentLoaded", function() {
                             fila.classList.add("materia-rojo");
                             break;
                     }
+                  
+                    /* Si no hay sección seleccionada: todos los checkbox quedan deshabilitados. */
+                    /* Si hay sección: solamente ROJO queda deshabilitado. */
+                    const deshabilitado = !seccion || materia.estado === "ROJO" ? "disabled" : "";
 
                     fila.innerHTML = `
                         <td style="text-align:center;">
                             <input
                                 type="checkbox"
                                 name="materias[]"
-                                value="${materia.id_materia}">
+                                value="${materia.id_materia}"
+                                ${deshabilitado}>
                         </td>
+
                         <td>
                             ${materia.nombre}
                         </td>
@@ -135,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     tbody.appendChild(fila);
                 });
+
                 contenedor_materias.appendChild(tabla);
             });
         } catch (error) {

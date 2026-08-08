@@ -1,0 +1,38 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="asignar_materia">
+    <div class="contenedor_asignar_materia">
+        <h3>Asignar Materia a Docente</h3>
+
+        <div id="contenedor_busqueda_asignacion">
+            <h4>Busqueda Asignación</h4>
+
+            <form method="post" id="formulario_busqueda">
+                {% csrf_token %}
+                <label for="trayecto">Trayecto Académico:</label>
+                <select name="trayecto" id="trayecto">
+                    <option value="">Selecciona el trayecto</option>
+                    <option value="Inicial">Inicial</option>
+                    <option value="Trayecto I">Trayecto I</option>
+                    <option value="Trayecto II">Trayecto II</option>
+                    <option value="Trayecto III">Trayecto III</option>
+                    <option value="Trayecto IV">Trayecto IV</option>
+                    <option value="Trayecto V">Trayecto V</option>
+                </select>
+
+                <label for="materia">Materia:</label>
+                <input type="text" name="materia" id="materia" autocomplete="off">
+            </form>
+        </div>
+
+        <div id="contenedor_materias"></div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Coordinador_PNF/Asignacion_Materia/reactivar_asignacion.js' %}"></script>
+
+{% endblock %}

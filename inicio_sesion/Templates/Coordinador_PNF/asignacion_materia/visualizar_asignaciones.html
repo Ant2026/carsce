@@ -8,6 +8,27 @@
     <div class="contenedor_asignar_materia">
         <h3>Asignar Materia a Docente</h3>
 
+        <div id="contenedor_busqueda_asignacion">
+            <h4>Busqueda Asignación</h4>
+
+            <form method="post" id="formulario_busqueda">
+                {% csrf_token %}
+                <label for="trayecto">Trayecto Académico:</label>
+                <select name="trayecto" id="trayecto">
+                    <option value="">Selecciona el trayecto</option>
+                    <option value="Inicial">Inicial</option>
+                    <option value="Trayecto I">Trayecto I</option>
+                    <option value="Trayecto II">Trayecto II</option>
+                    <option value="Trayecto III">Trayecto III</option>
+                    <option value="Trayecto IV">Trayecto IV</option>
+                    <option value="Trayecto V">Trayecto V</option>
+                </select>
+
+                <label for="materia">Materia:</label>
+                <input type="text" name="materia" id="materia" autocomplete="off">
+            </form>
+        </div>
+
         <div id="contenedor_materias"></div>
     </div>
 </section>
@@ -16,15 +37,79 @@
     <div class="contenedor_docente_asignado_materia">
         <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
         
-        <h4>Docentes Asignado a Materia</h4>
+        <h4>Actualizar Asignación de Materia</h4>
 
         <form method="post" id="formulario_actualizar">
             {% csrf_token %}
-            <input type="hidden" name="materia_seleccionada" id="materia_seleccionada">
+            <input type="hidden" name="materia_asignada" id="materia_asignada">
 
-            <label for="docentes_asignados">Docentes Asignados:</label>
-            <select name="docentes_asignados" id="docentes_asignados"></select>
+            <!-- Información de la materia -->
+            <div class="datos_materia">
+                <label for="nombre_materia">Materia:</label>
+                <input type="text" id="nombre_materia" readonly>
 
+                <label for="nombre_seccion">Sección:</label>
+                <input type="text" id="nombre_seccion" readonly>
+            </div>
+
+
+            <!-- Docente principal -->
+            <div id="docente_principal">
+                <h5>Docente Principal</h5>
+
+                <label for="docente_principal_nombre">Docente:</label>
+                <input type="text" id="docente_principal_nombre" readonly>
+
+                <div class="estado_docente">
+                    <label>Estado:</label>
+                    <label for="principal_activo">
+                        <input type="radio" name="estado_principal" value="ACTIVO" id="principal_activo">
+                        Activo
+                    </label>
+
+                    <label for="principal_inactivo">
+                        <input type="radio" name="estado_principal" value="INACTIVO" id="principal_inactivo">
+                        Inactivo
+                    </label>
+                </div>
+            </div>
+
+
+            <!-- Docente secundario -->
+            <div id="docente_secundario">
+                <h5>Docente Secundario / Suplente</h5>
+
+                <label for="docente_secundario_nombre">Docente:</label>
+                <input type="text" id="docente_secundario_nombre" readonly>
+
+                <div class="estado_docente">
+                    <label>Estado:</label>
+                    <label for="secundario_activo">
+                        <input type="radio" name="estado_secundario" value="ACTIVO" id="secundario_activo">
+                        Activo
+                    </label>
+
+                    <label for="secundario_inactivo">
+                        <input type="radio" name="estado_secundario" value="INACTIVO" id="secundario_inactivo">
+                        Inactivo
+                    </label>
+                </div>
+            </div>
+
+            <!-- Estado de la materia -->
+            <div id="suspension_materia">
+                <h5>Asignación de la Materia</h5>
+
+                <label>Estado de la materia:</label>
+                <label for="materia_activa">
+                    <input type="radio" name="estado_materia" value="ACTIVA" id="materia_activa">
+                    Activa
+                </label>
+                <label for="materia_suspendida">
+                    <input type="radio" name="estado_materia" value="SUSPENDIDA" id="materia_suspendida"> 
+                    Suspendida
+                </label>
+            </div>
 
             <input type="submit" value="Actualizar la Asignación">
         </form>

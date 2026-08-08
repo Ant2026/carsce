@@ -11,8 +11,7 @@ def sec_reg(request):
         SeccionAcademica.objects.values(
             "id_seccion",
             "nombre",
-            "turno",
-            "activa"
+            "turno"
         )
     )
 
@@ -139,7 +138,6 @@ def reg_sec(request):
                 })
     
         SeccionAcademica.objects.create(
-            activa=True,
             turno=turno, 
             nombre=seccion
         )

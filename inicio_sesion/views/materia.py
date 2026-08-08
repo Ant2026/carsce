@@ -217,8 +217,8 @@ def mat_guardar(request):
 
             materia.nombre = nombre
             materia.recuperacion = reparacion_materia
-            materia.htea=int(thea)
-            materia.htei=int(thei)
+            materia.htea = Decimal(thea.replace(",", "."))
+            materia.htei = Decimal(thei.replace(",", "."))
             materia.id_pnf_id = pnf_materia
             materia.save()
 

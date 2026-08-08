@@ -97,6 +97,10 @@ urlpatterns = [
     path('exist_cod/', views.exist_cod, name="exist_cod"),
     path('corr_reg/', views.corr_reg, name="corr_reg"),
 
+    path('mat_asig/', views.mat_asig, name="mat_asig"),
+    path('mats_desact/', views.mats_desact, name="mats_desact"),
+    path('asig_desact/', views.asig_desact, name="asig_desact"),
+
     #FORO
     path('Historia/', views.Historia, name="Historia"),
     path('mision_vision/', views.mision_vision, name="mision_vision"),
