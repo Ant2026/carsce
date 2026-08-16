@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.hashers import check_password, make_password
 from django.http import JsonResponse
-from django.db.models import Q
 
 from inicio_sesion.models import Usuario, Contacto, Cuenta, Estudiante
 

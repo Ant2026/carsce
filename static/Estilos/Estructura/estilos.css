@@ -12,11 +12,16 @@
 @import url('../Foro/mantenimiento.css');
 
 @import url('../formulario.css');
-@import url('../Sesion/formulario_inicio_sesion.css'); /* Estilos del Login */
-@import url('../Sesion/formularios_registros.css'); /* Estilos panel de registro*/
-@import url('../Sesion/formulario_registro_personal.css'); /* Estilos formulario de registro personal */
-@import url('../Sesion/formulario_registro_estudiantil.css'); /* Estilos formulario registro estudiantil */
-@import url('../Sesion/formularios_recuperar_credenciales.css'); /*Estilos formulario recuperar credenciales*/
+@import url('../Sesion/formulario_inicio_sesion.css');
+/* Estilos del Login */
+@import url('../Sesion/formularios_registros.css');
+/* Estilos panel de registro*/
+@import url('../Sesion/formulario_registro_personal.css');
+/* Estilos formulario de registro personal */
+@import url('../Sesion/formulario_registro_estudiantil.css');
+/* Estilos formulario registro estudiantil */
+@import url('../Sesion/formularios_recuperar_credenciales.css');
+/*Estilos formulario recuperar credenciales*/
 
 @import url('../Logueo/logueado.css');
 @import url('../Logueo/panel_director_general.css');
@@ -33,61 +38,69 @@
 /* @import url('inscripcion.css');  */
 /* @import url('../continuacion.css');  */
 
-:root{
-    --color-base: white; /* Para tarjetas y fondos en especifico */
-    --color-neutro: black; /* Letras */
-    --color-intermitente: #555; /* Letras de menor importancia */
+:root {
+    --color-base: white;
+    /* Para tarjetas y fondos en especifico */
+    --color-neutro: black;
+    /* Letras */
+    --color-intermitente: #555;
+    /* Letras de menor importancia */
     --color-claro: #ccc;
-    --shadows: 0px 0px 20px rgba(0,0,0,.15); /* Sombras general */
+    --shadows: 0px 0px 20px rgba(0, 0, 0, .15);
+    /* Sombras general */
     /* Paleta de colores */
-    --color-azulE: #211C84; /* Color primordial en el encabezado */
-    --color-hover-azulE: #2f6fd6; /* La sombra para el color del encabezado */
-    --color-botones: #FFE100; /* Para los botones */
+    --color-azulE: #211C84;
+    /* Color primordial en el encabezado */
+    --color-hover-azulE: #2f6fd6;
+    /* La sombra para el color del encabezado */
+    --color-botones: #FFE100;
+    /* Para los botones */
     /* Paleta del foro */
-    --color-principal: #8C1007; /* Color principal del foro */
-    --sidebar:#111827;
-    --sidebar-hover:#1F2937;
-    --sidebar-active:#2563EB;
+    --color-principal: #8C1007;
+    /* Color principal del foro */
+    --sidebar: #111827;
+    --sidebar-hover: #1F2937;
+    --sidebar-active: #2563EB;
 
-    --text:#E5E7EB;
-    --text-muted:#9CA3AF;
+    --text: #E5E7EB;
+    --text-muted: #9CA3AF;
 
-    --background:#F8FAFC;
+    --background: #F8FAFC;
 
-    --shadow-:0 10px 35px rgba(0,0,0,.12);
+    --shadow-: 0 10px 35px rgba(0, 0, 0, .12);
 
-    --primario:#1D4ED8;
-    --primario-hover:#2563EB;
+    --primario: #1D4ED8;
+    --primario-hover: #2563EB;
 
-    --verde:#10B981;
-    --naranja:#F59E0B;
-    --rojo:#EF4444;
+    --verde: #10B981;
+    --naranja: #F59E0B;
+    --rojo: #EF4444;
 
-    --texto:#1F2937;
-    --texto-secundario:#6B7280;
+    --texto: #1F2937;
+    --texto-secundario: #6B7280;
 
-    --fondo:#F3F6FB;
-    --blanco:#FFFFFF;
+    --fondo: #F3F6FB;
+    --blanco: #FFFFFF;
 
-    --borde:#E5E7EB;
+    --borde: #E5E7EB;
 
-    --radio:20px;
+    --radio: 20px;
 
     --sombra-suave:
-        0 8px 30px rgba(15,23,42,.05);
+        0 8px 30px rgba(15, 23, 42, .05);
 
     --sombra-hover:
-        0 18px 45px rgba(15,23,42,.10);
+        0 18px 45px rgba(15, 23, 42, .10);
 }
 
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     font-family: "Poppins";
 }
 
-.oculto { 
+.oculto {
     display: none;
 }
 
@@ -126,7 +139,6 @@
     opacity: .7;
 }
 
-
 /* Materia sin docente asignado */
 .materia-verde {
     background-color: #d4edda;
@@ -148,4 +160,4359 @@
 .materia-amarillo:hover,
 .materia-rojo:hover {
     filter: brightness(95%);
+}
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+#formulario_registrar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 25px;
+    background: #ffffff;
+    border: 1px solid #e1e5ea;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   GRUPOS
+========================================= */
+
+.grupo_formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.grupo_formulario label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #343a40;
+}
+
+
+/* =========================================
+   SELECT E INPUT
+========================================= */
+
+.grupo_formulario select,
+.grupo_formulario input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 7px;
+    background: #ffffff;
+    outline: none;
+    box-sizing: border-box;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.grupo_formulario select:focus,
+.grupo_formulario input:focus {
+    border-color: #495057;
+    box-shadow: 0 0 0 3px rgba(73, 80, 87, 0.12);
+}
+
+
+/* =========================================
+   CONTENEDOR DE LA TABLA
+========================================= */
+
+#formulario_registrar .contenedor_tabla_horario {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 5px;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #e1e5ea;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   TABLA
+========================================= */
+
+#tabla_horario {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+#tabla_horario thead th {
+    padding: 14px 10px;
+    background: #212529;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    border-right: 1px solid #495057;
+}
+
+#tabla_horario thead th:last-child {
+    border-right: none;
+}
+
+
+/* =========================================
+   CUERPO
+========================================= */
+
+#tabla_horario tbody td {
+    height: 65px;
+    padding: 8px;
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+    background: #ffffff;
+    vertical-align: middle;
+}
+
+#tabla_horario tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#tabla_horario tbody td:last-child {
+    border-right: none;
+}
+
+
+/* =========================================
+   INPUTS Y SELECTS DE LA TABLA
+========================================= */
+
+#tabla_horario tbody input,
+#tabla_horario tbody select {
+    width: 100%;
+    height: 38px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 13px;
+    outline: none;
+}
+
+#tabla_horario tbody input:focus,
+#tabla_horario tbody select:focus {
+    border-color: #495057;
+    box-shadow: 0 0 0 2px rgba(73, 80, 87, 0.12);
+}
+
+
+/* =========================================
+   HOVER DE LAS FILAS
+========================================= */
+
+#tabla_horario tbody tr:hover td {
+    background: #f8f9fa;
+}
+
+
+/* =========================================
+   BOTÓN
+========================================= */
+
+#generar_pdf {
+    grid-column: 1 / -1;
+    justify-self: end;
+    min-width: 160px;
+    height: 42px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 7px;
+    background: #212529;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+#generar_pdf:hover {
+    background: #343a40;
+}
+
+#generar_pdf:active {
+    transform: scale(0.98);
+}
+
+
+
+
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.contenedor_gestion_documentos {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.encabezado_documentos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.encabezado_documentos h1 {
+    margin: 0 0 6px;
+    font-size: 27px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.encabezado_documentos p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   BARRA DE HERRAMIENTAS
+   ========================================================= */
+
+.barra_documentos {
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) auto auto auto;
+    align-items: end;
+    gap: 15px;
+
+    padding: 18px;
+    margin-bottom: 15px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   BUSCADOR
+   ========================================================= */
+
+.buscador_documentos {
+    width: 100%;
+}
+
+.buscador_documentos input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 14px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 14px;
+    color: #1f2937;
+
+    background: #ffffff;
+
+    transition: 0.2s ease;
+}
+
+.buscador_documentos input::placeholder {
+    color: #9ca3af;
+}
+
+.buscador_documentos input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+
+.filtro_documentos,
+.ordenar_documentos {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtro_documentos label,
+.ordenar_documentos label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.filtro_documentos select,
+.ordenar_documentos select {
+    min-width: 150px;
+    height: 42px;
+
+    padding: 0 35px 0 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #374151;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.filtro_documentos select:focus,
+.ordenar_documentos select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   RUTA
+   ========================================================= */
+
+.ruta_documentos {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+    padding: 8px 2px;
+
+    font-size: 14px;
+    color: #6b7280;
+}
+
+#btn_inicio_documentos {
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #2563eb;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+#btn_inicio_documentos:hover {
+    text-decoration: underline;
+}
+
+#ruta_actual {
+    color: #374151;
+}
+
+
+/* =========================================================
+   CONTENEDOR DE ELEMENTOS
+   ========================================================= */
+
+.contenedor_elementos_documentos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* =========================================================
+   ELEMENTOS
+   ========================================================= */
+
+.elemento_documento {
+    display: flex;
+    align-items: center;
+
+    min-height: 72px;
+
+    padding: 10px 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.elemento_documento:hover {
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================================
+   ICONO
+   ========================================================= */
+
+.icono_elemento {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    margin-right: 14px;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+
+    font-size: 23px;
+}
+
+
+/* =========================================================
+   INFORMACIÓN
+   ========================================================= */
+
+.informacion_elemento {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.informacion_elemento h3 {
+    margin: 0;
+
+    overflow: hidden;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: #1f2937;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.informacion_elemento span {
+    overflow: hidden;
+
+    font-size: 13px;
+
+    color: #6b7280;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   CARPETAS
+   ========================================================= */
+
+.elemento_documento.carpeta {
+    cursor: pointer;
+}
+
+.elemento_documento.carpeta .icono_elemento {
+    background: #fff7ed;
+}
+
+.elemento_documento.carpeta:hover {
+    background: #fffbeb;
+}
+
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
+.acciones_elemento {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    margin-left: 15px;
+}
+
+.acciones_elemento button {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #6b7280;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.acciones_elemento button:hover {
+    background: #f3f4f6;
+}
+
+.btn_visualizar:hover {
+    color: #2563eb !important;
+}
+
+.btn_descargar:hover {
+    color: #16a34a !important;
+}
+
+.btn_compartir:hover {
+    color: #7c3aed !important;
+}
+
+.btn_opciones:hover {
+    color: #111827 !important;
+}
+
+
+/* =========================================================
+   MODALES
+   ========================================================= */
+
+.modal_documentos {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    backdrop-filter: blur(2px);
+}
+
+.modal_documentos[hidden] {
+    display: none;
+}
+
+
+/* =========================================================
+   MODAL GENERAL
+   ========================================================= */
+
+.contenido_modal_documentos {
+    width: 100%;
+    max-width: 520px;
+
+    padding: 24px;
+
+    box-sizing: border-box;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.20);
+
+    animation: aparecer_modal 0.2s ease;
+}
+
+@keyframes aparecer_modal {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   ENCABEZADO DEL MODAL
+   ========================================================= */
+
+.encabezado_modal {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.encabezado_modal h2 {
+    margin: 0 0 5px;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+.encabezado_modal span {
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+.encabezado_modal button {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #6b7280;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.encabezado_modal button:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+
+/* =========================================================
+   VISUALIZADOR PDF
+   ========================================================= */
+
+.contenido_modal_visualizador {
+    width: 95vw;
+    max-width: 1200px;
+
+    height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.visor_documento {
+    flex: 1;
+
+    min-height: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    background: #f3f4f6;
+}
+
+.visor_documento iframe {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    border: none;
+}
+
+
+/* =========================================================
+   INFORMACIÓN PARA COMPARTIR
+   ========================================================= */
+
+.informacion_compartir {
+    margin-bottom: 18px;
+}
+
+.informacion_compartir p {
+    margin: 0;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   ENLACE
+   ========================================================= */
+
+.grupo_formulario {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 18px;
+}
+
+.grupo_formulario label {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+.contenedor_enlace {
+    display: flex;
+
+    gap: 8px;
+}
+
+.contenedor_enlace input {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 42px;
+
+    padding: 0 12px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #f9fafb;
+
+    color: #374151;
+
+    font-size: 13px;
+}
+
+#copiar_enlace {
+    height: 42px;
+
+    padding: 0 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+#copiar_enlace:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================================================
+   ACCIONES DEL MODAL
+   ========================================================= */
+
+.acciones_modal {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.acciones_modal button {
+    min-height: 40px;
+
+    padding: 0 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+#cerrar_compartir {
+    background: #f3f4f6;
+
+    color: #374151;
+}
+
+#cerrar_compartir:hover {
+    background: #e5e7eb;
+}
+
+
+/* =========================================================
+   MENÚ DE OPCIONES
+   ========================================================= */
+
+.menu_opciones_documento {
+    position: fixed;
+
+    z-index: 2000;
+
+    min-width: 160px;
+
+    padding: 5px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.menu_opciones_documento[hidden] {
+    display: none;
+}
+
+.menu_opciones_documento button {
+    width: 100%;
+
+    padding: 9px 12px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    color: #374151;
+
+    cursor: pointer;
+}
+
+.menu_opciones_documento button:hover {
+    background: #f3f4f6;
+}
+
+
+/* =========================================================
+   ESTADO SIN RESULTADOS
+   ========================================================= */
+
+.sin_documentos {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 220px;
+
+    padding: 30px;
+
+    border: 1px dashed #d1d5db;
+
+    border-radius: 10px;
+
+    background: #f9fafb;
+
+    text-align: center;
+}
+
+.sin_documentos .icono_vacio {
+    margin-bottom: 12px;
+
+    font-size: 38px;
+}
+
+.sin_documentos h3 {
+    margin: 0 0 6px;
+
+    font-size: 16px;
+
+    color: #374151;
+}
+
+.sin_documentos p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 950px) {
+
+    .barra_documentos {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .buscador_documentos {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .contenedor_gestion_documentos {
+        padding: 15px;
+    }
+
+
+    .encabezado_documentos {
+        align-items: flex-start;
+    }
+
+    .encabezado_documentos h1 {
+        font-size: 23px;
+    }
+
+
+    .barra_documentos {
+        grid-template-columns: 1fr;
+
+        padding: 14px;
+    }
+
+    .buscador_documentos {
+        grid-column: auto;
+    }
+
+
+    .filtro_documentos select,
+    .ordenar_documentos select {
+        width: 100%;
+    }
+
+
+    .elemento_documento {
+        min-height: 64px;
+
+        padding: 8px 10px;
+    }
+
+
+    .icono_elemento {
+        width: 40px;
+        height: 40px;
+
+        margin-right: 10px;
+
+        font-size: 20px;
+    }
+
+
+    .informacion_elemento h3 {
+        font-size: 14px;
+    }
+
+    .informacion_elemento span {
+        font-size: 12px;
+    }
+
+
+    .acciones_elemento {
+        margin-left: 5px;
+    }
+
+
+    .acciones_elemento button {
+        width: 32px;
+        height: 32px;
+
+        font-size: 15px;
+    }
+
+
+    .acciones_elemento .btn_descargar,
+    .acciones_elemento .btn_compartir {
+        display: none;
+    }
+
+
+    .contenido_modal_documentos {
+        padding: 18px;
+    }
+
+
+    .contenido_modal_visualizador {
+        width: 100vw;
+        height: 100vh;
+
+        padding: 12px;
+
+        border-radius: 0;
+    }
+
+
+    .contenedor_enlace {
+        flex-direction: column;
+    }
+
+
+    #copiar_enlace {
+        width: 100%;
+    }
+
+}
+
+
+/* ================================
+   DESCRIPCIÓN DEL FORMULARIO
+================================ */
+
+.descripcion_formulario {
+    margin: 10px 0 20px;
+    padding: 14px 18px;
+
+    background-color: #f4f7fb;
+    border-left: 4px solid #2563eb;
+
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.6;
+
+    border-radius: 6px;
+}
+
+
+/* ================================
+   TABLA DE PLANES
+================================ */
+
+.tabla_planes {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 30px;
+
+    background-color: #ffffff;
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Encabezado */
+
+.tabla_planes thead {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+
+.tabla_planes th {
+    padding: 13px 14px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-align: center;
+    text-transform: uppercase;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+
+/* Celdas */
+
+.tabla_planes td {
+    padding: 12px 14px;
+
+    color: #334155;
+    font-size: 14px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+/* Filas */
+
+.tabla_planes tbody tr {
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Fila seleccionable */
+
+.tabla_planes tbody tr:hover {
+    background-color: #eff6ff;
+    cursor: pointer;
+}
+
+
+/* Fila seleccionada */
+
+.tabla_planes tbody tr.seleccionado {
+    background-color: #dbeafe;
+
+    box-shadow: inset 4px 0 0 #2563eb;
+}
+
+.tabla_planes tbody tr.seleccionado td {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+
+/* ================================
+   TÍTULO
+================================ */
+
+h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+/* ================================
+   FORMULARIO
+================================ */
+
+#formulario_elemento_directriz {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding: 22px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #dbe2ea;
+    border-radius: 8px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Labels */
+
+#formulario_elemento_directriz label {
+    margin-top: 8px;
+
+    color: #334155;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* Textareas */
+
+#formulario_elemento_directriz textarea {
+    width: 100%;
+    min-height: 90px;
+
+    padding: 11px 13px;
+
+    box-sizing: border-box;
+
+    resize: vertical;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+
+    background-color: #f8fafc;
+
+    color: #1e293b;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+/* Focus */
+
+#formulario_elemento_directriz textarea:focus {
+    border-color: #2563eb;
+
+    background-color: #ffffff;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* Placeholder */
+
+#formulario_elemento_directriz textarea::placeholder {
+    color: #94a3b8;
+}
+
+
+/* ================================
+   BOTÓN
+================================ */
+
+#formulario_elemento_directriz input[type="submit"] {
+    margin-top: 15px;
+
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #2563eb;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+#formulario_elemento_directriz input[type="submit"]:hover {
+    background-color: #1d4ed8;
+}
+
+#formulario_elemento_directriz input[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 700px) {
+
+    .tabla_planes {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .tabla_planes th,
+    .tabla_planes td {
+        white-space: nowrap;
+    }
+
+    #formulario_elemento_directriz {
+        padding: 16px;
+    }
+}
+
+/* =========================================
+   MÓDULO PLAN DE ACTIVIDAD ACADÉMICO
+   ========================================= */
+
+#modulo_plan_actividad {
+    width: 100%;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.contenedor_plan_actividad {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+/* Título */
+
+.contenedor_plan_actividad h2 {
+    margin: 0 0 10px 0;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Descripción */
+
+.descripcion_formulario {
+    margin: 0 0 28px 0;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border-left: 4px solid #2563eb;
+    border-radius: 6px;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Formulario */
+
+#formulario_registrar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Etiquetas */
+
+#formulario_registrar label {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Inputs y selects */
+
+#formulario_registrar input[type="text"],
+#formulario_registrar select,
+#formulario_registrar textarea {
+    width: 100%;
+    padding: 11px 13px;
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: #1f2937;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Select */
+
+#formulario_registrar select {
+    cursor: pointer;
+}
+
+/* Textarea */
+
+#formulario_registrar textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+/* Focus */
+
+#formulario_registrar input[type="text"]:focus,
+#formulario_registrar select:focus,
+#formulario_registrar textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* Placeholder */
+
+#formulario_registrar input::placeholder,
+#formulario_registrar textarea::placeholder {
+    color: #9ca3af;
+}
+
+/* Contenedor de evaluaciones */
+
+#contenedor_evaluacion {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+}
+
+/* Botón registrar */
+
+#formulario_registrar input[type="submit"] {
+    width: 100%;
+    margin-top: 24px;
+    padding: 12px 18px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+#formulario_registrar input[type="submit"]:hover {
+    background: #1d4ed8;
+}
+
+#formulario_registrar input[type="submit"]:active {
+    transform: scale(0.99);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    #modulo_plan_actividad {
+        padding: 20px 10px;
+    }
+
+    .contenedor_plan_actividad {
+        padding: 20px 16px;
+        border-radius: 9px;
+    }
+
+    .contenedor_plan_actividad h2 {
+        font-size: 22px;
+    }
+
+    .descripcion_formulario {
+        font-size: 13px;
+    }
+}
+
+
+/* Contenedor general de las evaluaciones */
+#contenedor_evaluacion {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Mensaje cuando no hay evaluaciones */
+.ayuda_evaluaciones {
+    margin: 0;
+    padding: 18px 20px;
+    border: 1px dashed #b8c2cc;
+    border-radius: 10px;
+    background-color: #f8fafc;
+    color: #64748b;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Tarjeta de cada evaluación */
+.bloque_evaluacion {
+    padding: 22px;
+    border-radius: 12px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 8px;
+}
+
+/* Título de la evaluación */
+.bloque_evaluacion h3 {
+    grid-column: 1 / -1;
+
+    margin: 0 0 12px 0;
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #1e293b;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Etiquetas */
+.bloque_evaluacion label {
+    display: block;
+    margin-top: 5px;
+
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Inputs */
+.bloque_evaluacion input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 11px 12px;
+    margin-bottom: 8px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background-color: #ffffff;
+    color: #1f2937;
+
+    font-size: 14px;
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Focus */
+.bloque_evaluacion input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Placeholder */
+.bloque_evaluacion input::placeholder {
+    color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .bloque_evaluacion {
+        grid-template-columns: 1fr;
+    }
+
+    .bloque_evaluacion h3 {
+        grid-column: 1;
+    }
+}
+
+.estado_unidades {
+    margin: 12px 0 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.estado_unidades p {
+    margin: 6px 0 0;
+}
+
+.separador {
+    margin: 0 8px;
+    color: #94a3b8;
+}
+
+.estado_info {
+    background-color: #eff6ff;
+    border-left: 4px solid #2563eb;
+    color: #1e40af;
+}
+
+.estado_advertencia {
+    background-color: #fff7ed;
+    border-left: 4px solid #f97316;
+    color: #9a3412;
+}
+
+.estado_correcto {
+    background-color: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    color: #166534;
+}
+
+.estado_error {
+    background-color: #fef2f2;
+    border-left: 4px solid #dc2626;
+    color: #991b1b;
+}
+
+
+
+
+/* =========================================
+   PLANES DE ACTIVIDADES ACADÉMICAS
+========================================= */
+
+#modulo_visualizar_actividades {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.conteendo__visualizar_actividades {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.conteendo__visualizar_actividades h2 {
+    margin: 0 0 25px 0;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    color: #1f2937;
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+#formulario_estado {
+    width: 100%;
+}
+
+
+/* =========================================
+   TABLA
+========================================= */
+
+#formulario_estado table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+/* CABECERA */
+
+#formulario_estado thead {
+    background: #f5f6f8;
+}
+
+#formulario_estado th {
+    padding: 14px 16px;
+
+    text-align: left;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #606770;
+
+    text-transform: uppercase;
+
+    border-bottom: 1px solid #e2e5e9;
+}
+
+
+/* CUERPO */
+
+#formulario_estado td {
+    padding: 15px 16px;
+
+    font-size: 14px;
+
+    color: #333333;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+/* HOVER */
+
+#formulario_estado tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+#formulario_estado tbody tr:hover {
+    background-color: #fafafa;
+}
+
+
+/* =========================================
+   ID
+========================================= */
+
+#formulario_estado td:first-child {
+    font-weight: 600;
+    color: #666666;
+}
+
+
+/* =========================================
+   ESTADO
+========================================= */
+
+.estado-plan {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 5px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* BORRADOR */
+
+.estado-borrador {
+    background-color: #f1f1f1;
+    color: #555555;
+}
+
+
+/* ENVIADO */
+
+.estado-enviado {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+
+/* ACEPTADA */
+
+.estado-aceptada {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+
+/* DENEGADA */
+
+.estado-denegada {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+
+/* =========================================
+   CANTIDAD DE UNIDADES
+========================================= */
+
+.unidades-plan {
+    font-weight: 600;
+    color: #333333;
+}
+
+
+/* =========================================
+   BOTÓN ENVIAR
+========================================= */
+
+.btn-enviar-plan {
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 5px;
+
+    background-color: #2563eb;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease;
+}
+
+.btn-enviar-plan:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-enviar-plan:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   TABLA VACÍA
+========================================= */
+
+#formulario_estado tbody .tabla-vacia {
+    text-align: center;
+
+    padding: 30px;
+
+    color: #777777;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    #modulo_visualizar_actividades {
+        padding: 10px;
+    }
+
+    .conteendo__visualizar_actividades {
+        padding: 15px;
+    }
+
+    #formulario_estado {
+        overflow-x: auto;
+    }
+
+    #formulario_estado table {
+        min-width: 650px;
+    }
+
+}
+
+/* =========================================
+   DIÁLOGO
+========================================= */
+
+#dialogo_planes_estudios {
+    width: 850px;
+    max-width: 90vw;
+    max-height: 85vh;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+    overflow: hidden;
+}
+
+
+/* Fondo detrás del diálogo */
+
+#dialogo_planes_estudios::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================
+   CONTENEDOR
+========================================= */
+
+.contenedor_planes_estudios {
+    position: relative;
+
+    width: 100%;
+    max-height: 85vh;
+
+    padding: 25px 30px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================
+   CERRAR
+========================================= */
+
+#cerrar_dialogo {
+    position: absolute;
+
+    top: 18px;
+    right: 22px;
+
+    font-size: 20px;
+
+    color: #777;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease,
+        transform 0.2s ease;
+}
+
+#cerrar_dialogo:hover {
+    color: #222;
+
+    transform: scale(1.1);
+}
+
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.contenedor_planes_estudios>h3 {
+    margin: 0 0 25px;
+
+    padding-right: 40px;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    color: #222;
+}
+
+
+/* =========================================
+   INFORMACIÓN DEL PLAN
+========================================= */
+
+#informacion_plan {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 0;
+
+    margin-bottom: 25px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+
+#informacion_plan p {
+    margin: 0;
+
+    padding: 13px 16px;
+
+    font-size: 14px;
+
+    color: #555;
+
+    border-bottom: 1px solid #e5e5e5;
+}
+
+
+#informacion_plan p:nth-child(odd) {
+    border-right: 1px solid #e5e5e5;
+}
+
+
+#informacion_plan p:nth-last-child(-n + 2) {
+    border-bottom: none;
+}
+
+
+#informacion_plan strong {
+    color: #222;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   PESTAÑAS
+========================================= */
+
+.pestanas_unidades {
+    display: flex;
+
+    align-items: center;
+
+    gap: 2px;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid #ddd;
+
+    overflow-x: auto;
+}
+
+
+/* Botón de pestaña */
+
+.pestana_unidad {
+    position: relative;
+
+    flex-shrink: 0;
+
+    padding: 11px 18px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #777;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.pestana_unidad:hover {
+    color: #222;
+
+    background: #f7f7f7;
+}
+
+
+/* Pestaña activa */
+
+.pestana_unidad.activa {
+    color: #222;
+
+    font-weight: 600;
+}
+
+
+/* Línea de pestaña activa */
+
+.pestana_unidad.activa::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: -1px;
+
+    height: 2px;
+
+    background: #222;
+}
+
+
+/* =========================================
+   CONTENIDO DE LA UNIDAD
+========================================= */
+
+.contenido_unidad {
+    padding: 5px 3px 20px;
+}
+
+
+.contenido_unidad>h4 {
+    margin: 0 0 18px;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: #222;
+}
+
+
+/* =========================================
+   PONDERACIÓN
+========================================= */
+
+.dato_unidad {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+
+    color: #555;
+}
+
+
+.dato_unidad strong {
+    color: #222;
+}
+
+
+/* =========================================
+   CONTENIDO
+========================================= */
+
+.contenido_unidad_texto {
+    margin-bottom: 25px;
+}
+
+
+.contenido_unidad_texto>strong {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    color: #222;
+}
+
+
+.contenido_unidad_texto p {
+    margin: 0;
+
+    padding: 14px 16px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 7px;
+
+    background: #fafafa;
+
+    color: #555;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   EVALUACIONES
+========================================= */
+
+.seccion_evaluaciones {
+    margin-top: 25px;
+}
+
+
+.seccion_evaluaciones>h4 {
+    margin: 0 0 12px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #222;
+}
+
+
+.evaluaciones_unidad {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* Evaluación */
+
+.evaluacion {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 15px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 7px;
+
+    background: #fff;
+}
+
+
+.evaluacion_info {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    gap: 20px;
+}
+
+
+.evaluacion strong {
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: #333;
+}
+
+
+.evaluacion span {
+    font-size: 13px;
+
+    color: #777;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   SIN EVALUACIONES
+========================================= */
+
+.sin_evaluaciones {
+    margin: 0;
+
+    padding: 12px 15px;
+
+    border: 1px dashed #d5d5d5;
+    border-radius: 7px;
+
+    color: #888;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   SCROLL DE PESTAÑAS
+========================================= */
+
+.pestanas_unidades::-webkit-scrollbar {
+    height: 4px;
+}
+
+.pestanas_unidades::-webkit-scrollbar-thumb {
+    background: #ccc;
+
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   SCROLL DEL DIÁLOGO
+========================================= */
+
+.contenedor_planes_estudios::-webkit-scrollbar {
+    width: 6px;
+}
+
+.contenedor_planes_estudios::-webkit-scrollbar-thumb {
+    background: #ccc;
+
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 650px) {
+
+    #dialogo_planes_estudios {
+        width: 94vw;
+
+        max-width: 94vw;
+    }
+
+
+    .contenedor_planes_estudios {
+        padding: 20px;
+    }
+
+
+    #informacion_plan {
+        grid-template-columns: 1fr;
+    }
+
+
+    #informacion_plan p:nth-child(odd) {
+        border-right: none;
+    }
+
+
+    #informacion_plan p:nth-last-child(-n + 2) {
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+
+    #informacion_plan p:last-child {
+        border-bottom: none;
+    }
+
+
+    .evaluacion_info {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .evaluacion span {
+        white-space: normal;
+    }
+}
+
+
+/* =========================================
+   DIALOGO ACTUALIZAR PLAN DE ESTUDIO
+========================================= */
+
+#dialogo_actualizar_plan_estudio {
+    width: 850px;
+    max-width: 90vw;
+    max-height: 88vh;
+
+    margin: auto;
+    padding: 0;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+    overflow: hidden;
+}
+
+
+/* Fondo del dialog */
+
+#dialogo_actualizar_plan_estudio::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.contenedor_actualizar_plan_estudio {
+    position: relative;
+
+    max-height: 88vh;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================
+   BOTÓN CERRAR
+========================================= */
+
+#cerrar_dialogo_actualizar {
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    transition: transform 0.2s ease;
+}
+
+#cerrar_dialogo_actualizar:hover {
+    transform: scale(1.1);
+}
+
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.contenedor_actualizar_plan_estudio h3 {
+    margin: 0 0 25px;
+
+    text-align: center;
+
+    font-size: 22px;
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+#formulario_actualizacion {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+/* =========================================
+   INFORMACIÓN GENERAL
+========================================= */
+
+.informacion_plan {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+}
+
+
+.campo_plan {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.campo_plan label {
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.campo_plan input {
+    width: 100%;
+
+    padding: 9px 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+.campo_plan input[readonly] {
+    background: #f3f3f3;
+
+    color: #555;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   PESTAÑAS DE UNIDADES
+========================================= */
+
+.pestanas_unidades_actualizacion {
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    margin-top: 10px;
+
+    border-bottom: 1px solid #ccc;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+}
+
+
+/* Cada pestaña */
+
+.pestana_unidad_actualizacion {
+    flex-shrink: 0;
+
+    padding: 10px 18px;
+
+    border: none;
+
+    border-bottom: 3px solid transparent;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/* Hover */
+
+.pestana_unidad_actualizacion:hover {
+    background: #f3f3f3;
+}
+
+
+/* Pestaña activa */
+
+.pestana_unidad_actualizacion.activa {
+    border-bottom-color: #333;
+
+    font-weight: 700;
+}
+
+
+/* =========================================
+   CONTENEDOR DE UNIDADES
+========================================= */
+
+.contenedor_unidades {
+    width: 100%;
+}
+
+
+/* =========================================
+   CONTENIDO DE CADA UNIDAD
+========================================= */
+
+.unidad_contenido_actualizacion {
+    display: none;
+
+    padding: 20px 0;
+}
+
+
+.unidad_contenido_actualizacion.activa {
+    display: block;
+}
+
+
+/* =========================================
+   CAMPOS DE LA UNIDAD
+========================================= */
+
+.unidad_contenido_actualizacion>label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.unidad_contenido_actualizacion>input[type="text"],
+.unidad_contenido_actualizacion>textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+.unidad_contenido_actualizacion>input[type="text"]:focus,
+.unidad_contenido_actualizacion>textarea:focus {
+    border-color: #555;
+}
+
+
+.unidad_contenido_actualizacion>textarea {
+    min-height: 130px;
+
+    resize: vertical;
+}
+
+
+/* =========================================
+   TÍTULO EVALUACIONES
+========================================= */
+
+.unidad_contenido_actualizacion>h4 {
+    margin: 20px 0 12px;
+
+    font-size: 16px;
+}
+
+
+/* =========================================
+   CONTENEDOR EVALUACIONES
+========================================= */
+
+.contenedor_evaluaciones_actualizacion {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+/* =========================================
+   TARJETA DE EVALUACIÓN
+========================================= */
+
+.evaluacion_actualizar {
+    padding: 15px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    background: #f8f8f8;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   CABECERA EVALUACIÓN
+========================================= */
+
+.evaluacion_cabecera {
+    margin-bottom: 12px;
+}
+
+
+.evaluacion_cabecera h4 {
+    margin: 0;
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   CAMPOS DE EVALUACIÓN
+========================================= */
+
+.campo_formulario {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    margin-bottom: 12px;
+}
+
+
+.campo_formulario:last-child {
+    margin-bottom: 0;
+}
+
+
+.campo_formulario label {
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.campo_formulario input {
+    width: 100%;
+
+    padding: 9px 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+.campo_formulario input:focus {
+    border-color: #555;
+}
+
+
+/* =========================================
+   BOTÓN ACTUALIZAR
+========================================= */
+
+#formulario_actualizacion>input[type="submit"] {
+    width: 100%;
+
+    margin-top: 5px;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #333;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: background 0.2s ease;
+}
+
+
+#formulario_actualizacion>input[type="submit"]:hover {
+    background: #222;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 650px) {
+
+    #dialogo_actualizar_plan_estudio {
+        width: 95vw;
+
+        max-height: 92vh;
+    }
+
+
+    .contenedor_actualizar_plan_estudio {
+        padding: 18px;
+    }
+
+
+    .informacion_plan {
+        grid-template-columns: 1fr;
+    }
+
+
+    .pestana_unidad_actualizacion {
+        padding: 9px 14px;
+    }
+
+}
+
+
+/* =========================================
+   CONTROLES DE LAS UNIDADES
+========================================= */
+
+.unidad_contenido_actualizacion {
+    display: none;
+    padding: 20px 0;
+}
+
+.unidad_contenido_actualizacion.activa {
+    display: block;
+}
+
+
+/* Títulos de los campos */
+
+.unidad_contenido_actualizacion label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   TÍTULO DE LA UNIDAD
+========================================= */
+
+.unidad_contenido_actualizacion input[type="text"] {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    margin-bottom: 18px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    background: #fff;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition: border-color 0.2s ease;
+}
+
+
+.unidad_contenido_actualizacion input[type="text"]:focus {
+    border-color: #555;
+}
+
+
+/* =========================================
+   CONTENIDO DE LA UNIDAD
+========================================= */
+
+.unidad_contenido_actualizacion textarea {
+    width: 100%;
+
+    min-height: 140px;
+
+    padding: 10px 12px;
+
+    margin-bottom: 18px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    background: #fff;
+
+    outline: none;
+
+    resize: vertical;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    transition: border-color 0.2s ease;
+}
+
+
+.unidad_contenido_actualizacion textarea:focus {
+    border-color: #555;
+}
+
+
+/* =========================================
+   TÍTULO "EVALUACIONES"
+========================================= */
+
+.unidad_contenido_actualizacion>h4 {
+    margin: 20px 0 12px;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================
+   EVALUACIONES
+========================================= */
+
+.contenedor_evaluaciones_actualizacion {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.evaluacion_actualizar {
+    padding: 15px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    background: #f8f8f8;
+
+    box-sizing: border-box;
+}
+
+
+/* Cabecera */
+
+.evaluacion_cabecera {
+    margin-bottom: 12px;
+}
+
+
+.evaluacion_cabecera h4 {
+    margin: 0;
+
+    font-size: 15px;
+}
+
+
+/* =========================================
+   CONTROLES DE LAS EVALUACIONES
+========================================= */
+
+.campo_formulario {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    margin-bottom: 12px;
+}
+
+
+.campo_formulario label {
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.campo_formulario input {
+    width: 100%;
+
+    padding: 9px 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    background: #fff;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 14px;
+}
+
+
+.campo_formulario input:focus {
+    border-color: #555;
+}
+
+/* =========================================================
+   MÓDULO - COORDINADOR DE ACTIVIDADES
+========================================================= */
+
+#modulo_coordinador_actividades {
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.conteendo__coordinador_actividades {
+    width: min(1250px, 100%);
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   ENCABEZADO DEL MÓDULO
+========================================================= */
+
+.encabezado_modulo {
+    margin-bottom: 25px;
+}
+
+.encabezado_modulo h2 {
+    margin: 0 0 10px;
+
+    color: #1f2937;
+
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.descripcion_modulo {
+    max-width: 900px;
+
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   FORMULARIO DE BÚSQUEDA
+========================================================= */
+
+#formulario_busqueda {
+    margin-bottom: 25px;
+}
+
+.campo_busqueda {
+    width: min(500px, 100%);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.campo_busqueda label {
+    color: #374151;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.campo_busqueda select {
+    width: 100%;
+    height: 44px;
+
+    padding: 0 40px 0 14px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    outline: none;
+
+    background-color: #ffffff;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.campo_busqueda select:hover {
+    border-color: #93c5fd;
+}
+
+.campo_busqueda select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   CONTENEDOR DE RESULTADOS
+========================================================= */
+
+.contenedor_resultados {
+    width: 100%;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   ENCABEZADO DE RESULTADOS
+========================================================= */
+
+.encabezado_resultados {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    background: #f8fafc;
+}
+
+.encabezado_resultados h3 {
+    margin: 0 0 5px;
+
+    color: #1f2937;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.encabezado_resultados p {
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.tabla_planes {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.tabla_planes table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 700px;
+}
+
+
+/* =========================================================
+   ENCABEZADO DE TABLA
+========================================================= */
+
+.tabla_planes thead {
+    background: #f1f5f9;
+}
+
+.tabla_planes th {
+    padding: 13px 16px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-align: left;
+
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FILAS
+========================================================= */
+
+.tabla_planes tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+
+    transition:
+        background-color 0.2s ease;
+}
+
+.tabla_planes tbody tr:last-child {
+    border-bottom: none;
+}
+
+.tabla_planes tbody tr:hover {
+    background: #f8fafc;
+}
+
+.tabla_planes td {
+    padding: 14px 16px;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   ID
+========================================================= */
+
+.tabla_planes td:first-child {
+    width: 70px;
+
+    color: #64748b;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MATERIA
+========================================================= */
+
+.tabla_planes td:nth-child(2) {
+    color: #1f2937;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PERÍODO ACADÉMICO
+========================================================= */
+
+.tabla_planes td:nth-child(3) {
+    color: #64748b;
+}
+
+
+/* =========================================================
+   UNIDADES
+========================================================= */
+
+.tabla_planes td:nth-child(4) {
+    text-align: center;
+}
+
+.tabla_planes td:nth-child(4) span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 32px;
+    height: 28px;
+
+    padding: 0 9px;
+
+    border-radius: 7px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DECISIÓN
+========================================================= */
+
+.tabla_planes td:last-child {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   BOTONES DE DECISIÓN
+========================================================= */
+
+.tabla_planes button {
+    min-height: 34px;
+
+    padding: 7px 12px;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.tabla_planes button:hover {
+    transform: translateY(-1px);
+}
+
+.tabla_planes button:active {
+    transform: translateY(0);
+}
+
+
+/* Botón consultar */
+
+.tabla_planes .btn_consultar,
+.tabla_planes button[class*="consultar"] {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.tabla_planes .btn_consultar:hover,
+.tabla_planes button[class*="consultar"]:hover {
+    background: #dbeafe;
+}
+
+
+/* Botón aceptar */
+
+.tabla_planes .btn_aceptar,
+.tabla_planes button[class*="aceptar"] {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+.tabla_planes .btn_aceptar:hover,
+.tabla_planes button[class*="aceptar"]:hover {
+    background: #d1fae5;
+}
+
+
+/* Botón denegar */
+
+.tabla_planes .btn_denegar,
+.tabla_planes button[class*="denegar"] {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+.tabla_planes .btn_denegar:hover,
+.tabla_planes button[class*="denegar"]:hover {
+    background: #fee2e2;
+}
+
+
+/* =========================================================
+   ESTADO VACÍO DE LA TABLA
+========================================================= */
+
+.tabla_planes .sin_resultados {
+    padding: 35px 20px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   DIALOG PRINCIPAL
+========================================================= */
+
+#dialogo_coordinador_planes_estudios {
+    width: min(1100px, 92vw);
+    max-height: 90vh;
+
+    margin: auto;
+    padding: 0;
+
+    border: none;
+    border-radius: 18px;
+
+    background: transparent;
+
+    overflow: visible;
+}
+
+#dialogo_coordinador_planes_estudios::backdrop {
+    background: rgba(15, 23, 42, 0.68);
+
+    backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   CONTENEDOR DEL DIALOG
+========================================================= */
+
+.contenedor_coordinador_planes_estudios {
+    position: relative;
+
+    width: 100%;
+    max-height: 90vh;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
+    overflow-y: auto;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.20);
+
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.contenedor_coordinador_planes_estudios::-webkit-scrollbar {
+    width: 7px;
+}
+
+.contenedor_coordinador_planes_estudios::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.contenedor_coordinador_planes_estudios::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   BOTÓN CERRAR
+========================================================= */
+
+.cerrar_dialogo {
+    position: absolute;
+
+    top: 17px;
+    right: 18px;
+
+    z-index: 10;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.cerrar_dialogo:hover {
+    background: rgba(255, 255, 255, 0.28);
+
+    transform: rotate(90deg);
+}
+
+
+/* =========================================================
+   ENCABEZADO DEL DIALOG
+========================================================= */
+
+.encabezado_dialogo {
+    padding: 28px 70px 26px 30px;
+
+    background:
+        linear-gradient(135deg,
+            #1e3a8a,
+            #2563eb);
+
+    color: #ffffff;
+}
+
+.encabezado_dialogo h3 {
+    margin: 0 0 8px;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.encabezado_dialogo p {
+    max-width: 800px;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DEL PLAN
+========================================================= */
+
+.informacion_plan {
+    padding: 25px 30px 10px;
+}
+
+.datos_plan {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.dato_plan {
+    min-height: 67px;
+
+    padding: 13px 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #f9fafb;
+}
+
+.dato_plan .etiqueta {
+    margin-bottom: 5px;
+
+    color: #6b7280;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+.dato_plan .valor {
+    color: #111827;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   SECCIÓN UNIDADES
+========================================================= */
+
+.seccion_unidades {
+    padding: 15px 30px 30px;
+}
+
+.seccion_unidades>h4 {
+    margin: 0 0 14px;
+
+    color: #111827;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PESTAÑAS DE UNIDADES
+========================================================= */
+
+.pestanas_unidades {
+    display: flex;
+
+    gap: 5px;
+
+    padding: 5px 5px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    overflow-x: auto;
+}
+
+.pestana_unidad {
+    position: relative;
+
+    flex-shrink: 0;
+
+    padding: 11px 17px;
+
+    border: none;
+    border-radius: 8px 8px 0 0;
+
+    background: transparent;
+
+    color: #6b7280;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.pestana_unidad:hover {
+    background: #f3f4f6;
+
+    color: #374151;
+}
+
+.pestana_unidad.activa {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.pestana_unidad.activa::after {
+    content: "";
+
+    position: absolute;
+
+    left: 12px;
+    right: 12px;
+    bottom: -1px;
+
+    height: 3px;
+
+    border-radius: 4px 4px 0 0;
+
+    background: #2563eb;
+}
+
+
+/* =========================================================
+   CONTENIDO DE UNIDADES
+========================================================= */
+
+.contenido_unidades {
+    margin-top: 20px;
+
+    min-height: 250px;
+}
+
+.contenido_unidad {
+    padding: 22px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+.contenido_unidad>h4 {
+    margin: 0 0 13px;
+
+    color: #1e3a8a;
+
+    font-size: 18px;
+}
+
+.contenido_unidad>p {
+    display: inline-flex;
+
+    margin: 0 0 23px;
+
+    padding: 7px 12px;
+
+    border-radius: 7px;
+
+    background: #f3f4f6;
+
+    color: #4b5563;
+
+    font-size: 12px;
+}
+
+.contenido_unidad h5 {
+    margin: 0 0 10px;
+
+    color: #374151;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CONTENIDO ACADÉMICO
+========================================================= */
+
+.texto_contenido {
+    min-height: 80px;
+
+    margin-bottom: 25px;
+
+    padding: 15px 17px;
+
+    border-left: 4px solid #2563eb;
+    border-radius: 0 8px 8px 0;
+
+    background: #f8fafc;
+
+    color: #4b5563;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   EVALUACIONES
+========================================================= */
+
+.lista_evaluaciones {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.evaluacion {
+    padding: 15px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    background: #f9fafb;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.evaluacion:hover {
+    border-color: #bfdbfe;
+
+    transform: translateY(-2px);
+}
+
+.evaluacion p {
+    margin: 0;
+
+    color: #4b5563;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.evaluacion p+p {
+    margin-top: 8px;
+}
+
+.evaluacion strong {
+    color: #374151;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 850px) {
+
+    #modulo_coordinador_actividades {
+        padding: 24px 18px;
+    }
+
+    .datos_plan {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .lista_evaluaciones {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MÓVIL
+========================================================= */
+
+@media (max-width: 600px) {
+
+    #modulo_coordinador_actividades {
+        padding: 20px 12px;
+    }
+
+    .encabezado_modulo h2 {
+        font-size: 21px;
+    }
+
+    .descripcion_modulo {
+        font-size: 13px;
+    }
+
+    .encabezado_resultados {
+        padding: 18px;
+    }
+
+    .encabezado_resultados h3 {
+        font-size: 16px;
+    }
+
+    .encabezado_resultados p {
+        font-size: 12px;
+    }
+
+    #dialogo_coordinador_planes_estudios {
+        width: 96vw;
+        max-height: 94vh;
+    }
+
+    .contenedor_coordinador_planes_estudios {
+        max-height: 94vh;
+
+        border-radius: 14px;
+    }
+
+    .encabezado_dialogo {
+        padding: 23px 58px 22px 20px;
+    }
+
+    .encabezado_dialogo h3 {
+        font-size: 18px;
+    }
+
+    .encabezado_dialogo p {
+        font-size: 13px;
+    }
+
+    .informacion_plan {
+        padding: 20px 18px 8px;
+    }
+
+    .datos_plan {
+        grid-template-columns: 1fr;
+    }
+
+    .seccion_unidades {
+        padding: 15px 18px 22px;
+    }
+
+    .contenido_unidad {
+        padding: 17px;
+    }
+
+}
+
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+========================================================= */
+
+@media (max-width: 400px) {
+
+    #modulo_coordinador_actividades {
+        padding: 15px 8px;
+    }
+
+    .encabezado_modulo h2 {
+        font-size: 19px;
+    }
+
+    .campo_busqueda {
+        width: 100%;
+    }
+
+    #dialogo_coordinador_planes_estudios {
+        width: 98vw;
+    }
+
+    .encabezado_dialogo {
+        padding-left: 16px;
+        padding-right: 52px;
+    }
+
+    .informacion_plan {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .seccion_unidades {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+}
+
+
+/* =========================================================
+   REGISTRAR NOTAS ACADÉMICAS
+   ========================================================= */
+
+#modulo_registrar_notas_academicas {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.contenedor_registrar_notas_academicas {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.contenedor_registrar_notas_academicas h2 {
+    margin: 0 0 25px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+
+/* =========================================================
+   FORMULARIO
+   ========================================================= */
+
+#formulario_registrar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+#formulario_registrar label {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+}
+
+
+/* =========================================================
+   SELECT E INPUT
+   ========================================================= */
+
+#formulario_registrar select,
+#formulario_registrar input[type="text"] {
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    background-color: #fff;
+    color: #333;
+
+    font-size: 14px;
+    outline: none;
+}
+
+
+/* Cuando se selecciona */
+
+#formulario_registrar select:focus,
+#formulario_registrar input[type="text"]:focus {
+    border-color: #888;
+}
+
+
+/* Campo readonly */
+
+#trayecto_academico {
+    background-color: #f5f5f5 !important;
+    color: #666 !important;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BOTÓN REGISTRAR
+   ========================================================= */
+
+.contenedor_boton_notas {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 18px;
+    margin-bottom: 10px;
+}
+
+#btn_registrar_notas {
+    height: 38px;
+    padding: 0 20px;
+
+    border: 1px solid #999;
+    border-radius: 4px;
+
+    background-color: #eee;
+    color: #333;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#btn_registrar_notas:hover {
+    background-color: #ddd;
+}
+
+
+/* =========================================================
+   CONTENEDOR DE LA TABLA
+   ========================================================= */
+
+#contenedor_notas_academicas {
+    width: 100%;
+    margin-top: 15px;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLA
+   ========================================================= */
+
+.tabla-calificaciones {
+    width: 100%;
+    min-width: 850px;
+
+    border-collapse: collapse;
+
+    background-color: #fff;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.tabla-calificaciones th {
+    padding: 10px;
+
+    border: 1px solid #ccc;
+
+    background-color: #f2f2f2;
+    color: #333;
+
+    text-align: center;
+    font-weight: 600;
+}
+
+
+/* Encabezado de actividades */
+
+.tabla-calificaciones .encabezado-actividades {
+    background-color: #e9e9e9;
+}
+
+
+/* Encabezado de cada unidad */
+
+.tabla-calificaciones .encabezado-unidad {
+    background-color: #f5f5f5;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   CELDAS
+   ========================================================= */
+
+.tabla-calificaciones td {
+    padding: 8px;
+
+    border: 1px solid #ddd;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   COLUMNA NÚMERO
+   ========================================================= */
+
+.tabla-calificaciones .celda-numero {
+    width: 40px;
+    color: #555;
+}
+
+
+/* =========================================================
+   COLUMNA ESTUDIANTE
+   ========================================================= */
+
+.tabla-calificaciones .celda-estudiante {
+    min-width: 220px;
+    text-align: left;
+}
+
+.nombre-estudiante {
+    display: block;
+
+    color: #333;
+    font-weight: 500;
+}
+
+.celda-estudiante small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #777;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   CELDAS DE CALIFICACIÓN
+   ========================================================= */
+
+.celda-calificacion {
+    width: 90px;
+}
+
+
+/* =========================================================
+   INPUT DE CALIFICACIÓN
+   ========================================================= */
+
+.input-calificacion {
+    width: 65px;
+    height: 32px;
+
+    padding: 0 5px;
+    box-sizing: border-box;
+
+    border: 1px solid #bbb;
+    border-radius: 3px;
+
+    text-align: center;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.input-calificacion:focus {
+    border-color: #777;
+}
+
+
+/* =========================================================
+   PROMEDIO
+   ========================================================= */
+
+.tabla-calificaciones .celda-promedio {
+    width: 90px;
+}
+
+.input-promedio {
+    width: 65px;
+    height: 32px;
+
+    padding: 0 5px;
+    box-sizing: border-box;
+
+    border: 1px solid #ccc;
+    border-radius: 3px;
+
+    background-color: #f5f5f5;
+
+    text-align: center;
+    font-weight: 600;
+
+    color: #333;
+}
+
+
+/* =========================================================
+   FILAS
+   ========================================================= */
+
+.tabla-calificaciones tbody tr:hover {
+    background-color: #fafafa;
+}
+
+
+/* =========================================================
+   MENSAJE SIN ESTUDIANTES
+   ========================================================= */
+
+#contenedor_notas_academicas p {
+    margin: 15px 0;
+    padding: 12px;
+
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    background-color: #f5f5f5;
+
+    color: #666;
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    #modulo_registrar_notas_academicas {
+        padding: 15px;
+    }
+
+    .contenedor_registrar_notas_academicas h2 {
+        font-size: 20px;
+    }
+
+    #btn_registrar_notas {
+        width: 100%;
+    }
+
+    .contenedor_boton_notas {
+        justify-content: stretch;
+    }
 }

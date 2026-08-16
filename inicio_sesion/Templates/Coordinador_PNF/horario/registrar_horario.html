@@ -1,0 +1,66 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_horario_academico">
+   <div class="contenedor_horario_academico"> 
+       
+        <form method="post" id="formulario_registrar"> 
+            {% csrf_token %}
+
+            <div class="grupo_formulario">
+                <label for="trayectos_registrados">Trayecto</label> 
+                <select name="trayecto" id="trayectos_registrados"> 
+                    <option value="">Seleccione un trayecto</option> 
+                </select>
+            </div> 
+            <div class="grupo_formulario"> 
+                <label for="periodos_academicas_registrados"> Periodo Académico </label> 
+                <select name="periodo_academico" id="periodos_academicas_registrados"> 
+                    <option value="">Seleccione un periodo</option> 
+                </select> 
+            </div> 
+            <div class="grupo_formulario"> 
+                <label for="aulas_registrados">Aula Académica</label> 
+                <select name="aula" id="aulas_registrados"> 
+                    <option value="">Seleccione un aula</option> 
+                </select> 
+            </div> 
+            <div class="grupo_formulario"> 
+                <label for="seccion_registrados"> Sección Académica </label> 
+                <select name="seccion" id="seccion_registrados"> 
+                    <option value="">Seleccione una sección</option> 
+                </select> 
+            </div> 
+            <div class="grupo_formulario"> 
+                <label for="cantidad_fila">Cantidad de Filas</label> 
+                <input type="number" name="filas" id="cantidad_fila" min="1" max="5" minlength="1" maxlength="1" placeholder="Max 5" disabled> 
+            </div> 
+
+            <div class="contenedor_tabla_horario"> 
+                <table id="tabla_horario"> 
+                    <thead> 
+                        <tr> 
+                            <th>Hora Inicio</th> 
+                            <th>Hora Final</th> 
+                            <th>Lunes</th> 
+                            <th>Martes</th> 
+                            <th>Miércoles</th> 
+                            <th>Jueves</th> 
+                            <th>Viernes</th> 
+                        </tr> 
+                    </thead> 
+                    <tbody id="contenedor_horario"></tbody> 
+                </table> 
+            </div>
+
+            <button type="submit" id="generar_pdf"> Generar PDF </button> 
+        </form> 
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Coordinador_PNF/Horario/horario_academico.js' %}"></script>
+
+{% endblock %}

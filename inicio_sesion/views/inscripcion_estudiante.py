@@ -3,86 +3,67 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.conf import settings
 
-from inicio_sesion.models import Usuario, Contacto, Nacimiento, Residencia, SeccionAcademica, SeccionEstudiante, Bitacora, CoordinadorPNF, EstatusEstudiante, DocumentosEstudiante, ContactoAuxiliar, Discapacidad, InformacionSecundaria
+from inicio_sesion.models import Usuario, Contacto, Nacimiento, Residencia, SeccionAcademica, SeccionEstudiante, Bitacora, CoordinadorPNF, EstatusEstudiante, DocumentosEstudiante, ContactoAuxiliar, Discapacidad, InformacionSecundaria, Estudiante
+def obt_pre_inscrt(request):
 
-def obtener_pre_inscrito(request):
-    if request.method == "POST":
-        id_nucleo = request.POST.get("nucleo")
-        id_pnf = request.POST.get("pnf")
+    coordinador = CoordinadorPNF.objects.select_related(
+        "nucleo",
+        "pnf"
+    ).get(
+        usuario__cedula_identidad=request.session.get("cedula_usuario")
+    )
 
-        if not id_nucleo or not id_pnf:
-            return JsonResponse({
-                "estado": "exito",
-                "secciones": [],
-                "estudiantes": []
-            })
+    estudiantes = Estudiante.objects.filter(
+        nucleo=coordinador.nucleo,
+        pnf=coordinador.pnf,
+        estatusestudiante__estado="Espera",
+        estatusestudiante__estatus="Espera"
+    ).select_related(
+        "usuario"
+    ).distinct()
 
-        secciones = []
-        for seccion in SeccionAcademica.objects.select_related(
-            "id_aula"
-        ).filter(
-            id_nucleo_id=id_nucleo,
-            id_pnf_id=id_pnf
-        ).order_by("seccion"):
+    resultado = []
 
-            cantidad_estudiantes = SeccionEstudiante.objects.filter(id_seccion=seccion).count()
+    for estudiante in estudiantes:
 
-            if cantidad_estudiantes < 48:
-                secciones.append({
-                    "id_seccion": seccion.id_seccion,
-                    "seccion": seccion.seccion,
-                    "aula": seccion.id_aula.nombre_aula,
-                    "turno": seccion.turno,
-                    "cantidad_estudiantes": cantidad_estudiantes
-                })
-
-        estudiantes = EstatusEstudiante.objects.select_related(
-            "id_asignacion",
-            "id_asignacion__id_usuario",
-            "id_asignacion__id_perfil",
-            "id_asignacion__id_pnf",
-            "id_asignacion__id_nucleo"
-        ).filter(
-            estatus="Pre-Inscrito(a)",
+        estatus = estudiante.estatusestudiante_set.filter(
             estado="Espera",
-            id_asignacion__id_perfil_id=5,
-            id_asignacion__id_nucleo_id=id_nucleo,
-            id_asignacion__id_pnf_id=id_pnf
-        )
+            estatus="Espera"
+        ).order_by(
+            "-fecha_ingreso"
+        ).first()
 
-        datos = []
-        for estudiante in estudiantes:
-            usuario = estudiante.id_asignacion.id_usuario
+        if estatus:
 
-            datos.append({
-                "id_usuario": usuario.id_usuario,
-                "nombres": usuario.nombres,
-                "apellidos": usuario.apellidos,
-                "cedula": usuario.cedula_identidad
+            resultado.append({
+                "id_estudiante": estudiante.id_estudiante,
+                "cedula_identidad": estudiante.usuario.cedula_identidad,
+                "nombres": estudiante.usuario.nombres,
+                "apellidos": estudiante.usuario.apellidos,
+                "genero": estudiante.usuario.genero,
+
+                "estatus": estatus.estatus,
+                "estado": estatus.estado,
+                "ingreso": estatus.ingreso,
+                "descripcion_ingreso": estatus.descripcion_ingreso,
+                "trayecto": estatus.trayecto,
+                "fecha_ingreso": estatus.fecha_ingreso.strftime("%Y-%m-%d"),
             })
 
-        return JsonResponse({
-            "estado": "exito",
-            "secciones": secciones,
-            "estudiantes": datos
-        })
+    secciones = SeccionAcademica.objects.values(
+        "id_seccion",
+        "nombre",
+        "turno"
+    ).order_by("nombre")
 
     return JsonResponse({
-        "estado": "error",
-        "secciones": [],
-        "estudiantes": []
+        "estudiantes": resultado,
+        "secciones": list(secciones)
     })
-
-def obtener_datos_pre_inscrito(request):
+    
+def obt_data_est(request):
     if request.method == "POST":
-        cedula_estudiante = request.POST.get("cedula_estudiante")
-
-        usuario = Usuario.objects.filter(cedula_identidad=cedula_estudiante).first()
-        if not usuario:
-            return JsonResponse({
-                "estado": "fallo",
-                "descripcion": "Estudiante no encontrado"
-            })
+        usuario = Usuario.objects.filter(cedula_identidad=request.POST.get("cedula_estudiante")).first()
 
         datos_usuario = Usuario.objects.filter(pk=usuario.pk).values().first()
 
@@ -129,14 +110,29 @@ def obtener_datos_pre_inscrito(request):
         "descripcion": "Método no permitido"
     })
 
-def inscripcion_estudiante(request):
+def inscr_est(request):
     if request.method == "POST":
         cedula = request.POST.get("cedula")
-        id_nucleo = request.POST.get("nucleo")
-        id_pnf = request.POST.get("pnf")
         id_seccion = request.POST.get("seccion")
         accion = request.POST.get("accion")
 
+        # OBTENER COORDINADOR
+        coordinador = CoordinadorPNF.objects.select_related(
+            "nucleo",
+            "pnf"
+        ).filter(
+            usuario__cedula_identidad=request.session.get("cedula_usuario")
+        ).first()
+
+        if not coordinador:
+            return JsonResponse({
+                "titulo": "¡Advertencia!",
+                "estado": "fallo",
+                "icon": "warning",
+                "descripcion": "No se encontró el coordinador."
+            })
+
+        # VALIDAR SECCIÓN CUANDO SE ACEPTA
         if accion == "aceptado" and not id_seccion:
             return JsonResponse({
                 "titulo": "¡Advertencia!",
@@ -145,10 +141,10 @@ def inscripcion_estudiante(request):
                 "descripcion": "Debe seleccionar la sección."
             })
 
+        # BUSCAR USUARIO
         usuario = Usuario.objects.filter(
             cedula_identidad=cedula
         ).first()
-
         if not usuario:
             return JsonResponse({
                 "titulo": "¡Advertencia!",
@@ -157,15 +153,28 @@ def inscripcion_estudiante(request):
                 "descripcion": "El estudiante no existe."
             })
 
-        estatus_estudiante = EstatusEstudiante.objects.select_related(
-            "id_asignacion"
-        ).filter(
-            id_asignacion__id_usuario=usuario,
-            id_asignacion__id_nucleo_id=id_nucleo,
-            id_asignacion__id_pnf_id=id_pnf,
-            id_asignacion__id_perfil_id=5,
-            estatus="Pre-Inscrito(a)",
+        # BUSCAR ESTUDIANTE DEL NÚCLEO Y PNF DEL COORDINADOR
+        estudiante = Estudiante.objects.filter(
+            usuario=usuario,
+            nucleo=coordinador.nucleo,
+            pnf=coordinador.pnf
+        ).first()
+
+        if not estudiante:
+            return JsonResponse({
+                "titulo": "¡Advertencia!",
+                "estado": "fallo",
+                "icon": "warning",
+                "descripcion": "El estudiante no pertenece al PNF o núcleo del coordinador."
+            })
+
+        # BUSCAR ESTATUS DE PREINSCRIPCIÓN
+        estatus_estudiante = EstatusEstudiante.objects.filter(
+            estudiante=estudiante,
+            estatus="Espera",
             estado="Espera"
+        ).order_by(
+            "-fecha_ingreso"
         ).first()
 
         if not estatus_estudiante:
@@ -176,11 +185,15 @@ def inscripcion_estudiante(request):
                 "descripcion": "No se encontró la preinscripción del estudiante."
             })
 
+        # ==========================================
         # RECHAZAR
-        if accion == "rechazado":
+        # ==========================================
 
+        if accion == "rechazado":
             estatus_estudiante.estado = "Rechazado"
-            estatus_estudiante.save()
+            estatus_estudiante.save(
+                update_fields=["estado"]
+            )
 
             return JsonResponse({
                 "titulo": "¡Éxito!",
@@ -189,7 +202,10 @@ def inscripcion_estudiante(request):
                 "descripcion": "La preinscripción fue rechazada."
             })
 
+        # ==========================================
         # ACEPTAR
+        # ==========================================
+
         seccion = SeccionAcademica.objects.filter(
             id_seccion=id_seccion
         ).first()
@@ -202,8 +218,10 @@ def inscripcion_estudiante(request):
                 "descripcion": "La sección seleccionada no existe."
             })
 
+        # VALIDAR QUE EL ESTUDIANTE NO TENGA
+        # OTRA SECCIÓN ACTIVA
         if SeccionEstudiante.objects.filter(
-            id_usuario=usuario,
+            estudiante=estudiante,
             fecha_final__isnull=True
         ).exists():
 
@@ -214,15 +232,19 @@ def inscripcion_estudiante(request):
                 "descripcion": "El estudiante ya posee una sección activa."
             })
 
+        # REGISTRAR SECCIÓN
         SeccionEstudiante.objects.create(
-            id_seccion=seccion,
-            id_usuario=usuario,
+            seccion=seccion,
+            estudiante=estudiante,
             fecha_inicio=timezone.now().date()
         )
 
+        # ACTUALIZAR ESTATUS
         estatus_estudiante.estatus = "Inscrito(a)"
         estatus_estudiante.estado = "Activo"
-        estatus_estudiante.save()
+        estatus_estudiante.save(
+            update_fields=["estatus", "estado"]
+        )
 
         return JsonResponse({
             "titulo": "¡Éxito!",
@@ -231,6 +253,7 @@ def inscripcion_estudiante(request):
             "descripcion": "El estudiante fue inscrito correctamente."
         })
 
-    return render(request, "Director_General/inscripcion_estudiante.html")
+    return render(request, "Coordinador_PNF/inscripcion/inscripcion_estudiante.html")
+
 
 

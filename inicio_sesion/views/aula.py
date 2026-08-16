@@ -2,15 +2,29 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils import timezone
 
-from inicio_sesion.models import AulaAcademica, DirectorGeneral, Bitacora
+from inicio_sesion.models import AulaAcademica, DirectorGeneral, CoordinadorPNF, Bitacora
 
 # aulas_registrados
 def aulas_reg(request):
+    cedula = request.session.get("cedula_usuario")
 
-    director = DirectorGeneral.objects.get(usuario__cedula_identidad=request.session.get("cedula_usuario"))
+    director = DirectorGeneral.objects.filter(
+        usuario__cedula_identidad=cedula
+    ).select_related("nucleo").first()
+
+    if director:
+        nucleo = director.nucleo
+
+    else:
+        coordinador = CoordinadorPNF.objects.filter(
+            usuario__cedula_identidad=cedula
+        ).select_related("nucleo").first()
+
+        if coordinador:
+            nucleo = coordinador.nucleo
 
     aulas = AulaAcademica.objects.filter(
-        id_nucleo=director.nucleo
+        id_nucleo=nucleo
     ).values(
         "id_aula",
         "nombre_aula",
@@ -19,6 +33,7 @@ def aulas_reg(request):
     )
 
     return JsonResponse({
+        "estado": "exito",
         "aulas": list(aulas)
     })
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
 
-from inicio_sesion.models import Usuario, Nucleos, Contacto, PNFNucleo, DirectorGeneral, Docente, CoordinadorPNF, ControlEstudio
+from inicio_sesion.models import Usuario, Contacto, PNFNucleo, DirectorGeneral, Docente, CoordinadorPNF, ControlEstudio
 
 import json
 
@@ -135,25 +135,56 @@ def pre_reg_personal(request):
                     "icon": "warning"
                 })
 
+        perfiles_asignados = [
+            perfil for perfil in request.POST.getlist("perfil")
+            if perfil.strip()
+        ]
+
+        pnfs_coordinador = [
+            pnf for pnf in request.POST.getlist("pnf_coordinador_pnf")
+            if pnf.strip()
+        ]
+
+        pnfs_docente = [
+            pnf for pnf in request.POST.getlist("pnf_docente")
+            if pnf.strip()
+        ]
+
+        # Validar que exista al menos un perfil
+        if not perfiles_asignados:
+            return JsonResponse({
+                "estado": "fallo",
+                "title": "Perfil vacío",
+                "descripcion": "Debe seleccionar al menos un perfil para el usuario.",
+                "icon": "warning"
+            })
+
+
+        # Validar los PNF según el perfil seleccionado
         for perfil_id in perfiles_asignados:
+
             perfil = PERFILES.get(perfil_id)
+
             if perfil == "Coordinador PNF":
+
                 if not pnfs_coordinador:
                     return JsonResponse({
                         "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un PNF.",
+                        "title": "PNF vacío",
+                        "descripcion": "Debe seleccionar al menos un PNF para el perfil Coordinador PNF.",
                         "icon": "warning"
                     })
 
             elif perfil == "Docente":
+
                 if not pnfs_docente:
                     return JsonResponse({
                         "estado": "fallo",
-                        "title": "Vacío",
-                        "descripcion": "Debe seleccionar al menos un PNF.",
+                        "title": "PNF vacío",
+                        "descripcion": "Debe seleccionar al menos un PNF para el perfil Docente.",
                         "icon": "warning"
                     })
+                        
 
         cedula_identidad = f"{nacionalidad}-{num_cedula}"
         correo_principal = f"{nombre_correo}{dominio}"

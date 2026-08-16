@@ -187,16 +187,6 @@ class SeccionAcademica(models.Model):
     def __str__(self):
         return f"Sección {self.nombre}"
 
-class HorarioAcademica(models.Model):
-    id_horario = models.AutoField(primary_key=True)
-    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
-    id_pnf = models.ForeignKey(Pnf, on_delete=models.CASCADE)
-    id_periodo_academico = models.ForeignKey(PeriodoCargarNotas, on_delete=models.CASCADE)
-    id_aula = models.ForeignKey(AulaAcademica, on_delete=models.CASCADE)
-    trayecto = models.CharField(max_length=10)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    turno_academico = models.CharField(max_length=100)
-    activo = models.BooleanField(default=True)
 
 # Demás perfiles 
 class DatosPreofesion(models.Model):
@@ -233,7 +223,7 @@ class ContactoAuxiliar(models.Model):
     id_representante = models.AutoField(primary_key=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    cedula_identidad = models.CharField(max_length=15, unique=True)
+    cedula_identidad = models.CharField(max_length=15)
     telefono = models.CharField(max_length=15)
     parentesco = models.CharField(max_length=25)
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
@@ -346,6 +336,53 @@ class DocenteAsignadoMateria(models.Model):
                 name="uq_docente_secundario"
             ),
         ]
+
+# Encabezado en la creación de horario acdémico
+class HorarioAcademica(models.Model):
+    id_horario = models.AutoField(primary_key=True)
+    id_nucleo = models.ForeignKey(Nucleos, on_delete=models.PROTECT)
+    id_pnf = models.ForeignKey(Pnf, on_delete=models.PROTECT)
+    id_periodo_academico = models.ForeignKey(PeriodoCargarNotas,  on_delete=models.PROTECT)
+    id_aula = models.ForeignKey(AulaAcademica, on_delete=models.PROTECT)
+    id_seccion = models.ForeignKey(SeccionAcademica, on_delete=models.PROTECT)
+    trayecto = models.CharField(max_length=10)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True)
+
+# Detalle en la creación del horario
+class DetalleHorario(models.Model):
+    horario = models.ForeignKey(HorarioAcademica, on_delete=models.CASCADE, related_name="detalles")
+    materia_asignada = models.ForeignKey(MateriaAsignada, on_delete=models.PROTECT)
+    dia = models.CharField(max_length=15)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+
+# Conocer la carpeta donde fue enviado
+class CarpetaAcademica(models.Model):
+    id_carpeta = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=150)
+    carpeta_padre = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name="subcarpetas")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    activa = models.BooleanField(default=True)
+
+# Control de versiones del horario
+class DocumentoHorario(models.Model):
+    id_documento = models.AutoField(primary_key=True)
+    horario = models.ForeignKey(HorarioAcademica, on_delete=models.CASCADE, related_name="documentos")
+    carpeta = models.ForeignKey(CarpetaAcademica, on_delete=models.PROTECT, related_name="documentos")
+    archivo = models.CharField(max_length=500)
+    nombre_archivo = models.CharField(max_length=200)
+    fecha_subida = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True)
+
+# Contar con registro aquí va a compartir el documento
+class DocumentoCompartido(models.Model):
+    documento = models.ForeignKey(DocumentoHorario, on_delete=models.CASCADE, related_name="compartidos")
+    usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT, related_name="documentos_recibidos")
+    fecha_compartido = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True)
+    puede_ver = models.BooleanField(default=True)
+    puede_descargar = models.BooleanField(default=True)
 
 class CoordinadorPNF(RolAcademico):
     id_coordinador = models.AutoField(primary_key=True)

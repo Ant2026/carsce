@@ -1,0 +1,41 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_modificar_notas_academicas">
+    <div class="contenedor_modificar_notas_academicas">
+        <h2>Modificar Notas Académicas</h2>
+
+        <div class="modificar_notas_academicas">
+            <form method="post" id="formulario_actualizar">
+                {% csrf_token %}
+                <label for="nucleo_asignado">Núcleo Asignado:</label>
+                <select name="nucleo_asignado" id="nucleo_asignado"></select>
+
+                <label for="pnf_asignado">P.N.F Asignado:</label>
+                <select name="pnf_asignado" id="pnf_asignado"></select>
+
+                <label for="materia_asignada">Materia(s) Asignada(s):</label>
+                <select name="materia_asignada" id="materia_asignada"></select>
+
+                <label for="periodo_academico">Periodo Académico:</label>
+                <input type="text" name="periodo_academico" id="periodo_academico" readonly>
+
+                <label for="trayecto_academico">Trayecto Académico:</label>
+                <input type="text" name="trayecto_academico" id="trayecto_academico" readonly>
+
+                <div class="contenedor_boton_notas">
+                    <input type="submit" value="Registrar" id="btn_registrar_notas">
+                </div>
+
+                <div id="contenedor_notas_academicas"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Docente/modificar_notas_academicas.js' %}"></script>
+
+{% endblock %}

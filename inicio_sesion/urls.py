@@ -101,6 +101,21 @@ urlpatterns = [
     path('mats_desact/', views.mats_desact, name="mats_desact"),
     path('asig_desact/', views.asig_desact, name="asig_desact"),
 
+    path('trayecto_hor/', views.trayecto_hor, name="trayecto_hor"),
+    path('periodo_academico_hor/', views.periodo_academico_hor, name="periodo_academico_hor"),
+    path('reg_hor/', views.reg_hor, name="reg_hor"),
+    path('asig_mat_reg/', views.asig_mat_reg, name="asig_mat_reg"),
+
+    path('obt_pre_inscrt/', views.obt_pre_inscrt, name="obt_pre_inscrt"),
+    path('obt_data_est/', views.obt_data_est, name="obt_data_est"),
+    path('inscr_est/', views.inscr_est, name="inscr_est"),
+
+    path('pl_reg_coord_pnf/', views.pl_reg_coord_pnf, name="pl_reg_coord_pnf"),
+    path('pnf_asig_coord/', views.pnf_asig_coord, name="pnf_asig_coord"),
+    path('vis_pl_env/', views.vis_pl_env, name="vis_pl_env"),
+    path('datos_pl_reg_coord_pnf/', views.datos_pl_reg_coord_pnf, name="datos_pl_reg_coord_pnf"),
+    path('camb_est_pl/', views.camb_est_pl, name="camb_est_pl"),
+
     #FORO
     path('Historia/', views.Historia, name="Historia"),
     path('mision_vision/', views.mision_vision, name="mision_vision"),

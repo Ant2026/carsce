@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
-from django.core.mail import EmailMessage
+
 from django.utils import timezone
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
-from django.template.loader import render_to_string
 
 from inicio_sesion.models import Usuario, Nucleos, Pnf, Contacto, PNFNucleo,  Nacimiento, Residencia, Estudiante, Docente, CoordinadorPNF, ControlEstudio, DirectorGeneral, ContactoAuxiliar, Discapacidad, EstatusEstudiante, DocumentosEstudiante, InformacionSecundaria, DatosPreofesion 
 
@@ -215,7 +214,7 @@ def comp_registro(request):
         cedula_auxiliar = (
             nacionalidad_auxiliar + "-" + ci_auxiliar
             if nacionalidad_auxiliar and ci_auxiliar
-            else "N/A"
+            else ""
         )
 
         if not prefijo_auxiliar and num_telefono_secundaria:
@@ -270,9 +269,6 @@ def comp_registro(request):
             causa_discapacidad = request.POST.get("causa_discapacidad")
         else:
             causa_discapacidad = "N/A"
-
-        print(genero)
-        print(estado_civil)
 
         campos_generales = [
             (genero, "Género", "Por favor, seleccione una de las opciones presentes."),
@@ -536,7 +532,6 @@ def comp_registro(request):
 
             fs = FileSystemStorage(location=base_path)
 
-
             for nombre, archivo in documentos.items():
                 if archivo:
                     extension = os.path.splitext(archivo.name)[1]
@@ -544,7 +539,9 @@ def comp_registro(request):
                     filename = fs.save(nuevo_nombre, archivo)
 
                     file_path = os.path.join("media", "documentosEstudiante", nombre_estudiante, filename)
-                    DocumentosEstudiante.objects.update_or_create(estudiante=estudiante, nombre_documento=nombre,
+                    DocumentosEstudiante.objects.update_or_create(
+                        estudiante=estudiante, 
+                        nombre_documento=nombre,
                         defaults={
                             "archivo": file_path
                         }
@@ -561,3 +558,7 @@ def comp_registro(request):
             })
 
     return render(request, "Actualizaciones/completar_registro.html")
+
+
+
+

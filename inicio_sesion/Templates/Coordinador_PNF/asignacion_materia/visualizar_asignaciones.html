@@ -36,7 +36,7 @@
 <dialog id="dialogo_actualizar">
     <div class="contenedor_docente_asignado_materia">
         <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
-        
+
         <h4>Actualizar Asignación de Materia</h4>
 
         <form method="post" id="formulario_actualizar">
@@ -51,7 +51,6 @@
                 <label for="nombre_seccion">Sección:</label>
                 <input type="text" id="nombre_seccion" readonly>
             </div>
-
 
             <!-- Docente principal -->
             <div id="docente_principal">
@@ -106,7 +105,7 @@
                     Activa
                 </label>
                 <label for="materia_suspendida">
-                    <input type="radio" name="estado_materia" value="SUSPENDIDA" id="materia_suspendida"> 
+                    <input type="radio" name="estado_materia" value="SUSPENDIDA" id="materia_suspendida">
                     Suspendida
                 </label>
             </div>
@@ -116,6 +115,7 @@
     </div>
 </dialog>
 
-<script src="{% static 'Funciones_Asincronas/Coordinador_PNF/Asignacion_Materia/visualizar_asignaciones.js' %}"></script>
+<script
+    src="{% static 'Funciones_Asincronas/Coordinador_PNF/Asignacion_Materia/visualizar_asignaciones.js' %}"></script>
 
 {% endblock %}

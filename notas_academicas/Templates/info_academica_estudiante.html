@@ -1,0 +1,35 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_notas_academicas">
+    <div class="contenedor_notas_academicas">
+        <h2>Notas Académicas</h2>
+
+        <div class="conetendor_busqueda">
+            <form method="post" id="formulario_busqueda">
+                {% csrf_token %}
+                <label for="nucleo_presentar">Núcleo:</label>
+                <select name="nucleo_presentar" id="nucleo_presentar"></select>
+
+                <label for="pnfs_cursar">P.N.F:</label>
+                <select name="pnfs_cursar" id="pnfs_cursar"></select>
+
+                <label for="materias_presentadas">Materias Presentadas</label>
+                <select name="materias_presentadas" id="materias_presentadas"></select>
+            </form>
+        </div>
+
+        <div class="contenedor_actividades">
+            <div id="contendor_unidades"></div>
+
+            <div id="contenedor_notas_academica"></div>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Estudiantes/informacion_academica.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_visualizar_actividades">
+    <div class="conteendo__visualizar_actividades">
+
+        <h2>Planes de Actividades Académicas</h2>
+
+        <p class="descripcion_formulario">Los planes con 4 o más unidades pueden ser enviados al Coordinador de PNF.</p>
+
+        <form method="post" id="formulario_estado">
+            {% csrf_token %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>MATERIA</th>
+                        <th>ESTADO</th>
+                        <th>CANTIDAD DE UNIDADES</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="contenedor_planes_actividades"></tbody>
+            </table>
+        </form>
+    </div>
+</section>
+
+<dialog id="dialogo_planes_estudios">
+    <div class="contenedor_planes_estudios">
+        <i id="cerrar_dialogo_visualizar" class="icon-cancel-circled"></i>
+        <h3>Visualizar</h3>
+
+        <div id="informacion_plan"></div>
+
+        <div id="pestanas_unidades" class="pestanas_unidades"></div>
+
+        <div id="contenido_unidades" class="contenido_unidades"></div>
+    </div>
+</dialog>
+
+<dialog id="dialogo_actualizar_plan_estudio">
+    <div class="contenedor_actualizar_plan_estudio">
+        <i id="cerrar_dialogo_actualizar" class="icon-cancel-circled"></i>
+        <h3>Actualizar Plan de Estudio</h3>
+
+        <form method="post" id="formulario_actualizacion">
+            {% csrf_token %}
+            <input type="hidden" name="id_plan" id="id_plan">
+
+            <div class="informacion_plan">
+                <div class="campo_plan">
+                    <label for="materia">Materia:</label>
+                    <input type="text" name="materia" id="materia" readonly>
+                </div>
+                <div class="campo_plan">
+                    <label for="pnf">PNF:</label>
+                    <input type="text" name="pnf" id="pnf" readonly>
+                </div>
+                <div class="campo_plan">
+                    <label for="nucleo">Núcleo:</label>
+                    <input type="text" name="nucleo" id="nucleo" readonly>
+                </div>
+                <div class="campo_plan">
+                    <label for="periodo_academico">Periodo Académico:</label>
+                    <input type="text" name="periodo_academico" id="periodo_academico" readonly>
+                </div>
+            </div>
+
+            <div id="pestanas_unidades_actualizacion" class="pestanas_unidades_actualizacion"></div>
+
+            <div id="contenedor_unidades" class="contenedor_unidades"></div>
+
+            <input type="submit" value="Actualizar">
+        </form>
+    </div>
+</dialog>
+
+<script src="{% static 'Funciones_Asincronas/Docente/visualizar_plan_actividad.js' %}"></script>
+
+{% endblock %}

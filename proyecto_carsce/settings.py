@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inicio_sesion',
+    'notas_academicas',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -143,9 +144,3 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "uptjfr2025@gmail.com"
-EMAIL_HOST_PASSWORD = "xejo gpsk pgdp wxqp"

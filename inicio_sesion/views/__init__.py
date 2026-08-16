@@ -15,3 +15,5 @@ from .aula import *
 from .foro import *
 from .panel_usuario import *
 from .autoridades import *
+from .planes_actividades import *
+from .horario_academico import *

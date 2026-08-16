@@ -1,0 +1,92 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_coordinador_actividades">
+    <div class="conteendo__coordinador_actividades">
+        <div class="encabezado_modulo">
+            <h2>Revisión de Planes de Actividades Académicas</h2>
+
+            <p class="descripcion_modulo">
+                En este módulo puede consultar y revisar los planes de actividades
+                académicas enviados por los docentes correspondientes a los PNF
+                que tiene asignados. Seleccione un PNF para visualizar los planes
+                pendientes de revisión y determinar su aceptación o denegación.
+            </p>
+        </div>
+
+
+        <form method="post" id="formulario_busqueda">
+            {% csrf_token %}
+
+            <div class="campo_busqueda">
+                <label for="pnf_asignado">PNF asignados:</label>
+
+                <select name="pnf_asignado" id="pnf_asignado"></select>
+            </div>
+        </form>
+
+
+        <div class="contenedor_resultados">
+            <div class="encabezado_resultados">
+                <div>
+                    <h3>Planes enviados para revisión</h3>
+                    <p>
+                        Los siguientes planes han sido enviados por los docentes
+                        y requieren revisión por parte del Coordinador de PNF.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="tabla_planes">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>MATERIA</th>
+                            <th>PERIODO ACADÉMICO</th>
+                            <th>UNIDADES</th>
+                            <th>DECISIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenedor_planes_actividades"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<dialog id="dialogo_coordinador_planes_estudios">
+    <div class="contenedor_coordinador_planes_estudios">
+        <button type="button" id="cerrar_dialogo" class="cerrar_dialogo">
+            <i class="icon-cancel-circled"></i>
+        </button>
+
+        <div class="encabezado_dialogo">
+            <h3>Revisión del Plan de Actividades Académicas</h3>
+            <p>
+                Consulte la información del plan, sus unidades académicas,
+                contenidos y evaluaciones antes de tomar una decisión.
+            </p>
+        </div>
+
+        <div id="informacion_plan" class="informacion_plan"></div>
+
+        <div class="seccion_unidades">
+            <h4>Unidades académicas</h4>
+            <div id="pestanas_unidades" class="pestanas_unidades"></div>
+
+            <div id="contenido_unidades" class="contenido_unidades"></div>
+        </div>
+    </div>
+</dialog>
+
+<script
+    src="{% static 'Funciones_Asincronas/Coordinador_PNF/Plan_Actividades/visualizar_plan_actividades.js' %}"></script>
+
+{% endblock %}

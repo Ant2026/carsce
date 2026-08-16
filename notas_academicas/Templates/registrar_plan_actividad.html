@@ -1,0 +1,59 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<section id="modulo_plan_actividad">
+    <div class="contenedor_plan_actividad">
+        <h2>Plan de Actividad Académico</h2>
+
+        <p class="descripcion_formulario" id="descripcion_plan">
+            En este módulo podrás registrar el plan de actividad académica de las
+            materias asignadas. Puedes registrar un mínimo de
+            <strong>4</strong> y un máximo de <strong>6 unidades</strong>.
+            Selecciona la materia y el período académico correspondiente.
+        </p>
+
+        <div id="estado_unidades" class="estado_unidades estado_info">
+            Seleccione una materia asignada para consultar las unidades registradas.
+        </div>
+
+        <form method="post" id="formulario_registrar">
+            {% csrf_token %}
+            <label for="nucleo_asignado">Núcleos Asignados:</label>
+            <select name="nucleo_asignado" id="nucleo_asignado"></select>
+
+            <label for="pnfs_asignado">P.N.Fs Asignados:</label>
+            <select name="pnfs_asignado" id="pnfs_asignado"></select>
+
+            <label for="asignacion_materia">Materias Asignadas:</label>
+            <select name="asignacion_materia" id="asignacion_materia"></select>
+
+            <label for="periodo_academico">Periodo Académico</label>
+            <select name="periodo_academico" id="periodo_academico"></select>
+
+            <label for="titulo_unidad">Titulo del Contenido:</label>
+            <input type="text" name="titulo_unidad" id="titulo_unidad" maxlength="100"
+                placeholder="Debe ingresar el titulo de la unidad (Máximo 100 caracteres)" autocomplete="off" required>
+
+            <label for="contenido_unidad">Contenido Unidad:</label>
+            <textarea name="contenido_unidad" id="contenido_unidad"></textarea>
+
+            <label for="cantidad_evaluaciones">Cantidad de Evaluación:</label>
+            <select id="cantidad_evaluaciones" name="cantidad_evaluaciones" required>
+                <option value="">Seleccione...</option>
+                <option value="1">Una evaluación</option>
+                <option value="2">Dos evaluaciones</option>
+            </select>
+
+            <div id="contenedor_evaluacion"></div>
+
+            <input type="submit" value="Registrar">
+        </form>
+    </div>
+</section>
+
+<script src="{% static 'Funciones_Asincronas/Docente/registrar_plan_actividad.js' %}"></script>
+
+{% endblock %}
