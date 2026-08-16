@@ -4,10 +4,11 @@ from django.db import transaction
 from django.db.models import Prefetch
 from decimal import Decimal, ROUND_DOWN
 from django.utils import timezone
+from django.db.models import Avg
 
 from inicio_sesion.models import MateriaAsignada, PeriodoNotasMateria, Pnf, PNFNucleo, Estudiante, EstatusEstudiante, CalendarioCargarNotas, Nucleos, PeriodoCargarNotas, Materia, Docente, DocenteAsignadoMateria
 
-from .models import PlanActividadAcademica, DetallePlanActividades, HistorialDetalleNota, HistorialModificacionNotas, DetallePlanEvaluacion, PromedioFinal, Calificaciones, DetalleCalificacionesUnidad
+from .models import PlanActividadAcademica, DetallePlanActividades, HistorialTrayectoEstudiante, HistorialDetalleNota, HistorialModificacionNotas, DetallePlanEvaluacion, PromedioFinal, Calificaciones, DetalleCalificacionesUnidad
 
 # Registrar Plan de Actividades
 
@@ -1643,391 +1644,6 @@ def mod_calf_not(request):
             "calificaciones": datos
         })
 
-@transaction.atomic
-def mod_not_acad(request):
-    if request.method == "POST":
-        nucleo_asignado = request.POST.get("nucleo_asignado")
-        pnf_asignado = request.POST.get("pnf_asignado")
-        materia_asignada = request.POST.get("materia_asignada")
-        periodo_academico = request.POST.get("id_periodo_academico")
-        nombre_periodo_academico = request.POST.get("periodo_academico")
-        trayecto_academico = request.POST.get("trayecto_academico")
-
-        cedula = request.session.get("cedula_usuario")
-
-        calificaciones = {}
-        asistencias = {}
-        promedios = {}
-        for nombre_campo, valor in request.POST.items():
-            # CALIFICACIONES
-            if nombre_campo.startswith("calificacion_"):
-                partes = nombre_campo.split("_")
-                id_estudiante = partes[1]
-                numero_unidad = partes[2]
-                calificaciones.setdefault(id_estudiante, {})
-                calificaciones[id_estudiante][numero_unidad] = valor
-
-            # ASISTENCIA
-            elif nombre_campo.startswith("asistencia_"):
-                id_estudiante = nombre_campo.split("_")[1]
-                asistencias[id_estudiante] = valor
-
-            # PROMEDIO
-            elif nombre_campo.startswith("promedio_"):
-                id_estudiante = nombre_campo.split("_")[1]
-                promedios[id_estudiante] = valor
-
-            for nombre_campo, valor in request.POST.items():
-                valor = valor.strip()
-
-                # CALIFICACIONES
-                if nombre_campo.startswith("calificacion_"):
-                    partes = nombre_campo.split("_")
-                    id_estudiante = partes[1]
-                    numero_unidad = partes[2]
-
-                    if not valor:
-                        return JsonResponse({
-                            "estado": "error",
-                            "icon": "warning",
-                            "title": "Campos vacíos",
-                            "descripcion": (
-                                f"La calificación de la unidad {numero_unidad} "
-                                f"del estudiante {id_estudiante} está vacía."
-                            )
-                        })
-
-                    calificaciones.setdefault(id_estudiante, {})
-                    calificaciones[id_estudiante][numero_unidad] = valor
-
-                # ASISTENCIA
-                elif nombre_campo.startswith("asistencia_"):
-                    id_estudiante = nombre_campo.split("_")[1]
-                    if not valor:
-                        return JsonResponse({
-                            "estado": "error",
-                            "icon": "warning",
-                            "title": "Campo vacío",
-                            "descripcion": (
-                                f"La asistencia del estudiante "
-                                f"{id_estudiante} está vacía."
-                            )
-                        })
-
-                    asistencias[id_estudiante] = valor
-
-                # PROMEDIO
-                elif nombre_campo.startswith("promedio_"):
-                    id_estudiante = nombre_campo.split("_")[1]
-                    if not valor:
-                        return JsonResponse({
-                            "estado": "error",
-                            "icon": "warning",
-                            "title": "Campo vacío",
-                            "descripcion": (
-                                f"El promedio del estudiante "
-                                f"{id_estudiante} está vacío."
-                            )
-                        })
-
-                    promedios[id_estudiante] = valor
-
-        # PERIODO
-        try:
-            periodo = PeriodoNotasMateria.objects.get(id=periodo_academico)
-        except PeriodoNotasMateria.DoesNotExist:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "title": "Error",
-                "descripcion": "Ocurrió un error en el modelo intermedio (Periodo Notas Materia)."
-            })
-
-        # MATERIA ASIGNADA
-        try:
-            materia_asignacion = MateriaAsignada.objects.get(id_materia_asignada=materia_asignada)
-        except MateriaAsignada.DoesNotExist:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "title": "Error",
-                "descripcion": "Ocurrió un error en el modelo intermedio (Materia Asignación)."
-            })
-
-        # PLAN DE ACTIVIDAD ACADÉMICA
-        plan = PlanActividadAcademica.objects.filter(
-            materia_asignacion=materia_asignacion,
-            pnf_id=pnf_asignado,
-            nucleo_id=nucleo_asignado,
-            activo=True,
-            estado_aceptacion="ACEPTADA"
-        ).first()
-
-        if not plan:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "title": "Plan académico",
-                "descripcion": "No se encuentra registrado un plan de actividad académica aceptado para la materia."
-            })
-
-        # UNIDADES DEL PLAN
-        unidades = list(plan.detalles.all().order_by("id_detalle"))
-        if not unidades:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "error",
-                "title": "Unidades académicas",
-                "descripcion": "El plan de actividad académica no tiene unidades registradas."
-            })
-        
-        # VALIDAR QUE EXISTAN ESTUDIANTES
-        ids_estudiantes = set(calificaciones.keys())
-        if not ids_estudiantes:
-            return JsonResponse({
-                "estado": "fallo",
-                "icon": "warning",
-                "title": "Sin calificaciones",
-                "descripcion": "No se encontraron calificaciones para actualizar."
-            })
-
-        # ACTUALIZAR NOTAS DE LAS UNIDADES
-        for id_estudiante in ids_estudiantes:
-
-            # VALIDAR ESTUDIANTE
-            try:
-                estudiante = Estudiante.objects.get(
-                    id_estudiante=id_estudiante,
-                    nucleo_id=nucleo_asignado,
-                    pnf_id=pnf_asignado
-                )
-            except Estudiante.DoesNotExist:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "title": "Estudiante",
-                    "descripcion": (
-                        f"No se encontró el estudiante "
-                        f"{id_estudiante}."
-                    )
-                })
-
-            # BUSCAR CALIFICACIÓN EXISTENTE
-            try:
-                calificacion = Calificaciones.objects.get(
-                    periodo_materia=periodo,
-                    materia_asignada=materia_asignacion,
-                    estudiante=estudiante,
-                    trayecto=trayecto_academico
-                )
-            except Calificaciones.DoesNotExist:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "title": "Calificación no encontrada",
-                    "descripcion": (
-                        f"No existe un registro de calificaciones "
-                        f"para el estudiante {id_estudiante}."
-                    )
-                })
-            except Calificaciones.MultipleObjectsReturned:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "title": "Error",
-                    "descripcion": (
-                        f"Existen múltiples registros de calificaciones "
-                        f"para el estudiante {id_estudiante}."
-                    )
-                })
-
-            # ACTUALIZAR CONDICIÓN
-            valor_promedio = promedios.get(id_estudiante, "0")
-
-            try:
-                promedio = Decimal(
-                    str(valor_promedio).replace(",", ".")
-                )
-            except (ValueError, TypeError):
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "title": "Promedio inválido",
-                    "descripcion": (
-                        f"El promedio del estudiante "
-                        f"{id_estudiante} no es válido."
-                    )
-                })
-
-            try:
-                asistencia = int(
-                    asistencias.get(id_estudiante, 0)
-                )
-            except (ValueError, TypeError):
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "error",
-                    "title": "Asistencia inválida",
-                    "descripcion": (
-                        f"La asistencia del estudiante "
-                        f"{id_estudiante} no es válida."
-                    )
-                })
-
-            # DETERMINAR CONDICIÓN
-            nombre_materia = (
-                materia_asignacion.materia.nombre
-                .strip()
-                .lower()
-            )
-
-            if asistencia >= 75:
-                if "proyecto socio tecnológico" in nombre_materia:
-                    if promedio >= Decimal("16"):
-                        condicion = "APROBADO"
-                    else:
-                        condicion = "REPROBADO"
-                else:
-                    if promedio >= Decimal("12"):
-                        condicion = "APROBADO"
-                    else:
-                        condicion = "REPARACIÓN"
-            else:
-                condicion = "REPROBADO"
-
-            # MODIFICAR ÚNICAMENTE CONDICIÓN
-            calificacion.condicion = condicion
-            calificacion.save(update_fields=["condicion"])
-
-            # NOTAS DE LAS UNIDADES
-            notas_estudiante = calificaciones.get(
-                id_estudiante,
-                {}
-            )
-
-            for numero_unidad, nota in notas_estudiante.items():
-                if nota == "":
-                    continue
-
-                # VALIDAR NÚMERO DE UNIDAD
-                try:
-                    numero_unidad = int(numero_unidad)
-                except (ValueError, TypeError):
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "icon": "error",
-                        "title": "Unidad inválida",
-                        "descripcion": (
-                            f"La unidad recibida para el estudiante "
-                            f"{id_estudiante} no es válida."
-                        )
-                    })
-
-                # VALIDAR QUE EXISTA EN EL PLAN
-                if numero_unidad < 1 or numero_unidad > len(unidades):
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "icon": "error",
-                        "title": "Unidad inválida",
-                        "descripcion": (
-                            f"La unidad {numero_unidad} "
-                            f"no existe en el plan académico."
-                        )
-                    })
-
-                # CONVERTIR NOTA
-                try:
-                    nota_unidad = Decimal(
-                        str(nota).replace(",", ".")
-                    )
-                except (ValueError, TypeError):
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "icon": "error",
-                        "title": "Nota inválida",
-                        "descripcion": (
-                            f"La nota de la unidad "
-                            f"{numero_unidad} del estudiante "
-                            f"{id_estudiante} no es válida."
-                        )
-                    })
-
-                # OBTENER UNIDAD DEL PLAN
-                unidad = unidades[numero_unidad - 1]
-
-                # BUSCAR DETALLE EXISTENTE
-                try:
-                    detalle_calificacion = (
-                        DetalleCalificacionesUnidad.objects.get(
-                            calificacion=calificacion,
-                            unidad=unidad
-                        )
-                    )
-                except DetalleCalificacionesUnidad.DoesNotExist:
-                    return JsonResponse({
-                        "estado": "fallo",
-                        "icon": "error",
-                        "title": "Detalle no encontrado",
-                        "descripcion": (
-                            f"No existe el detalle de calificación "
-                            f"de la unidad {numero_unidad} para "
-                            f"el estudiante {id_estudiante}."
-                        )
-                    })
-
-                # ACTUALIZAR NOTA DE LA UNIDAD
-                detalle_calificacion.nota_unidad = nota_unidad
-                detalle_calificacion.save(
-                    update_fields=["nota_unidad"]
-                )
-
-            # RECALCULAR PROMEDIO
-            detalles_unidades = (
-                DetalleCalificacionesUnidad.objects.filter(
-                    calificacion=calificacion
-                )
-            )
-
-            notas_validas = [
-                detalle.nota_unidad
-                for detalle in detalles_unidades
-                if detalle.nota_unidad is not None
-            ]
-
-            if not notas_validas:
-                return JsonResponse({
-                    "estado": "fallo",
-                    "icon": "warning",
-                    "title": "Sin notas",
-                    "descripcion": (
-                        f"No existen notas registradas para "
-                        f"el estudiante {id_estudiante}."
-                    )
-                })
-
-            # CALCULAR NUEVO PROMEDIO
-            promedio = (
-                sum(notas_validas, Decimal("0"))
-                / Decimal(len(notas_validas))
-            ).quantize(
-                Decimal("0.01")
-            )
-
-            # GUARDAR PROMEDIO
-            calificacion.promedio_tramo = promedio
-            calificacion.save(
-                update_fields=["promedio_tramo"]
-            )
-
-        return JsonResponse({
-            "estado": "exito",
-            "icon": "success",
-            "title": "Exito",
-            "descripcion": "Se registraron las notas académicas exitosamente."
-        }) 
-
-    return render(request, "modificar_notas_academicas.html")
-
 # Visualizar Notas Académicas Estudiante
 
 def nucleos_est_asig(request):
@@ -2118,7 +1734,7 @@ def mate_tray_est(request):
             .filter(
                 estudiante=estudiante,
                 estado="Activo",
-                ingreso="Inscrito(a)"
+                estatus="Inscrito(a)"
             )
             .order_by("-fecha_ingreso")
             .first()
@@ -2209,7 +1825,7 @@ def plan_act_est(request):
                 "descripcion": "El estudiante no fue aceptado por el P.N.F"
             })
 
-        if (estatus_estudiante.estado.upper() != "Activo" or estatus_estudiante.ingreso.upper() != "Inscrito(a)"):
+        if (estatus_estudiante.estado != "Activo" or estatus_estudiante.estatus != "Inscrito(a)"):
             return JsonResponse({
                 "estado": "fallo",
                 "icon": "error",
@@ -2235,7 +1851,7 @@ def plan_act_est(request):
 
         if not planes.exists():
             return JsonResponse({
-                "estado": "fallo",
+                "estado": "no_exite",
                 "icon": "error",
                 "title": "Sin plan de evaluación",
                 "descripcion": "No existe un plan de evaluación aceptado para esta materia"
@@ -2314,7 +1930,6 @@ def eval_reg_est(request):
             .filter(
                 estudiante=estudiante,
                 materia_asignada__materia_id=id_materia,
-                materia_asignada__seccion__nucleo_id=id_nucleo
             )
             .prefetch_related(
                 "detalles_unidad__unidad"

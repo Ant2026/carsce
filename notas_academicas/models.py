@@ -96,6 +96,27 @@ class HistorialDetalleNota(models.Model):
     promedio_anterior = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     promedio_nuevo = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
+class HistorialTrayectoEstudiante(models.Model):
+    id_historial = models.AutoField(primary_key=True)
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.PROTECT, related_name="historiales_trayecto")
+    anio = models.PositiveIntegerField()
+    trayecto_anterior = models.CharField(max_length=20)
+    trayecto_nuevo = models.CharField(max_length=20)
+    cantidad_materias = models.PositiveSmallIntegerField()
+    materias_reprobadas = models.PositiveSmallIntegerField()
+    materias_mala_asistencia = models.PositiveSmallIntegerField()
+    estado = models.CharField(max_length=50)
+    puede_pasar = models.BooleanField(default=False)
+    motivo = models.TextField()
+    fecha_procesamiento = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return (
+            f"{self.estudiante} - "
+            f"{self.anio} - "
+            f"{self.trayecto_anterior}"
+        )
+
 # class DetalleCalificaciones(models.Model):
 #     id_detalle_calificaciones = models.AutoField(primary_key=True)
 #     calificacion = models.ForeignKey(Calificaciones, on_delete=models.PROTECT, related_name="detalles_evaluacion")

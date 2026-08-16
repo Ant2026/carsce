@@ -387,6 +387,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 allowEscapeKey: false
             });
 
+            if (resultado.estado == "exito") {
+                formulario_registrar.reset();
+                contenedor_notas_academicas.innerHTML = "";
+            }
         } catch (error) {
             console.error(error);
         }

@@ -33,7 +33,6 @@ urlpatterns = [
     path('mod_mat_not/', views.mod_mat_not, name="mod_mat_not"),
     path('mod_per_not/', views.mod_per_not, name="mod_per_not"),
     path('mod_calf_not/', views.mod_calf_not, name="mod_calf_not"),
-    path('mod_not_acad/', views.mod_not_acad, name="mod_not_acad"),
 
     path('nucleos_est_asig/', views.nucleos_est_asig, name="nucleos_est_asig"),
     path('pnfs_est_asig/', views.pnfs_est_asig, name="pnfs_est_asig"),

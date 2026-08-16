@@ -152,52 +152,53 @@
 
     </article>
 
-<article class="grafico">
+    <article class="grafico">
 
-    <div class="titulo_panel">
+        <div class="titulo_panel">
 
-        <h2>Estadísticas de registros</h2>
-
-    </div>
-
-    <div class="resumen_grafico">
-
-        <div>
-
-            <strong>1,245</strong>
-
-            <span>Estudiantes</span>
+            <h2>Estadísticas de registros</h2>
 
         </div>
 
-        <div>
+        <div class="resumen_grafico">
 
-            <strong>98</strong>
+            <div>
 
-            <span>Inscripciones</span>
+                <strong>1,245</strong>
+
+                <span>Estudiantes</span>
+
+            </div>
+
+            <div>
+
+                <strong>98</strong>
+
+                <span>Inscripciones</span>
+
+            </div>
+
+            <div>
+
+                <strong>327</strong>
+
+                <span>Constancias</span>
+
+            </div>
 
         </div>
 
-        <div>
+        <div class="contenedor_grafico">
 
-            <strong>327</strong>
-
-            <span>Constancias</span>
+            <canvas id="grafico_dashboard"></canvas>
 
         </div>
 
-    </div>
+    </article>
 
-    <div class="contenedor_grafico">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'funcionalidades/dashboard_director_general.js' %}"></script>
 
-        <canvas id="grafico_dashboard"></canvas>
+    {% endif %}
 
-    </div>
-
-</article>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{% static 'funcionalidades/dashboard_director_general.js' %}"></script>
-{% endif %}
-
-{% endblock %}
+    {% endblock %}

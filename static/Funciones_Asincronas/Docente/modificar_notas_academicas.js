@@ -234,52 +234,88 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             const tbody = tabla.querySelector("tbody");
 
-            resultadoEstudiantes.calificaciones.forEach((estudiante, indice) => {
+            const estudiantesMostrados = new Set();
+            let numeroFila = 1;
+
+            resultadoEstudiantes.calificaciones.forEach((estudiante) => {
+
+                const idEstudiante = estudiante.id_estudiante;
+
+                // EVITAR ESTUDIANTE DUPLICADO
+                if (estudiantesMostrados.has(idEstudiante)) {
+                    console.warn(
+                        "Estudiante duplicado:",
+                        idEstudiante,
+                        estudiante.nombre_estudiante
+                    );
+                    return;
+                }
+
+                estudiantesMostrados.add(idEstudiante);
+
                 const fila = document.createElement("tr");
 
                 let controles = "";
+
                 for (let i = 1; i <= cantidadActividades; i++) {
+
                     const unidad = estudiante.unidades[i - 1];
-                    const notaUnidad = unidad ? unidad.nota_unidad : "";
+
+                    const notaUnidad = unidad
+                        ? unidad.nota_unidad
+                        : "";
 
                     controles += `
-                            <td class="celda-calificacion">
-                                <input
-                                    type="text"
-                                    class="input-calificacion"
-                                    name="calificacion_${estudiante.id_estudiante}_${i}"
-                                    data-id-estudiante="${estudiante.id_estudiante}"
-                                    data-numero-unidad="${i}"
-                                    value="${notaUnidad}"
-                                >
-                            </td>`;
+                        <td class="celda-calificacion">
+                            <input
+                                type="text"
+                                class="input-calificacion"
+                                name="calificacion_${idEstudiante}_${i}"
+                                data-id-estudiante="${idEstudiante}"
+                                data-numero-unidad="${i}"
+                                value="${notaUnidad}"
+                            >
+                        </td>
+                    `;
                 }
 
                 fila.innerHTML = `
-                        <td>${indice + 1}</td>
-                        <td>${estudiante.nombre_estudiante}</td>
-                        <td>${estudiante.cedula_identidad}</td>
-                        ${controles}
-                        <td class="celda-asistencia">
-                            <input
-                                type="text"
-                                class="input-asistencia"
-                                name="asistencia_${estudiante.id_estudiante}"
-                                data-id-estudiante="${estudiante.id_estudiante}"
-                                value="${estudiante.asistencia ?? ""}">
-                        </td>
+                    <td>${numeroFila}</td>
 
-                        <td class="celda-promedio">
-                            <input
-                                type="text"
-                                class="input-promedio"
-                                name="promedio_${estudiante.id_estudiante}"
-                                data-id-estudiante="${estudiante.id_estudiante}"
-                                value="${estudiante.promedio ?? ""}"
-                                readonly>
-                        </td>
-                    `;
+                    <td>
+                        ${estudiante.nombre_estudiante}
+                    </td>
+
+                    <td>
+                        ${estudiante.cedula_identidad}
+                    </td>
+
+                    ${controles}
+
+                    <td class="celda-asistencia">
+                        <input
+                            type="text"
+                            class="input-asistencia"
+                            name="asistencia_${idEstudiante}"
+                            data-id-estudiante="${idEstudiante}"
+                            value="${estudiante.asistencia ?? ""}">
+                    </td>
+
+                    <td class="celda-promedio">
+                        <input
+                            type="text"
+                            class="input-promedio"
+                            name="promedio_${idEstudiante}"
+                            data-id-estudiante="${idEstudiante}"
+                            value="${estudiante.promedio ?? ""}"
+                            readonly>
+                    </td>
+                `;
+
                 tbody.appendChild(fila);
+
+                // Aumentar solamente cuando se agregó la fila
+                numeroFila++;
             });
 
             contenedor_notas_academicas.appendChild(tabla);

@@ -4516,3 +4516,245 @@ h3 {
         justify-content: stretch;
     }
 }
+
+
+/* =========================================================
+   CONTENEDOR DE NOTAS ACADÉMICAS
+   ========================================================= */
+
+#contenedor_notas_academica {
+    width: 100%;
+    margin-top: 25px;
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   RESUMEN DE NOTAS
+   ========================================================= */
+
+.resumen_notas_academicas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dato_nota {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+
+    min-height: 75px;
+    padding: 15px;
+
+    background: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+
+    box-sizing: border-box;
+}
+
+.dato_nota span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666666;
+}
+
+.dato_nota strong {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222222;
+}
+
+
+/* =========================================================
+   TABLA DE NOTAS ACADÉMICAS
+   ========================================================= */
+
+.tabla_notas_academicas {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabla_notas_academicas thead {
+    background: #f4f4f4;
+}
+
+.tabla_notas_academicas th {
+    padding: 13px 15px;
+
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+
+    color: #333333;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.tabla_notas_academicas td {
+    padding: 12px 15px;
+
+    font-size: 14px;
+    color: #444444;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.tabla_notas_academicas tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla_notas_academicas tbody tr:hover {
+    background: #fafafa;
+}
+
+
+/* =========================================================
+   COLUMNAS NUMÉRICAS
+   ========================================================= */
+
+.tabla_notas_academicas th:nth-child(2),
+.tabla_notas_academicas td:nth-child(2) {
+    text-align: center;
+}
+
+.tabla_notas_academicas th:nth-child(3),
+.tabla_notas_academicas td:nth-child(3) {
+    text-align: center;
+}
+
+
+/* =========================================================
+   NOTA DE LA UNIDAD
+   ========================================================= */
+
+.tabla_notas_academicas td:nth-child(2) {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   MENSAJE CUANDO NO EXISTEN CALIFICACIONES
+   ========================================================= */
+
+.tabla_notas_academicas .mensaje_tabla {
+    padding: 25px 15px;
+
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #666666;
+    background: #fafafa;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .resumen_notas_academicas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .resumen_notas_academicas {
+        grid-template-columns: 1fr;
+    }
+
+    .tabla_notas_academicas {
+        min-width: 600px;
+    }
+
+    #contenedor_notas_academica {
+        overflow-x: auto;
+    }
+
+}
+
+
+
+/* =========================================================
+   TABLA DEL PLAN DE ACTIVIDADES
+   ========================================================= */
+
+#contendor_unidades {
+    width: 100%;
+    margin-top: 25px;
+    overflow-x: auto;
+}
+
+.tabla_plan_estudio {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabla_plan_estudio thead {
+    background: #f4f4f4;
+}
+
+.tabla_plan_estudio th {
+    padding: 13px 15px;
+
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+
+    color: #333333;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.tabla_plan_estudio td {
+    padding: 12px 15px;
+
+    font-size: 14px;
+    color: #444444;
+
+    border-bottom: 1px solid #eeeeee;
+    vertical-align: middle;
+}
+
+.tabla_plan_estudio tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla_plan_estudio tbody tr:hover {
+    background: #fafafa;
+}
+
+.tabla_plan_estudio th:nth-child(2),
+.tabla_plan_estudio td:nth-child(2) {
+    text-align: center;
+}
+
+.tabla_plan_estudio th:nth-child(5),
+.tabla_plan_estudio td:nth-child(5) {
+    text-align: center;
+}
+
+.tabla_plan_estudio .mensaje_tabla {
+    padding: 25px 15px;
+
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #666666;
+    background: #fafafa;
+}

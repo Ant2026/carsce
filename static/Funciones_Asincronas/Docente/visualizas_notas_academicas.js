@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         await pnfs_asignados();
 
-        await calificaciones_materia();
     });
 
     async function pnfs_asignados() {
@@ -196,9 +195,19 @@ document.addEventListener("DOMContentLoaded", () => {
         await calificaciones_materia()
     });
 
+
     async function calificaciones_materia() {
         try {
-            if (!nucleo || !pnf || !materia || !periodo_academico || !fecha_calificacion) return;
+
+            if (
+                !nucleo ||
+                !pnf ||
+                !materia ||
+                !periodo_academico ||
+                !fecha_calificacion
+            ) {
+                return;
+            }
 
             const formulario = new FormData();
             formulario.append("id_nucleo", nucleo);
@@ -207,107 +216,268 @@ document.addEventListener("DOMContentLoaded", () => {
             formulario.append("id_periodo_academico", periodo_academico);
             formulario.append("fecha_calificacion", fecha_calificacion);
 
-            const [respuestaEstudiantes, respuestaActividades] = await Promise.all([
+            const csrfToken = document.querySelector(
+                "[name=csrfmiddlewaretoken]"
+            ).value;
+
+            const [
+                respuestaEstudiantes,
+                respuestaActividades
+            ] = await Promise.all([
+
                 fetch("/notas_academicas/calf_reg_not/", {
                     method: "POST",
                     headers: {
-                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                        "X-CSRFToken": csrfToken
                     },
                     body: formulario
                 }),
+
                 fetch("/notas_academicas/cant_det_pla/", {
                     method: "POST",
                     headers: {
-                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                        "X-CSRFToken": csrfToken
                     },
                     body: formulario
                 })
+
             ]);
-            const [resultadoEstudiantes, resultadoActividades] = await Promise.all([
+
+
+            // ==========================================
+            // CONVERTIR RESPUESTAS
+            // ==========================================
+
+            const [
+                resultadoEstudiantes,
+                resultadoActividades
+            ] = await Promise.all([
+
                 respuestaEstudiantes.json(),
                 respuestaActividades.json()
+
             ]);
 
-            console.log("Cantidad:", resultadoActividades.cantidad_actividades);
-            console.log("Calificaciones:", resultadoEstudiantes);
 
-            contenedor_notas_academicas.innerHTML = "";
-            if (!resultadoEstudiantes.calificaciones || resultadoEstudiantes.calificaciones.length === 0) {
-                contenedor_notas_academicas.innerHTML = `
-                    <p>No hay estudiantes registrados para esta materia.</p>
-                `;
+            console.log(
+                "Calificaciones:",
+                resultadoEstudiantes
+            );
+
+            console.log(
+                "Cantidad de actividades:",
+                resultadoActividades.cantidad_actividades
+            );
+
+
+            // ==========================================
+            // VALIDAR RESPUESTAS
+            // ==========================================
+
+            if (!respuestaEstudiantes.ok) {
+
+                console.error(
+                    "Error estudiantes:",
+                    resultadoEstudiantes
+                );
+
                 return;
             }
 
-            const cantidadActividades = resultadoActividades.cantidad_actividades;
+            if (!respuestaActividades.ok) {
+
+                console.error(
+                    "Error actividades:",
+                    resultadoActividades
+                );
+
+                return;
+            }
+
+
+            // ==========================================
+            // LIMPIAR CONTENEDOR
+            // ==========================================
+
+            contenedor_notas_academicas.innerHTML = "";
+
+
+            // ==========================================
+            // VALIDAR ESTUDIANTES
+            // ==========================================
+
+            if (
+                !resultadoEstudiantes.calificaciones ||
+                resultadoEstudiantes.calificaciones.length === 0
+            ) {
+
+                contenedor_notas_academicas.innerHTML = `
+                <p>No hay estudiantes registrados para esta materia.</p>
+            `;
+
+                return;
+            }
+
+
+            // ==========================================
+            // CANTIDAD DE ACTIVIDADES
+            // ==========================================
+
+            const cantidadActividades =
+                resultadoActividades.cantidad_actividades || 0;
 
             cantidad_evaluaciones = cantidadActividades;
 
+
+            // ==========================================
+            // CREAR TABLA
+            // ==========================================
+
             const tabla = document.createElement("table");
 
-            tabla.classList.add("tabla-calificaciones");
+            tabla.classList.add(
+                "tabla-calificaciones"
+            );
+
+
+            // ==========================================
+            // ENCABEZADO
+            // ==========================================
 
             let encabezado = `
-                <tr>
-                    <th>#</th>
-                    <th>Estudiante</th>
-                    <th>C.I</th>
-            `;
+            <tr>
+                <th>#</th>
+                <th>Estudiante</th>
+                <th>C.I</th>
+        `;
 
-            for (let i = 1; i <= cantidadActividades; i++) {
+
+            for (
+                let i = 1;
+                i <= cantidadActividades;
+                i++
+            ) {
+
                 encabezado += `
-                    <th>Unidad ${i}</th>
-                `;
+                <th>Unidad ${i}</th>
+            `;
             }
 
+
             encabezado += `
-                    <th>Asistencia</th>
-                    <th>Promedio</th>
-                </tr>
-            `;
+                <th>Asistencia</th>
+                <th>Promedio</th>
+            </tr>
+        `;
+
 
             tabla.innerHTML = `
-                <thead>
-                    ${encabezado}
-                </thead>
-                <tbody></tbody>
-            `;
-            const tbody = tabla.querySelector("tbody");
+            <thead>
+                ${encabezado}
+            </thead>
 
-            resultadoEstudiantes.calificaciones.forEach(
-                (estudiante, indice) => {
-                    const fila = document.createElement("tr");
+            <tbody></tbody>
+        `;
 
-                    let controles = "";
-                    for (let i = 1; i <= cantidadActividades; i++) {
-                        const unidad = estudiante.unidades[i - 1];
 
-                        const notaUnidad = unidad ? unidad.nota_unidad : "";
+            const tbody = tabla.querySelector(
+                "tbody"
+            );
 
-                        controles += `
-                            <td class="celda-calificacion">
-                                ${notaUnidad}
-                            </td>
-                        `;
-                    }
 
-                    fila.innerHTML = `
-                    <td>${indice + 1}</td>
-                    <td>${estudiante.nombre_estudiante}</td>
-                    <td>${estudiante.cedula_identidad}</td>
+            // EVITAR ESTUDIANTES DUPLICADOS
+            const estudiantesMostrados = new Set();
+
+            let numeroFila = 1;
+
+            // RECORRER ESTUDIANTES
+            resultadoEstudiantes.calificaciones.forEach((estudiante) => {
+                const idEstudiante = estudiante.id_estudiante;
+
+                if (estudiantesMostrados.has(idEstudiante)) {
+                    console.warn(
+                        "Estudiante duplicado:",
+                        idEstudiante,
+                        estudiante.nombre_estudiante
+                    );
+                    return;
+                }
+                estudiantesMostrados.add(idEstudiante);
+
+                const fila = document.createElement("tr");
+                let controles = "";
+
+
+                for (let i = 1; i <= cantidadActividades; i++) {
+
+                    const unidad =
+                        estudiante.unidades?.[i - 1];
+
+
+                    const notaUnidad =
+                        unidad
+                            ? unidad.nota_unidad
+                            : "";
+
+
+                    controles += `
+                        <td class="celda-calificacion">
+                            ${notaUnidad}
+                        </td>
+                    `;
+                }
+
+
+                // ==================================
+                // CONTENIDO DE LA FILA
+                // ==================================
+
+                fila.innerHTML = `
+                    <td>
+                        ${numeroFila}
+                    </td>
+
+                    <td>
+                        ${estudiante.nombre_estudiante}
+                    </td>
+
+                    <td>
+                        ${estudiante.cedula_identidad}
+                    </td>
+
                     ${controles}
-                     <td class="celda-asistencia">
+
+                    <td class="celda-asistencia">
                         ${estudiante.asistencia}%
                     </td>
+
                     <td class="celda-promedio">
                         ${estudiante.promedio}
                     </td>
                 `;
-                    tbody.appendChild(fila);
-                }
+
+
+                // ==================================
+                // AGREGAR FILA
+                // ==================================
+
+                tbody.appendChild(fila);
+
+
+                numeroFila++;
+            }
             );
 
-            contenedor_notas_academicas.appendChild(tabla);
+
+            // ==========================================
+            // AGREGAR TABLA AL CONTENEDOR
+            // ==========================================
+
+            contenedor_notas_academicas.appendChild(
+                tabla
+            );
+
+
         } catch (error) {
             console.error(error);
         }

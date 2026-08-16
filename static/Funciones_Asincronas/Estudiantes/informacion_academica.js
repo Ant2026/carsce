@@ -38,10 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(nucleo);
 
         await pnfs_asignados();
-
-        await materias_presentada();
-
-        await plan_estudio();
     });
 
     async function pnfs_asignados() {
@@ -82,6 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
         await materias_presentada();
 
         await plan_estudio();
+
+        await notas_academicas();
     });
 
     async function materias_presentada() {
@@ -103,6 +101,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultado = await respuesta.json();
             console.log(resultado);
 
+            if (resultado.estado == "fallo") {
+                await Swal.fire({
+                    text: resultado.descripcion,
+                    icon: resultado.icon,
+                    title: resultado.title,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+                return;
+            }
+
             select_materias_presentadas.innerHTML = "<option value='' selected>Selecciona la materia</option>";
 
             resultado.materias.forEach(materia => {
@@ -122,10 +131,14 @@ document.addEventListener("DOMContentLoaded", () => {
         materia = opcion.value;
 
         await plan_estudio();
+
+        await notas_academicas();
     });
 
     async function plan_estudio() {
         try {
+            if (!nucleo || !pnf || !materia) return;
+
             const formulario = new FormData();
             formulario.append("id_nucleo", nucleo);
             formulario.append("id_pnf", pnf);
@@ -134,15 +147,290 @@ document.addEventListener("DOMContentLoaded", () => {
             const respuesta = await fetch("/notas_academicas/plan_act_est/", {
                 method: "POST",
                 headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value
                 },
                 body: formulario
             });
             const resultado = await respuesta.json();
             console.log(resultado);
 
+            const contenedor = document.getElementById("contendor_unidades");
+
+            // LIMPIAR CONTENEDOR
+            contenedor.innerHTML = "";
+
+            // MENSAJES DE ERROR
+            if (resultado.estado === "fallo") {
+                Swal.fire({
+                    icon: resultado.icon,
+                    title: resultado.title,
+                    text: resultado.descripcion
+                });
+
+                return;
+            }
+
+            // NO EXISTE PLAN
+            if (resultado.estado === "no_exite") {
+                contenedor.innerHTML = `
+                    <table class="tabla_plan_estudio">
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Ponderación</th>
+                                <th>Contenido</th>
+                                <th>Método de evaluación</th>
+                                <th>Fecha de evaluación</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="mensaje_tabla">
+                                    ${resultado.descripcion}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+
+                return;
+            }
+            // PLAN EXISTENTE
+            if (resultado.estado === "exito") {
+
+                let filas = "";
+
+                resultado.unidades.forEach((unidad) => {
+                    const evaluaciones = unidad.evaluaciones;
+
+                    // SIN EVALUACIONES
+                    if (evaluaciones.length === 0) {
+                        filas += `
+                            <tr>
+                                <td>${unidad.titulo_unidad}</td>
+                                <td>${unidad.ponderacion}</td>
+                                <td>${unidad.contenido_unidad}</td>
+                                <td colspan="2">
+                                    Sin evaluaciones registradas
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    // CON EVALUACIONES
+                    evaluaciones.forEach((evaluacion, indice) => {
+
+                        filas += `<tr>`;
+
+                        // SOLO MOSTRAR LOS DATOS DE LA UNIDAD EN LA PRIMERA FILA
+                        if (indice === 0) {
+
+                            filas += `
+                            <td rowspan="${evaluaciones.length}">
+                                ${unidad.titulo_unidad}
+                            </td>
+
+                            <td rowspan="${evaluaciones.length}">
+                                ${unidad.ponderacion}
+                            </td>
+
+                            <td rowspan="${evaluaciones.length}">
+                                ${unidad.contenido_unidad}
+                            </td>
+                        `;
+                        }
+
+                        // DATOS DE LA EVALUACIÓN
+                        filas += `
+                        <td>
+                            ${evaluacion.metodo_evaluacion}
+                        </td>
+
+                        <td>
+                            ${evaluacion.fecha_evaluacion}
+                        </td>
+                    `;
+                        filas += `</tr>`;
+                    });
+                });
+
+                contenedor.innerHTML = `
+                <table class="tabla_plan_estudio">
+                    <thead>
+                        <tr>
+                            <th>Unidad</th>
+                            <th>Ponderación</th>
+                            <th>Contenido</th>
+                            <th>Método de evaluación</th>
+                            <th>Fecha de evaluación</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${filas}
+                    </tbody>
+                </table>
+            `;
+            }
+
         } catch (error) {
             console.error(error);
         }
     }
+
+    async function notas_academicas() {
+        try {
+            if (!nucleo || !pnf || !materia) return;
+
+            const formulario = new FormData();
+
+            formulario.append("id_nucleo", nucleo);
+            formulario.append("id_pnf", pnf);
+            formulario.append("id_materia", materia);
+
+            const respuesta = await fetch("/notas_academicas/eval_reg_est/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value
+                },
+                body: formulario
+            });
+
+            const resultado = await respuesta.json();
+
+            console.log(resultado);
+
+            const contenedor = document.getElementById(
+                "contenedor_notas_academica"
+            );
+
+            // LIMPIAR CONTENEDOR
+            contenedor.innerHTML = "";
+
+            // ==========================================
+            // ERROR
+            // ==========================================
+
+            if (resultado.estado === "fallo") {
+
+                Swal.fire({
+                    icon: resultado.icon,
+                    title: resultado.title,
+                    text: resultado.descripcion
+                });
+
+                return;
+            }
+
+            // ==========================================
+            // NO TIENE CALIFICACIONES
+            // ==========================================
+
+            if (resultado.registradas === false) {
+
+                contenedor.innerHTML = `
+                    <table class="tabla_notas_academicas">
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Nota de la unidad</th>
+                                <th>Fecha de calificación</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="mensaje_tabla">
+                                    El estudiante todavía no tiene calificaciones registradas.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+
+                return;
+            }
+
+            // ==========================================
+            // TIENE CALIFICACIONES
+            // ==========================================
+
+            if (resultado.registradas === true) {
+
+                let filas = "";
+
+                resultado.evaluaciones.forEach((evaluacion) => {
+
+                    filas += `
+                        <tr>
+                            <td>
+                                ${evaluacion.titulo_unidad}
+                            </td>
+
+                            <td>
+                                ${evaluacion.nota_unidad}
+                            </td>
+
+                            <td>
+                                ${evaluacion.fecha_calificacion}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                contenedor.innerHTML = `
+                    <div class="resumen_notas_academicas">
+
+                        <div class="dato_nota">
+                            <span>Trayecto</span>
+                            <strong>${resultado.trayecto}</strong>
+                        </div>
+
+                        <div class="dato_nota">
+                            <span>Promedio</span>
+                            <strong>${resultado.promedio_tramo}</strong>
+                        </div>
+
+                        <div class="dato_nota">
+                            <span>Asistencia</span>
+                            <strong>${resultado.asistencia}</strong>
+                        </div>
+
+                        <div class="dato_nota">
+                            <span>Condición</span>
+                            <strong>${resultado.condicion}</strong>
+                        </div>
+
+                    </div>
+
+                    <table class="tabla_notas_academicas">
+
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Nota de la unidad</th>
+                                <th>Fecha de calificación</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            ${filas}
+                        </tbody>
+
+                    </table>
+                `;
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
 });
