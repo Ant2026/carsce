@@ -4,53 +4,81 @@
 
 {% load static %}
 
-<section id="modulo_autoridades">
+<section id="modulo_autoridades_actualizar">
     <div class="contenedor_modulo_autoridades">
-        <h2>Gestión de Autoridades</h2>
+        <h3>Gestión de Autoridades</h3>
 
-        <h3>Buscar Autoridad</h3>
-        <form method="post" id="formulario_buscar">
-            {% csrf_token %}
-            <label for="cedula_actualizar">Cedula Identidad:</label>
-            <div class="grupo-campo">
-                <select name="nacionalidad" id="nacionalidad">
-                    <option value="">N</option>
-                    <option value="V">V</option>
-                    <option value="E">E</option>
-                </select>
-                <input type="text" name="cedula" id="cedula" autocomplete="off" required>
-            </div>
+        <!-- CARD 1: BÚSQUEDA -->
+        <div class="card_autoridades card_buscar_autoridad">
+            <h4>Buscar Autoridad</h4>
 
-            <input type="submit" value="Buscar Autoridad">
-        </form>
+            <form method="post" id="formulario_buscar">
+                {% csrf_token %}
+                <div class="campo">
+                    <label for="cedula">Cédula de Identidad:</label>
+                    <div class="grupo-cedula">
+                        <select name="nacionalidad" id="nacionalidad" required>
+                            <option value="">N</option>
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                        </select>
+                        <input type="text" name="cedula" id="cedula" autocomplete="off" required>
+                    </div>
+                </div>
 
-        <h3>Actualizar Autoridades</h3>
+                <input type="submit" id="btn_buscar" value="Buscar Autoridad">
+            </form>
+        </div>
 
-        <form method="post" id="formulario_actualizar">
-            {% csrf_token %}
-            <input type="hidden" name="usuarioseleccionado" id="usuario_seleccionado">
+        <!-- CARD 2: FORMULARIO DE EDICIÓN -->
+        <div class="card_autoridades card_actualizar_autoridad">
+            <h4>Actualizar Datos de Autoridad</h4>
 
-            <label for="nombres_actualizar">Nombres:</label>
-            <input type="text" name="nombres_actualizar" id="nombres_actualizar" autocomplete="off" required>
-            
-            <label for="apellidos_actualizar">Apellidos:</label>
-            <input type="text" name="apellidos_actualizar" id="apellidos_actualizar" autocomplete="off" required>
-            
-            <label for="genero_actualizar">Genero:</label>
-            <select name="genero_actualizar" id="genero_actualizar">
-                <option value="Masculino">Masculino</option>
-                <option value="Femenino">Femenino</option>
-            </select>
-    
-            <label for="cargo_actualizar">Cargo:</label>
-            <select name="cargo_actualizar" id="cargo_actualizar"></select>
+            <form method="post" id="formulario_actualizar">
+                {% csrf_token %}
+                <input type="hidden" name="usuarioseleccionado" id="usuario_seleccionado">
 
-            <label for="resolucion_actualizar">Resolución:</label>
-            <input type="text" name="resolucion_actualizar" id="resolucion_actualizar" minlength="12" maxlength="12" pattern="[A-Z]{6}[0-9]{6}"  title="Debe contener exactamente 6 letras mayúsculas seguidas de 6 números." autocomplete="off" required>
-            <small id="msg_resolucion"></small>
+                <!-- FILA 1: Nombres y Apellidos -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="nombres_actualizar">Nombres:</label>
+                        <input type="text" name="nombres_actualizar" id="nombres_actualizar" autocomplete="off" required>
+                    </div>
 
-            <input type="submit" id="btn_actualizar" value="Actualizar Autoridades">
-        </form>
+                    <div class="campo">
+                        <label for="apellidos_actualizar">Apellidos:</label>
+                        <input type="text" name="apellidos_actualizar" id="apellidos_actualizar" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <!-- FILA 2: Género y Cargo -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="genero_actualizar">Género:</label>
+                        <select name="genero_actualizar" id="genero_actualizar" required>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cargo_actualizar">Cargo:</label>
+                        <select name="cargo_actualizar" id="cargo_actualizar" required></select>
+                    </div>
+                </div>
+
+                <!-- FILA 3: Resolución -->
+                <div class="fila-campos">
+                    <div class="campo campo-completo">
+                        <label for="resolucion_actualizar">Resolución:</label>
+                        <input type="text" name="resolucion_actualizar" id="resolucion_actualizar" minlength="12" maxlength="12" pattern="[A-Z]{6}[0-9]{6}" title="Debe contener exactamente 6 letras mayúsculas seguidas de 6 números." autocomplete="off" required>
+                        <small id="msg_resolucion"></small>
+                    </div>
+                </div>
+
+                <input type="submit" id="btn_actualizar" value="Actualizar Autoridades">
+            </form>
+        </div>
     </div>
 </section>
 

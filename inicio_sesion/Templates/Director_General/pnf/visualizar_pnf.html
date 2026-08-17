@@ -4,27 +4,30 @@
 
 {% load static %}
 
-<section id="pnfs_registrado">
-    <div class="contenedor_pnfs_registrado">
+<section id="pnfs_visualizado">
+    <div class="contenedor_pnfs_visualizado">
         <h3>Programa Nacional de Formación</h3>
 
         <div id="tabla_pnfs">
             <h4>PNFs Registrados</h4>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>PNF</th>
-                        <th>Código</th>
-                        <th>PERIODO ACADEMICO</th>
-                    </tr>
-                </thead>
-                <tbody id="pnfs_registrados">
-                    <!-- Los datos de los PNFs se cargarán aquí mediante JavaScript -->
-                </tbody>
-            </table>
-         </div>
+            <!-- Envoltorio responsive para scroll horizontal -->
+            <div class="contenedor_tabla">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>PNF</th>
+                            <th>Código</th>
+                            <th>Periodo Académico</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pnfs_registrados">
+                        <!-- Los datos de los PNFs se cargarán aquí mediante JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 

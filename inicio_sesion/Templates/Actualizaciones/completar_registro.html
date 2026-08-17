@@ -7,18 +7,65 @@
 <section id="completar_registro">
     <div class="contenedor_completar_regitro">
         <h3>Completar Registro</h3>
+        <!-- BARRA DE PROGRESO -->
+        <div id="barra_progreso">
+
+            <div class="paso_barra activo">
+                <span>1</span>
+                <p>Datos Básicos</p>
+            </div>
+
+            <div class="paso_barra">
+                <span>2</span>
+                <p>Contacto</p>
+            </div>
+
+            <div class="paso_barra">
+                <span>3</span>
+                <p>Nacimiento</p>
+            </div>
+
+            <div class="paso_barra">
+                <span>4</span>
+                <p>Residencia</p>
+            </div>
+
+            {% if "Estudiante" not in request.session.rol %}
+
+            <div class="paso_barra">
+                <span>5</span>
+                <p>Información Profesional</p>
+            </div>
+
+            {% endif %}
+
+            {% if "Estudiante" in request.session.rol %}
+
+            <div class="paso_barra">
+                <span>5</span>
+                <p>Información Académica</p>
+            </div>
+
+            <div class="paso_barra">
+                <span>6</span>
+                <p>Documentos</p>
+            </div>
+
+            {% endif %}
+
+        </div>
 
         <form method="post" id="formulario_registro" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <div id="contenedor_datos_basicos">
+            <div id="contenedor_datos_basicos" class="paso_formulario activo">
                 <h4>Datos Básicos</h4>
 
                 <div class="campo">
                     <label for="nombres_usuario">Nombre:</label>
                     <input type="text" name="nombres" id="nombres_usuario" readonly>
                 </div>
-                
+
                 <div class="campo">
                     <label for="apellidos_usuario">Apellido:</label>
                     <input type="text" name="apellidos" id="apellidos_usuario" readonly>
@@ -40,30 +87,33 @@
                 </div>
             </div>
 
-            <div id="contenedor_contacto">
+            <div id="contenedor_contacto" class="paso_formulario">
                 <h4>Datos de Contacto</h4>
 
                 <div class="campo">
                     <label for="numero_telefonico_principal">Telefono Principal:</label>
                     <div class="campo_horizontal">
-                        <select name="prefijo_telefono_principal" id="prefijo_principal"></select>
-                        <input type="text" name="num_telefono_principal" id="numero_telefonico_principal" placeholder="Ejemplo: 1234567" autocomplete="off">                        
+                        <select name="prefijo_telefono_principal" id="prefijo_principal" required></select>
+                        <input type="text" name="num_telefono_principal" id="numero_telefonico_principal"
+                            placeholder="Ejemplo: 1234567" autocomplete="off" required>
                     </div>
                 </div>
 
                 <div class="campo">
                     <label for="numero_telefonico_secundario">Telefono Secundaria (Opcional):</label>
                     <div class="campo_horizontal">
-                        <select name="prefijo_telefono_secundaria" id="prefijo_secundario"></select>
-                        <input type="text" name="num_telefono_secundaria" id="numero_telefonico_secundario" placeholder="Ejemplo: 1234567" autocomplete="off">                        
+                        <select name="prefijo_telefono_secundaria" id="prefijo_secundario" ></select>
+                        <input type="text" name="num_telefono_secundaria" id="numero_telefonico_secundario"
+                            placeholder="Ejemplo: 1234567" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="campo">
                     <label for="correo_principal">Correo Electronico Principal:</label>
                     <div class="campo_horizontal">
-                        <input type="text" name="correo_principal" id="correo_principal" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
-                        <select name="dominio_correo_principal" id="dominio_principal"></select>
+                        <input type="text" name="correo_principal" id="correo_principal"
+                            placeholder="Ejemplo: ejemplo2026" autocomplete="off" required>
+                        <select name="dominio_correo_principal" id="dominio_principal" required></select>
                     </div>
                     <small id="msg_correo_princ"></small>
                 </div>
@@ -71,59 +121,63 @@
                 <div class="campo">
                     <label for="correo_secundario">Correo Electronico Secundaria:</label>
                     <div class="campo_horizontal">
-                        <input type="text" name="correo_secundaria" id="correo_secundario" placeholder="Ejemplo: ejemplo2026" autocomplete="off">
-                        <select name="dominio_correo_secundaria" id="dominio_secundario"></select>
+                        <input type="text" name="correo_secundaria" id="correo_secundario"
+                            placeholder="Ejemplo: ejemplo2026" autocomplete="off" required>
+                        <select name="dominio_correo_secundaria" id="dominio_secundario" required></select>
                     </div>
                     <small id="msg_correo_sec"></small>
                 </div>
             </div>
 
-            <div id="contenedor_nacimiento">
+            <div id="contenedor_nacimiento" class="paso_formulario">
                 <h4>Datos de Nacimiento</h4>
 
                 <div class="campo">
                     <label for="pais_nacimiento">País de Nacimiento:</label>
-                    <select name="pais_nacimiento" id="pais_nacimiento"></select>
+                    <select name="pais_nacimiento" id="pais_nacimiento" required></select>
                 </div>
 
                 <div class="campo">
                     <label for="estado_nacimiento">Estado/Provincia/Departamento de Nacimiento:</label>
-                    <select name="estado_nacimiento" id="estado_nacimiento" disabled></select>
+                    <select name="estado_nacimiento" id="estado_nacimiento" disabled required></select>
 
-                    <input type="text" name="estado_novzla" id="estado_novzla" placeholder="Indica el estado o provincia donde naciste" autocomplete="off" hidden>
+                    <input type="text" name="estado_novzla" id="estado_novzla"
+                        placeholder="Indica el estado o provincia donde naciste" autocomplete="off" hidden>
                 </div>
 
                 <div class="campo">
                     <label for="municipio_nacimiento">Municipio/Condado/Comuna de Nacimiento:</label>
-                    <select name="municipio_nacimiento" id="municipio_nacimiento"></select>
+                    <select name="municipio_nacimiento" id="municipio_nacimiento" required></select>
 
-                    <input type="text" name="municipio_novzla" placeholder="Indica el municipio o condado donde naciste" id="municipio_novzla" autocomplete="off" hidden>
+                    <input type="text" name="municipio_novzla" placeholder="Indica el municipio o condado donde naciste"
+                        id="municipio_novzla" autocomplete="off" hidden>
                 </div>
 
                 <div class="campo">
                     <label for="parroquia_nacimiento">Parroquia/Barrio/Distrito de Nacimiento:</label>
-                    <select name="parroquia_nacimiento" id="parroquia_nacimiento"></select>
+                    <select name="parroquia_nacimiento" id="parroquia_nacimiento" required></select>
 
-                    <input type="text" name="parroquia_novzla" id="parroquia_novzla" placeholder="Indica la parroquia o distrito donde naciste" autocomplete="off" hidden>
+                    <input type="text" name="parroquia_novzla" id="parroquia_novzla"
+                        placeholder="Indica la parroquia o distrito donde naciste" autocomplete="off" hidden>
                 </div>
 
                 <div class="campo">
                     <label for="direccion_nacimiento">Dirección de Nacimiento:</label>
-                    <textarea name="direccion_nacimiento" id="direccion_nacimiento"></textarea>
+                    <textarea name="direccion_nacimiento" id="direccion_nacimiento" required></textarea>
                 </div>
 
                 <div class="campo">
                     <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" autocomplete="off">
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" autocomplete="off" required>
                 </div>
             </div>
 
-            <div id="contenedor_residencia">
+            <div id="contenedor_residencia" class="paso_formulario">
                 <h4>Datos de Residencia</h4>
 
                 <div class="campo">
                     <label for="condicion_residencia">Condición de Residencia:</label>
-                    <select name="condicion_residencia" id="condicion_residencia">
+                    <select name="condicion_residencia" id="condicion_residencia" required>
                         <option value="">Elije una opción</option>
                         <option value="Residente">Residente</option>
                         <option value="Foraneo">Foraneo</option>
@@ -132,214 +186,227 @@
 
                 <div class="campo">
                     <label for="municipio_residencia">Municipio/Condado/Comuna de Residencia:</label>
-                    <select name="municipio_residencia" id="municipio_residencia"></select>
+                    <select name="municipio_residencia" id="municipio_residencia" required></select>
                 </div>
 
                 <div class="campo">
                     <label for="parroquia_residencia">Parroquia/Barrio/Distrito de Residencia:</label>
-                    <select name="parroquia_residencia" id="parroquia_residencia"></select>
+                    <select name="parroquia_residencia" id="parroquia_residencia" required></select>
                 </div>
 
                 <div class="campo">
                     <label for="direccion_domicilio">Dirección de Residencia:</label>
-                    <textarea name="direccion_domicilio" id="direccion_domicilio"></textarea>
+                    <textarea name="direccion_domicilio" id="direccion_domicilio" required></textarea>
                 </div>
             </div>
-            
+
             {% if "Estudiante" not in request.session.rol %}
-                <div id="contenedor_profesion">
-                    <h4>Datos Profesionales</h4>
-                    
-                    <div class="campo">
-                        <label for="profesion_pregrado">Profesión de Pregrado:</label>
-                        <input type="text" name="profesion_pregrado" placeholder="Especifica la profesión que posee" id="profesion_pregrado" autocomplete="off">
-                    </div>
+            <div id="contenedor_profesion" class="paso_formulario">
+                <h4>Datos Profesionales</h4>
 
-                    <div class="campo">
-                        <label for="universidad_pregrado">Universidad de Pregrado:</label>
-                        <input type="text" name="universidad_pregrado" placeholder="¿Donde te formaste como profesional?" id="universidad_pregrado" autocomplete="off">
-                    </div>
-
-                    <div class="campo">
-                        <label for="pais_profesion">País de Profesión de Pregrado:</label>
-                        <select name="pais_profesion" id="pais_profesion"></select>
-                    </div>
+                <div class="campo">
+                    <label for="profesion_pregrado">Profesión de Pregrado:</label>
+                    <input type="text" name="profesion_pregrado" placeholder="Especifica la profesión que posee"
+                        id="profesion_pregrado" autocomplete="off" required>
                 </div>
+
+                <div class="campo">
+                    <label for="universidad_pregrado">Universidad de Pregrado:</label>
+                    <input type="text" name="universidad_pregrado" placeholder="¿Donde te formaste como profesional?"
+                        id="universidad_pregrado" autocomplete="off" required>
+                </div>
+
+                <div class="campo">
+                    <label for="pais_profesion">País de Profesión de Pregrado:</label>
+                    <select name="pais_profesion" id="pais_profesion" required></select>
+                </div>
+            </div>
             {% endif %}
 
             {% if "Estudiante" in request.session.rol %}
-                <div id="contenedor_contacto_auxiliar">
-                    <h4>Datos de Contacto Auxiliar (Opcional)</h4>
+            <div id="contenedor_contacto_auxiliar" class="paso_formulario">
+                <h4>Datos de Contacto Auxiliar (Opcional)</h4>
 
-                    <div class="campo">
-                        <label for="nombres_auxiliar">Nombres del Individuo Auxiliar:</label>
-                        <input type="text" name="nombres_auxiliar" id="nombres_auxiliar" autocomplete="off">
-                    </div>
-                    <div class="campo">
-                        <label for="apellidos_auxiliar">Apellidos del Individuo Auxiliar:</label>
-                        <input type="text" name="apellidos_auxiliar" id="apellidos_auxiliar" autocomplete="off">
-                    </div>
-                    <div class="campo">
-                        <label for="cedula_auxiliar">Cédula de Identidad:</label>
-                        <div class="campo_horizontal">
-                            <select name="nacionalidad_auxiliar" id="nacionalidad_auxiliar">
-                                <option value="">N</option>
-                                <option value="V">V</option>
-                                <option value="E">E</option>
-                            </select>
-                            <input type="text" name="ci_auxiliar" id="cedula_auxiliar" autocomplete="off">
-                        </div>
-                    </div>
-                    <small id="msg_ced_aux"></small>
-
-                    <div class="campo">
-                        <label for="numero_telefono_auxiliar">Teléfono:</label>
-                        <div class="campo_horizontal">
-                            <select name="prefijo_auxiliar" id="prefijo_telefono_auxiliar"></select>
-                            <input type="text" name="telefono_auxiliar" id="numero_telefono_auxiliar" maxlength="7" minlength="7" placeholder="Número telefónico debe llevar 7 dígitos" autocomplete="off">
-                        </div>
-                    </div>
-
-                    <div class="campo">
-                        <label for="parestenco">Parentesco:</label>
-                        <select name="parestenco_auxiliar" id="parestenco">
-                            <option value="">Elige una opción</option>
-                            <option value="Padre">Padre</option>
-                            <option value="Madre">Madre</option>
-                            <option value="Hermano(a)">Hermano(a)</option>
-                            <option value="Abuelo(a)">Abuelo(a)</option>
-                            <option value="Nieto(a)">Nieto(a)</option>
-                            <option value="Tío(a)">Tío(a)</option>
-                            <option value="Primo(a)">Primo(a)</option>
-                            <option value="Cónyuge">Cónyuge</option>
-                            <option value="Pareja">Pareja</option>
-                            <option value="Amigo(a)">Amigo(a)</option>
+                <div class="campo">
+                    <label for="nombres_auxiliar">Nombres del Individuo Auxiliar:</label>
+                    <input type="text" name="nombres_auxiliar" id="nombres_auxiliar" autocomplete="off" required>
+                </div>
+                <div class="campo">
+                    <label for="apellidos_auxiliar">Apellidos del Individuo Auxiliar:</label>
+                    <input type="text" name="apellidos_auxiliar" id="apellidos_auxiliar" autocomplete="off" required>
+                </div>
+                <div class="campo">
+                    <label for="cedula_auxiliar">Cédula de Identidad:</label>
+                    <div class="campo_horizontal">
+                        <select name="nacionalidad_auxiliar" id="nacionalidad_auxiliar" required>
+                            <option value="">N</option>
+                            <option value="V">V</option>
+                            <option value="E">E</option>
                         </select>
+                        <input type="text" name="ci_auxiliar" id="cedula_auxiliar" autocomplete="off" required>
                     </div>
                 </div>
-        
-                <div class="contenedor_secundaria">
-                    <h4>Datos de Secundaria</h4>
+                <small id="msg_ced_aux"></small>
+
+                <div class="campo">
+                    <label for="numero_telefono_auxiliar">Teléfono:</label>
+                    <div class="campo_horizontal">
+                        <select name="prefijo_auxiliar" id="prefijo_telefono_auxiliar" required></select>
+                        <input type="text" name="telefono_auxiliar" id="numero_telefono_auxiliar" maxlength="7"
+                            minlength="7" placeholder="Número telefónico debe llevar 7 dígitos" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="parestenco">Parentesco:</label>
+                    <select name="parestenco_auxiliar" id="parestenco" required>
+                        <option value="">Elige una opción</option>
+                        <option value="Padre">Padre</option>
+                        <option value="Madre">Madre</option>
+                        <option value="Hermano(a)">Hermano(a)</option>
+                        <option value="Abuelo(a)">Abuelo(a)</option>
+                        <option value="Nieto(a)">Nieto(a)</option>
+                        <option value="Tío(a)">Tío(a)</option>
+                        <option value="Primo(a)">Primo(a)</option>
+                        <option value="Cónyuge">Cónyuge</option>
+                        <option value="Pareja">Pareja</option>
+                        <option value="Amigo(a)">Amigo(a)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="contenedor_secundaria" class="paso_formulario">
+                <h4>Datos de Secundaria</h4>
+
+                <div class="campo">
+                    <label for="tipos_secundaria">Tipo de Liceo:</label>
+                    <select name="tipos_secundaria" id="tipos_secundaria" required>
+                        <option value="">Elije una opción</option>
+                        <option value="Público">Público</option>
+                        <option value="Privado">Privado</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="nombre_secundaria">Nombre del Liceo:</label>
+                    <input type="text" name="nombre_secundaria" id="nombre_secundaria" autocomplete="off" required>
+                </div>
+
+                <div class="campo">
+                    <label for="fecha_grado">Fecha de Grado:</label>
+                    <input type="date" name="fecha_graduacion" id="fecha_grado" required>
+                </div>
+
+                <div class="campo">
+                    <label for="codigo_sin_opsu">Código SNI OPSU:</label>
+                    <input type="text" name="codigo_opsu" id="codigo_sin_opsu"
+                        placeholder="Códgio OPSU debe ser 5 digito" minlength="5" maxlength="5" autocomplete="off" required>
+                </div>
+                <small id="msg_codigo_opsu"></small>
+            </div>
+
+            <div id="contenedor_discapacidad" class="paso_formulario">
+                <div class="encabezado_discapacidad">
+                    <h4>Datos de Discapacidad (Opcional)</h4>
+                    <button type="button" id="btn_discapacidad">
+                        Mostrar
+                    </button>
+                </div>
+
+                <div id="campos_discapacidad">
+                    <div class="campo">
+                        <label for="codigo_carnet_dispacidad">Carnet de Discapacidad:</label>
+                        <input type="text" name="carnet_dispacidad" id="codigo_carnet_dispacidad" autocomplete="off" required>
+                    </div>
 
                     <div class="campo">
-                        <label for="tipos_secundaria">Tipo de Liceo:</label>
-                        <select name="tipos_secundaria" id="tipos_secundaria">
+                        <label for="nro_registro_medico">Nro de Registro Médico:</label>
+                        <input type="text" name="registro_medico" id="nro_registro_medico" autocomplete="off" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="tipos_discapacidad">Tipo de Discapacidad:</label>
+                        <select name="tipos_discapacidad" id="tipos_discapacidad" required>
                             <option value="">Elije una opción</option>
-                            <option value="Público">Público</option>
-                            <option value="Privado">Privado</option>
+                            <option value="Visual">Visual</option>
+                            <option value="Auditiva">Auditiva</option>
+                            <option value="Lengauje">Lengauje</option>
+                            <option value="Intelectual">Intelectual</option>
+                            <option value="Autista">Autista</option>
+                            <option value="Fisica y Motora">Fisica y Motora</option>
+                            <option value="Otro">Otro</option>
                         </select>
                     </div>
-                    
-                    <div class="campo">
-                        <label for="nombre_secundaria">Nombre del Liceo:</label>
-                        <input type="text" name="nombre_secundaria" id="nombre_secundaria" autocomplete="off">
-                    </div>
 
                     <div class="campo">
-                        <label for="fecha_grado">Fecha de Grado:</label>
-                        <input type="date" name="fecha_graduacion" id="fecha_grado">
+                        <label for="grado_discapacidad">Grado de Discapacidad:</label>
+                        <select name="grado_discapacidad" id="grado_discapacidad" required>
+                            <option value="">Elije una opción</option>
+                            <option value="Leve">Leve</option>
+                            <option value="Moderada">Moderada</option>
+                            <option value="Grave">Grave</option>
+                        </select>
                     </div>
-                    
-                    <div class="campo">
-                        <label for="codigo_sin_opsu">Código SNI OPSU:</label>
-                        <input type="text" name="codigo_opsu" id="codigo_sin_opsu" placeholder="Códgio OPSU debe ser 5 digito" minlength="5" maxlength="5" autocomplete="off">
-                    </div>
-                    <small id="msg_codigo_opsu"></small>
-                </div>            
-
-                <div id="contenedor_discapacidad">
-                    <div class="encabezado_discapacidad">
-                        <h4>Datos de Discapacidad (Opcional)</h4>
-                        <button type="button" id="btn_discapacidad">
-                            Mostrar
-                        </button>
-                    </div>
-
-                    <div id="campos_discapacidad">
-                        <div class="campo">
-                            <label for="codigo_carnet_dispacidad">Carnet de Discapacidad:</label>
-                            <input type="text" name="carnet_dispacidad" id="codigo_carnet_dispacidad" autocomplete="off">
-                        </div>
-
-                        <div class="campo">
-                            <label for="nro_registro_medico">Nro de Registro Médico:</label>
-                            <input type="text" name="registro_medico" id="nro_registro_medico" autocomplete="off">
-                        </div>
-
-                        <div class="campo">
-                            <label for="tipos_discapacidad">Tipo de Discapacidad:</label>
-                            <select name="tipos_discapacidad" id="tipos_discapacidad">
-                                <option value="">Elije una opción</option>
-                                <option value="Visual">Visual</option>
-                                <option value="Auditiva">Auditiva</option>
-                                <option value="Lengauje">Lengauje</option>
-                                <option value="Intelectual">Intelectual</option>
-                                <option value="Autista">Autista</option>
-                                <option value="Fisica y Motora">Fisica y Motora</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                        
-                        <div class="campo">
-                            <label for="grado_discapacidad">Grado de Discapacidad:</label>
-                            <select name="grado_discapacidad" id="grado_discapacidad">
-                                <option value="">Elije una opción</option>
-                                <option value="Leve">Leve</option>
-                                <option value="Moderada">Moderada</option>
-                                <option value="Grave">Grave</option>
-                            </select>
-                        </div>
-
-                        <div class="campo">
-                            <label for="causa_discapacidad">Causa de Discapacidad:</label>
-                            <select name="causa_discapacidad" id="causa_discapacidad">
-                                <option value="">Elije una opción</option>
-                                <option value="Congenita">Congenita</option>
-                                <option value="Adquirida">Adquirida</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>  
-    
-                <div id="contenedor_pnfs_cursar">
-                    <h4>Datos de Núcleo y PNF</h4>
-
-                    <label for="nucleo_Barinas">Núcleo Barinas:<input type="checkbox" name="nucleoBarinas" id="nucleo_Barinas" value="Barinas"></label>
-                    <div id="contenedor_pnfs_Barinas"></div>
-
-                    <label for="nucleo_Barinitas">Núcleo Barinitas:<input type="checkbox" name="nucleoBarinitas" id="nucleo_Barinitas" value="Barinitas"></label>
-                    <div id="contenedor_pnfs_Barinitas"></div>
-
-                    <label for="nucleo_Socopo">Núcleo Socopo:<input type="checkbox" name="nucleoSocopo" id="nucleo_Socopo" value="Socopo"></label>
-                    <div id="contenedor_pnfs_Socopo"></div>
-
-                    <label for="nucleo_Pedraza">Núcleo Pedraza:<input type="checkbox" name="nucleoPedraza" id="nucleo_Pedraza" value="Pedraza"></label>
-                    <div id="contenedor_pnfs_Pedraza"></div>
-                </div>
-    
-                <div class="contenedor_documentos">
-                    <h4>Documentos</h4>
 
                     <div class="campo">
-                        <label for="documentoCI_estudiante">Cedula de Identidad:</label>
-                        <input type="file" name="CI_estudiante" id="documentoCI_estudiante">
-                    </div>
-                    <div class="campo">
-                        <label for="documentoTB_estudiante">Titulo de Bachiller:</label>
-                        <input type="file" name="TBachiller_estudiante" id="documentoTB_estudiante">
-                    </div>
-                    <div class="campo">
-                        <label for="documentoSN_estudiante">Sabana de Notas:</label>
-                        <input type="file" name="SNotas_estudiante" id="documentoSN_estudiante">
-                    </div>
-                    <div class="campo">
-                        <label for="documentoOPSU_estudiante">Certificado SNI OPSU:</label>
-                        <input type="file" name="OPSU_estudiante" id="documentoOPSU_estudiante">
+                        <label for="causa_discapacidad">Causa de Discapacidad:</label>
+                        <select name="causa_discapacidad" id="causa_discapacidad" required>
+                            <option value="">Elije una opción</option>
+                            <option value="Congenita">Congenita</option>
+                            <option value="Adquirida">Adquirida</option>
+                        </select>
                     </div>
                 </div>
+            </div>
+
+            <div id="contenedor_pnfs_cursar" class="paso_formulario">
+                <h4>Datos de Núcleo y PNF</h4>
+
+                <label for="nucleo_Barinas">Núcleo Barinas:<input type="checkbox" name="nucleoBarinas"
+                        id="nucleo_Barinas" value="Barinas"></label>
+                <div id="contenedor_pnfs_Barinas"></div>
+
+                <label for="nucleo_Barinitas">Núcleo Barinitas:<input type="checkbox" name="nucleoBarinitas"
+                        id="nucleo_Barinitas" value="Barinitas"></label>
+                <div id="contenedor_pnfs_Barinitas"></div>
+
+                <label for="nucleo_Socopo">Núcleo Socopo:<input type="checkbox" name="nucleoSocopo" id="nucleo_Socopo"
+                        value="Socopo"></label>
+                <div id="contenedor_pnfs_Socopo"></div>
+
+                <label for="nucleo_Pedraza">Núcleo Pedraza:<input type="checkbox" name="nucleoPedraza"
+                        id="nucleo_Pedraza" value="Pedraza" ></label>
+                <div id="contenedor_pnfs_Pedraza"></div>
+            </div>
+
+            <div id="contenedor_documentos" class="paso_formulario">
+                <h4>Documentos</h4>
+
+                <div class="campo">
+                    <label for="documentoCI_estudiante">Cedula de Identidad:</label>
+                    <input type="file" name="CI_estudiante" id="documentoCI_estudiante" required>
+                </div>
+                <div class="campo">
+                    <label for="documentoTB_estudiante">Titulo de Bachiller:</label>
+                    <input type="file" name="TBachiller_estudiante" id="documentoTB_estudiante" required>
+                </div>
+                <div class="campo">
+                    <label for="documentoSN_estudiante">Sabana de Notas:</label>
+                    <input type="file" name="SNotas_estudiante" id="documentoSN_estudiante" required>
+                </div>
+                <div class="campo">
+                    <label for="documentoOPSU_estudiante">Certificado SNI OPSU:</label>
+                    <input type="file" name="OPSU_estudiante" id="documentoOPSU_estudiante" required>
+                </div>
+            </div>
             {% endif %}
+            <div id="navegacion_formulario">
+                <button type="button" id="btn_anterior">← Anterior</button>
 
-            <input type="submit" id="btn_registro" value="Completar el Registro">
+                <button type="button" id="btn_siguiente">Siguiente →</button>
+
+                <input type="submit" id="btn_registro" value="Completar el Registro">
+            </div>
         </form>
     </div>
 </section>
@@ -356,5 +423,6 @@
 
 <!-- FUNCIÓN JAVASCRIPT PARA ENVIAR LOS DATOS AL FORMULARIO AJAX OJO -->
 <script src="{% static 'Funciones_Asincronas/Completar_Registro/completar_registro.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Actualizacion_Datos/barra_progreso.js' %}"></script>
 
 {% endblock %}

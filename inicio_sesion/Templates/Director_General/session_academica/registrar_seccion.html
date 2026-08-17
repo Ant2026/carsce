@@ -4,32 +4,39 @@
 
 {% load static %}
 
-<section id="secciones_registrado">
+<section id="modulo_secciones_registrar">
     <div class="contenedor_secciones_registrado">
-        <h3>Sección U.P.T "José Félix Ribas"</h3>
+        <h3>Secciones UPT "José Félix Ribas"</h3>
 
-        <div class="contenedor_registrar_secciones">
-            <h4>Registrar Sección</h4>
+        <div class="card_registrar_seccion">
+            <h4>Registrar Sección"</h4>
 
             <form method="post" id="formulario_registrar">
                 {% csrf_token %}
-                <label for="registro_seccion">Sección:</label>
-                <input type="text" name="registro_seccion" placeholder="Nombre de Sección 5 maximo caracteres."  maxlength="5" autocomplete="off" id="registro_seccion">
-                <small id="mensaje_nombre_seccion"></small>
 
-                <label for="registro_turno">Turno:</label>
-                <select name="registro_turno" id="registro_turno">
-                    <option value="">Selecciona el Turno Académico</option>
-                    <option value="Diurno">Diurno</option>
-                    <option value="Nocturno">Nocturno</option>
-                    <option value="Fin de Semana">Fin de Semana</option>
-                </select>
-                <small id="mensaje_aula_academica"></small>
-            
+                <!-- FILA DE CAMPOS: Sección y Turno -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="registro_seccion">Sección:</label>
+                        <input type="text" name="registro_seccion" id="registro_seccion" placeholder="Máximo 5 caracteres" maxlength="5" autocomplete="off" required>
+                        <small id="mensaje_nombre_seccion"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="registro_turno">Turno:</label>
+                        <select name="registro_turno" id="registro_turno" required>
+                            <option value="" disabled selected>Selecciona el Turno Académico</option>
+                            <option value="Diurno">Diurno</option>
+                            <option value="Nocturno">Nocturno</option>
+                            <option value="Fin de Semana">Fin de Semana</option>
+                        </select>
+                        <small id="mensaje_aula_academica"></small>
+                    </div>
+                </div>
+
                 <input type="submit" id="btn_registro" value="Registrar Sección">
             </form>
         </div>
-        
     </div>
 </section>
 

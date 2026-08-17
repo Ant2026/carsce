@@ -25,6 +25,23 @@ class Cuenta(models.Model):
         ]
     )
 
+    def obtener_rol_principal(self):
+        """Retorna el nombre del rol o perfil activo del usuario"""
+        u = self.id_usuario
+        
+        if DirectorGeneral.objects.filter(usuario=u).exists():
+            return "Director General"
+        if ControlEstudio.objects.filter(usuario=u).exists():
+            return "Control de Estudio"
+        if CoordinadorPNF.objects.filter(usuario=u).exists():
+            return "Coordinador de PNF"
+        if Docente.objects.filter(usuario=u).exists():
+            return "Docente"
+        if Estudiante.objects.filter(usuario=u).exists():
+            return "Estudiante"
+            
+        return "Sin Rol Asignado"
+
 class Residencia(models.Model):
     id_residencia = models.AutoField(primary_key=True)
     condicion_residencia = models.CharField(max_length=100)

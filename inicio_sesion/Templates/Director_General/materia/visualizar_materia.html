@@ -4,22 +4,28 @@
 
 {% load static %}
 
-<section id="modulo_materias">
+<section id="modulo_materias_actualizar">
     <div class="contenedor_modulo_materias">
         <h3>Materias UPT "José Félix Ribas"</h3>
 
-        <h4>Actuailizar Materias</h4>
+        <div class="card_actualizar_materias">
+            <h4>Actualizar Materias</h4>
 
-        <form method="post" id="buscar_materia">
-            {% csrf_token %}
+            <!-- FORMULARIO DE BÚSQUEDA POR PNF -->
+            <form method="post" id="buscar_materia">
+                {% csrf_token %}
 
-            <div class="campo_busqueda">
-                <label for="buscar_pnf">P.N.F:</label>
-                <select name="buscarpnf" id="buscar_pnf"></select>
-            </div>
-        </form>
+                <div class="campo_busqueda">
+                    <label for="buscar_pnf">P.N.F:</label>
+                    <select name="buscarpnf" id="buscar_pnf">
+                        <!-- Carga dinámica mediante JS -->
+                    </select>
+                </div>
+            </form>
 
-        <div id="contenedor_tablas_materia"></div>
+            <!-- CONTENEDOR DINÁMICO DE TABLAS (JS) -->
+            <div id="contenedor_tablas_materia"></div>
+        </div>
     </div>
 </section>
 

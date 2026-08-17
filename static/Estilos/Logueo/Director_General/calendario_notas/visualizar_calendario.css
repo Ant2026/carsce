@@ -1,0 +1,223 @@
+/* ========================================================= VISUALIZAR CALENDARIO (SCOPED) ========================================================= */
+#modulo_calendario_visualizar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#modulo_calendario_visualizar .contenedor_modulo_calendario {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_calendario_visualizar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+}
+
+/* Card contenedor de la tabla */
+#modulo_calendario_visualizar .card_tabla_calendario {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 30px 35px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+}
+
+#modulo_calendario_visualizar .card_tabla_calendario h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#modulo_calendario_visualizar .card_tabla_calendario h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 45px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* Envoltorio Responsive para Tabla */
+#modulo_calendario_visualizar .contenedor_tabla {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+}
+
+#modulo_calendario_visualizar table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.93rem;
+    background: var(--color-base);
+}
+
+#modulo_calendario_visualizar table thead tr {
+    background-color: var(--background);
+    color: var(--texto);
+    border-bottom: 2px solid var(--borde);
+}
+
+#modulo_calendario_visualizar table th {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-azulE);
+}
+
+#modulo_calendario_visualizar table td {
+    padding: 14px 18px;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+#modulo_calendario_visualizar table tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+#modulo_calendario_visualizar table tbody tr:hover {
+    background-color: rgba(33, 28, 132, 0.04);
+}
+
+#modulo_calendario_visualizar table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ========================================================= MODAL / DIALOG ========================================================= */
+#dialogo_actualizar_calendario {
+    border: none;
+    border-radius: var(--radio);
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: var(--color-base);
+    max-width: 550px;
+    width: 90%;
+}
+
+#dialogo_actualizar_calendario::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+}
+
+.contenedor_actualizar_calendario {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contenedor_actualizar_calendario .cabecera_dialogo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--background);
+    padding-bottom: 12px;
+}
+
+.contenedor_actualizar_calendario h4 {
+    margin: 0;
+    color: var(--texto);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.contenedor_actualizar_calendario #cerrar_dialogo {
+    font-size: 1.4rem;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.contenedor_actualizar_calendario #cerrar_dialogo:hover {
+    color: var(--rojo);
+}
+
+#actualizar_calendario {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#actualizar_calendario .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+#actualizar_calendario .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#actualizar_calendario label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#actualizar_calendario input[type="date"],
+#actualizar_calendario select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#actualizar_calendario input[type="date"][readonly] {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+#actualizar_calendario input[type="submit"] {
+    margin-top: 10px;
+    padding: 12px 20px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.92rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#actualizar_calendario input[type="submit"]:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #modulo_calendario_visualizar .card_tabla_calendario {
+        padding: 20px 15px;
+    }
+
+    #actualizar_calendario .fila-campos {
+        grid-template-columns: 1fr;
+    }
+}

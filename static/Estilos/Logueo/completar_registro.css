@@ -1,0 +1,523 @@
+/*====================================================*
+* CONTENEDOR PRINCIPAL
+*====================================================*/
+
+#completar_registro{
+    padding:80px 20px;
+    margin-top:120px;
+}
+
+
+#completar_registro #formulario_registro{
+
+    width:85%;
+    max-width:1000px;
+    margin:auto;
+
+    padding:35px 45px;
+
+    background:white;
+
+    border-radius:16px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+
+#completar_registro .error{
+
+    border:2px solid red !important;
+
+}
+
+
+/*====================================================*
+* WIZARD - BARRA DE PROGRESO
+*====================================================*/
+
+
+#completar_registro #barra_progreso{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    position:relative;
+
+    padding:35px 50px;
+
+    margin-bottom:35px;
+
+}
+
+
+#completar_registro #barra_progreso::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:58px;
+
+    left:90px;
+
+    right:90px;
+
+    height:4px;
+
+    background:var(--borde);
+
+    z-index:0;
+
+}
+
+
+
+#completar_registro .paso_barra{
+
+    position:relative;
+
+    z-index:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:10px;
+
+    width:120px;
+
+}
+
+
+
+#completar_registro .paso_barra span{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:white;
+
+    border:3px solid var(--borde);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:700;
+
+    color:var(--texto-secundario);
+
+    transition:.3s;
+
+}
+
+
+
+#completar_registro .paso_barra p{
+
+    margin:0;
+
+    text-align:center;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:var(--texto-secundario);
+
+}
+
+
+
+#completar_registro .paso_barra.activo span{
+
+    background:var(--primario);
+
+    border-color:var(--primario);
+
+    color:white;
+
+    transform:scale(1.15);
+
+}
+
+
+
+#completar_registro .paso_barra.activo p{
+
+    color:var(--primario);
+
+}
+
+
+
+#completar_registro .paso_barra.completado span{
+
+    background:var(--verde);
+
+    border-color:var(--verde);
+
+    color:white;
+
+}
+
+
+
+/*====================================================*
+* PASOS DEL FORMULARIO
+*====================================================*/
+
+
+#completar_registro .paso_formulario{
+
+    display:none;
+
+    animation:aparecer .4s ease;
+
+}
+
+
+
+#completar_registro .paso_formulario.activo{
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(2,minmax(250px,1fr));
+
+    gap:25px 35px;
+
+}
+
+
+
+#completar_registro .paso_formulario h4{
+
+    grid-column:1 / -1;
+
+    margin-bottom:10px;
+
+}
+
+
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(30px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+
+
+/*====================================================*
+* CAMPOS
+*====================================================*/
+
+
+#completar_registro .campo{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+
+    width:100%;
+
+    max-width:420px;
+
+}
+
+
+
+#completar_registro .campo label{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#333;
+
+}
+
+
+
+/* CAMPOS GRANDES */
+
+
+#completar_registro .campo:has(textarea),
+#completar_registro .campo:has(input[type="file"]){
+
+    grid-column:1 / -1;
+
+    max-width:700px;
+
+}
+
+
+
+/*====================================================*
+* INPUTS SELECT TEXTAREA
+*====================================================*/
+
+
+#completar_registro .campo input,
+#completar_registro .campo select,
+#completar_registro .campo textarea{
+
+
+    width:100%;
+
+    height:42px;
+
+    padding:8px 12px;
+
+    border:1px solid #d0d7de;
+
+    border-radius:8px;
+
+    background:white;
+
+    font-size:14px;
+
+    outline:none;
+
+    box-sizing:border-box;
+
+    transition:.3s;
+
+}
+
+
+
+#completar_registro .campo textarea{
+
+    height:auto;
+
+    min-height:120px;
+
+    resize:vertical;
+
+}
+
+
+
+#completar_registro .campo input:focus,
+#completar_registro .campo select:focus,
+#completar_registro .campo textarea:focus{
+
+
+    border-color:#2563eb;
+
+    box-shadow:
+
+    0 0 0 3px rgba(37,99,235,.15);
+
+
+}
+
+
+
+#completar_registro input[readonly]{
+
+
+    background:#f1f5f9;
+
+    cursor:not-allowed;
+
+    color:#64748b;
+
+}
+
+
+
+#completar_registro select:disabled{
+
+
+    background:#e5e7eb;
+
+    cursor:not-allowed;
+
+}
+
+
+
+/*====================================================*
+* CAMPOS HORIZONTALES
+*====================================================*/
+
+
+#completar_registro .campo_horizontal{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+
+
+#completar_registro .campo_horizontal select{
+
+    width:100px;
+
+}
+
+
+
+#completar_registro .campo_horizontal input{
+
+    flex:1;
+
+}
+
+
+
+/*====================================================*
+* CHECKBOX NUCLEOS
+*====================================================*/
+
+
+#completar_registro #contenedor_pnfs_cursar label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    background:#fafafa;
+
+    cursor:pointer;
+
+}
+
+
+#completar_registro #contenedor_pnfs_cursar input[type="checkbox"]{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+
+
+/*====================================================*
+* DOCUMENTOS
+*====================================================*/
+
+
+#completar_registro input[type="file"]{
+
+    height:auto;
+
+    padding:10px;
+
+    background:#f8f8f8;
+
+}
+
+
+
+/*====================================================*
+* NAVEGACION
+*====================================================*/
+#navegacion_formulario{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:35px;
+    padding:10px;
+}
+
+#navegacion_formulario button,
+#completar_registro #btn_registro{
+    border:none;
+    padding:12px 25px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:14px;
+    transition:.3s;
+}
+
+#completar_registro #btn_anterior{
+    background:#E5E7EB;
+    color:#333;
+}
+
+#completar_registro #btn_siguiente{
+    background:var(--primario);
+    color:white;
+}
+
+#completar_registro #btn_siguiente:hover{
+    transform:translateY(-2px);
+}
+
+#completar_registro #btn_registro{
+    display:none;
+    background:var(--verde);
+    color:white;
+}
+
+/*====================================================*
+* RESPONSIVE
+*====================================================*/
+@media(max-width:900px){
+    #completar_registro #formulario_registro{
+        width:95%;
+        padding:25px;
+    }
+
+    #completar_registro .paso_formulario.activo{
+        grid-template-columns:1fr;
+    }
+
+    #completar_registro #barra_progreso{
+        overflow-x:auto;
+        justify-content:flex-start;
+        gap:35px;
+        padding:25px;
+    }
+
+    #completar_registro #barra_progreso::before{
+        display:none;
+    }
+}

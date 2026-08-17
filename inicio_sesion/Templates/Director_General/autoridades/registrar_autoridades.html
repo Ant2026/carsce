@@ -4,50 +4,71 @@
 
 {% load static %}
 
-<section id="modulo_autoridades">
+<section id="modulo_autoridades_registrar">
     <div class="contenedor_modulo_autoridades">
         <h3>Gestión de Autoridades</h3>
 
-        <div class="contenedor_registrar_autoridades">
+        <div class="card_registrar_autoridades">
             <h4>Registrar Autoridades</h4>
 
             <form method="post" id="formulario_registrar_autoridades">
                 {% csrf_token %}
-                <label for="nombres_autoridades">Nombres:</label>
-                <input type="text" name="nombres_registrar" id="nombres_autoridades" autocomplete="off">
-                
-                <label for="apellidos_autoridades">Apellidos:</label>
-                <input type="text" name="apellidos_registrar" id="apellidos_autoridades" autocomplete="off">
-                
-                <label for="cedula_identidad">Cedula Identidad:</label>
-                <div class="grupo-campo">
-                    <select name="nacionalidad_registrar" id="nacionalidad">
-                        <option value="">N</option>
-                        <option value="V">V</option>
-                        <option value="E">E</option>
-                    </select>
-                    <input type="text" name="cedula_registrar" id="cedula_identidad" autocomplete="off">
-                </div>
-                <small id="mensaje_cedula_identidad"></small>
-                
-                <label for="genero_autoridades">Genero:</label>
-                <select name="genero_registrar" id="genero_autoridades">
-                    <option value="">Seleccione</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                </select>
-        
-                <label for="cargo_autoridades">Cargo:</label>
-                <select name="cargo_registrar" id="cargo_autoridades"></select>
 
-                <label for="resolucion_autoridades">Resolución:</label>
-                <input type="text" name="resolucion_registrar" id="resolucion_autoridades" minlength="12" maxlength="12" pattern="[A-Z]{6}[0-9]{6}"  title="Debe contener exactamente 6 letras mayúsculas seguidas de 6 números." autocomplete="off">
-                <small id="msg_resolucion"></small>
-                
+                <!-- FILA 1: Nombres y Apellidos -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="nombres_autoridades">Nombres:</label>
+                        <input type="text" name="nombres_registrar" id="nombres_autoridades" autocomplete="off" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="apellidos_autoridades">Apellidos:</label>
+                        <input type="text" name="apellidos_registrar" id="apellidos_autoridades" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <!-- FILA 2: Cédula de Identidad y Género -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="cedula_identidad">Cédula de Identidad:</label>
+                        <div class="grupo-cedula">
+                            <select name="nacionalidad_registrar" id="nacionalidad" required>
+                                <option value="">N</option>
+                                <option value="V">V</option>
+                                <option value="E">E</option>
+                            </select>
+                            <input type="text" name="cedula_registrar" id="cedula_identidad" autocomplete="off" required>
+                        </div>
+                        <small id="mensaje_cedula_identidad"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="genero_autoridades">Género:</label>
+                        <select name="genero_registrar" id="genero_autoridades" required>
+                            <option value="">Seleccione</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- FILA 3: Cargo y Resolución -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="cargo_autoridades">Cargo:</label>
+                        <select name="cargo_registrar" id="cargo_autoridades" required></select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="resolucion_autoridades">Resolución:</label>
+                        <input type="text" name="resolucion_registrar" id="resolucion_autoridades" minlength="12" maxlength="12" pattern="[A-Z]{6}[0-9]{6}" title="Debe contener exactamente 6 letras mayúsculas seguidas de 6 números." autocomplete="off" required>
+                        <small id="msg_resolucion"></small>
+                    </div>
+                </div>
+
                 <input type="submit" id="btn_registrar" value="Registrar Autoridades">
             </form>
         </div>
-
     </div>
 </section>
 

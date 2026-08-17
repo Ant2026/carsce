@@ -82,6 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'inicio_sesion.views.detalles.obtencion_rol.datos_usuario_global',
             ],
         },
     },
@@ -97,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'casrce',
         'USER': 'postgres',
-        'PASSWORD': '31438140',
+        'PASSWORD': '31359116',
         'HOST': 'localhost',
         'PORT': '5432',
     }

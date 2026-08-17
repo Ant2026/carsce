@@ -1,0 +1,143 @@
+/* ========================================================= REGISTRO DE PNF (SCOPED) ========================================================= */
+#pnfs_registrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#pnfs_registrado .contenedor_pnfs_registrado {
+    width: 100%;
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+#pnfs_registrado .contenedor_pnfs_registrado h2 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#pnfs_registrado .contenedor_registrar_pnf {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 40px 45px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    position: relative;
+}
+
+#pnfs_registrado .contenedor_registrar_pnf h3 {
+    color: var(--texto);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#pnfs_registrado .contenedor_registrar_pnf h3::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* ========================================================= FORMULARIO Y FILAS ========================================================= */
+#pnfs_registrado #formulario_registrar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pnfs_registrado .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#pnfs_registrado .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+#pnfs_registrado .campo label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#pnfs_registrado #formulario_registrar input[type="text"],
+#pnfs_registrado #formulario_registrar select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#pnfs_registrado #formulario_registrar input[type="text"]:focus,
+#pnfs_registrado #formulario_registrar select:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+/* Mensajes de validación */
+#pnfs_registrado #formulario_registrar small {
+    font-size: 0.82rem;
+    color: var(--rojo);
+    margin-top: 2px;
+    display: block;
+    min-height: 16px;
+}
+
+/* ========================================================= BOTÓN DE ACCIÓN ========================================================= */
+#pnfs_registrado #btn_registro {
+    margin-top: 10px;
+    padding: 14px 24px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#pnfs_registrado #btn_registro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
+}
+
+#pnfs_registrado #btn_registro:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #pnfs_registrado .fila-campos {
+        grid-template-columns: 1fr;
+    }
+
+    #pnfs_registrado .contenedor_registrar_pnf {
+        padding: 28px 20px;
+    }
+}

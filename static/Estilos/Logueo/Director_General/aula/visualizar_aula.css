@@ -1,0 +1,232 @@
+/* ========================================================= VISUALIZAR AULAS (SCOPED) ========================================================= */
+#modulo_aulas_visualizar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#modulo_aulas_visualizar .contenedor_aulas_academicas {
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_aulas_visualizar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#modulo_aulas_visualizar .card_visualizar_aulas {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 35px 40px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_aulas_visualizar .card_visualizar_aulas h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#modulo_aulas_visualizar .card_visualizar_aulas h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 45px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* TABLA DE AULAS */
+#modulo_aulas_visualizar .contenedor_tabla {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+    margin-top: 5px;
+}
+
+#modulo_aulas_visualizar table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.93rem;
+    background: var(--color-base);
+}
+
+#modulo_aulas_visualizar thead tr {
+    background-color: var(--background);
+    color: var(--texto);
+    border-bottom: 2px solid var(--borde);
+}
+
+#modulo_aulas_visualizar th {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-azulE);
+    white-space: nowrap;
+}
+
+#modulo_aulas_visualizar td {
+    padding: 14px 18px;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+#modulo_aulas_visualizar tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+#modulo_aulas_visualizar tbody tr:hover {
+    background-color: rgba(33, 28, 132, 0.04);
+    cursor: pointer;
+}
+
+/* ========================================================= DIÁLOGO MODAL ========================================================= */
+#dialogo_actualizar_aula {
+    border: none;
+    border-radius: var(--radio);
+    padding: 0;
+    background: transparent;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    max-width: 550px;
+    width: 90%;
+    margin: auto;
+}
+
+#dialogo_actualizar_aula::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+#dialogo_actualizar_aula .contenedor_actualizar_aula {
+    background: var(--color-base);
+    padding: 35px 40px;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#dialogo_actualizar_aula #cerrar_dialogo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.4rem;
+    color: var(--texto);
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+#dialogo_actualizar_aula #cerrar_dialogo:hover {
+    color: var(--rojo);
+    transform: scale(1.1);
+}
+
+#dialogo_actualizar_aula h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--background);
+}
+
+/* FORMULARIO DENTRO DEL MODAL */
+#formulario_actualizar_aula {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#formulario_actualizar_aula .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+#formulario_actualizar_aula .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+#formulario_actualizar_aula label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#formulario_actualizar_aula input[type="text"] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.93rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#formulario_actualizar_aula input[type="text"]:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+#formulario_actualizar_aula input[type="submit"] {
+    margin-top: 10px;
+    padding: 12px 20px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.93rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+#formulario_actualizar_aula input[type="submit"]:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.95);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #modulo_aulas_visualizar .card_visualizar_aulas {
+        padding: 25px 20px;
+    }
+
+    #dialogo_actualizar_aula .contenedor_actualizar_aula {
+        padding: 25px 20px;
+    }
+
+    #formulario_actualizar_aula .fila-campos {
+        grid-template-columns: 1fr;
+    }
+}

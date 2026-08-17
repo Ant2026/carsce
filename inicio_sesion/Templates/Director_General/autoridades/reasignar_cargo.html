@@ -4,29 +4,39 @@
 
 {% load static %}
 
-<section id="modulo_autoridades">
+<section id="modulo_autoridades_reasignar">
     <div class="contenedor_modulo_autoridades">
-        <h2>Gestión de Autoridades</h2>
+        <h3>Gestión de Autoridades</h3>
 
-        <h3>Reeasignar Cargos</h3>
-        <form method="post" id="formulario_actualizar">
-            {% csrf_token %}
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Cédula</th>
-                        <th>Cargo Actual</th>
-                        <th>Nuevo Cargo</th>
-                    </tr>
-                </thead>
-                <tbody id="contenedor_autoridades">
-                </tbody>
-            </table>
-            <input type="submit" value="Buscar Autoridad">
-        </form>
+        <div class="card_reasignar_autoridades">
+            <h4>Reasignar Cargos</h4>
+
+            <form method="post" id="formulario_actualizar">
+                {% csrf_token %}
+
+                <!-- ENVOLTORIO RESPONSIVE PARA TABLA DE EDICIÓN -->
+                <div class="contenedor_tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Cédula</th>
+                                <th>Cargo Actual</th>
+                                <th>Nuevo Cargo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contenedor_autoridades">
+                            <!-- Filas con opciones de reasignación renderizadas por JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="contenedor_acciones">
+                    <input type="submit" id="btn_reasignar" value="Reasignar Cargos">
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 

@@ -1,0 +1,163 @@
+/* ========================================================= REGISTRAR AUTORIDADES (SCOPED) ========================================================= */
+#modulo_autoridades_registrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#modulo_autoridades_registrar .contenedor_modulo_autoridades {
+    width: 100%;
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_autoridades_registrar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#modulo_autoridades_registrar .card_registrar_autoridades {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 40px 45px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    position: relative;
+}
+
+#modulo_autoridades_registrar .card_registrar_autoridades h4 {
+    color: var(--texto);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#modulo_autoridades_registrar .card_registrar_autoridades h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* ========================================================= FORMULARIO Y FILAS ========================================================= */
+#modulo_autoridades_registrar #formulario_registrar_autoridades {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_autoridades_registrar .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#modulo_autoridades_registrar .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+#modulo_autoridades_registrar label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#modulo_autoridades_registrar input[type="text"],
+#modulo_autoridades_registrar select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#modulo_autoridades_registrar input[type="text"]:focus,
+#modulo_autoridades_registrar select:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+/* Grupo especial Cédula (Select Nacionalidad + Input Número) */
+#modulo_autoridades_registrar .grupo-cedula {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#modulo_autoridades_registrar .grupo-cedula select {
+    width: 80px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+#modulo_autoridades_registrar .grupo-cedula input {
+    flex: 1;
+}
+
+/* Mensajes de validación */
+#modulo_autoridades_registrar small {
+    font-size: 0.82rem;
+    color: var(--rojo);
+    margin-top: 2px;
+    display: block;
+    min-height: 16px;
+}
+
+/* ========================================================= BOTÓN DE ACCIÓN ========================================================= */
+#modulo_autoridades_registrar #btn_registrar,
+#modulo_autoridades_registrar input[type="submit"] {
+    margin-top: 10px;
+    padding: 14px 24px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#modulo_autoridades_registrar #btn_registrar:hover,
+#modulo_autoridades_registrar input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
+}
+
+#modulo_autoridades_registrar #btn_registrar:active,
+#modulo_autoridades_registrar input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #modulo_autoridades_registrar .fila-campos {
+        grid-template-columns: 1fr;
+    }
+
+    #modulo_autoridades_registrar .card_registrar_autoridades {
+        padding: 28px 20px;
+    }
+}

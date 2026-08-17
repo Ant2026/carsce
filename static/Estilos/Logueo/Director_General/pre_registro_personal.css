@@ -1,0 +1,205 @@
+/* ========================================================= PRE REGISTRO PERSONAL (SCOPED) ========================================================= */
+#pre_registro_personal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#pre_registro_personal .contenedor_pre_registro_personal {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 40px 45px;
+    width: 100%;
+    max-width: 750px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    position: relative;
+}
+
+#pre_registro_personal .contenedor_pre_registro_personal h3 {
+    color: var(--texto);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#pre_registro_personal .contenedor_pre_registro_personal h3::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* ========================================================= FORMULARIO Y ESTRUCTURA DE FILAS ========================================================= */
+#pre_registro_personal #formulario_registrar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pre_registro_personal .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#pre_registro_personal .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+#pre_registro_personal .campo label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#pre_registro_personal #formulario_registrar input[type="text"],
+#pre_registro_personal #formulario_registrar select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#pre_registro_personal #formulario_registrar input[type="text"]:focus,
+#pre_registro_personal #formulario_registrar select:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+/* ========================================================= GRUPOS COMBINADOS ========================================================= */
+#pre_registro_personal .grupo-campo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+#pre_registro_personal .grupo-campo select#nacionalidad,
+#pre_registro_personal .grupo-campo select#prefijo_telefono {
+    width: 85px;
+    flex-shrink: 0;
+}
+
+#pre_registro_personal .grupo-campo select#dominio {
+    width: 150px;
+    flex-shrink: 0;
+}
+
+#pre_registro_personal .grupo-campo input {
+    flex: 1;
+}
+
+/* Mensajes de validación */
+#pre_registro_personal #formulario_registrar small {
+    font-size: 0.82rem;
+    color: var(--rojo);
+    margin-top: 2px;
+    display: block;
+    min-height: 16px;
+}
+
+/* ========================================================= CONTENEDORES DINÁMICOS ========================================================= */
+#pre_registro_personal #contenedor_perfiles,
+#pre_registro_personal #contenedor_pnfs_coordinador_pnf,
+#pre_registro_personal #contenedor_pnfs_docente {
+    background: var(--background);
+    padding: 18px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--borde);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#pre_registro_personal #contenedor_perfiles label,
+#pre_registro_personal #contenedor_pnfs_coordinador_pnf label,
+#pre_registro_personal #contenedor_pnfs_docente label {
+    margin-bottom: 0;
+    color: var(--color-azulE);
+    font-weight: 600;
+}
+
+#pre_registro_personal #perfil,
+#pre_registro_personal #pnf_coordinador_pnf,
+#pre_registro_personal #pnf_docente {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+#pre_registro_personal #perfil label,
+#pre_registro_personal #pnf_coordinador_pnf label,
+#pre_registro_personal #pnf_docente label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-base);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--borde);
+    font-size: 0.88rem;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#pre_registro_personal #perfil label:hover,
+#pre_registro_personal #pnf_coordinador_pnf label:hover,
+#pre_registro_personal #pnf_docente label:hover {
+    border-color: var(--color-azulE);
+    color: var(--texto);
+}
+
+/* ========================================================= BOTÓN DE ACCIÓN ========================================================= */
+#pre_registro_personal #btn_registro {
+    margin-top: 10px;
+    padding: 14px 24px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#pre_registro_personal #btn_registro:hover {
+    transform: translateY(-2px);    
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
+}
+
+#pre_registro_personal #btn_registro:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #pre_registro_personal .fila-campos {
+        grid-template-columns: 1fr;
+    }
+
+    #pre_registro_personal .contenedor_pre_registro_personal {
+        padding: 28px 20px;
+    }
+}

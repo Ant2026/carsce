@@ -84,7 +84,7 @@ def datos_pnf(request):
                 "estado": "fallo",
                 "icon": "error",
                 "title": "Error",
-                "descripcion": "Verifique en visualizar PNFs si se encuentra registrado."
+                "descripcion": "Verifique que si se encuentra registrado."
             })
 
         # Validar asignación del PNF al núcleo del director
@@ -103,6 +103,8 @@ def datos_pnf(request):
 
         return JsonResponse({
             "estado": "exito",
+            "title": "PNF encontrado",
+            "descripcion": "El PNF se encuentra Registrado",
             "pnf": {
                 "id": pnf.id_pnf,
                 "nombre": pnf.pnf,

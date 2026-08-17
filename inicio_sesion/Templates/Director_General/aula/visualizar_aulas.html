@@ -4,32 +4,38 @@
 
 {% load static %}
 
-<section id="aulas_academicas">
+<section id="modulo_aulas_visualizar">
     <div class="contenedor_aulas_academicas">
-        <h2>Aulas Académicas</h2>
+        <h3>Aulas Académicas</h3>
 
-        <div class="contenedor_busqueda_aulas">
-            <h3>Busqueda Aulas Académicas</h3>
+        <div class="card_visualizar_aulas">
+            <h4>Búsqueda de Aulas Académicas</h4>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>AULA</th>
-                        <th>EDIFICIO</th>
-                        <th>PISO</th>
-                    </tr>
-                </thead>
-                <tbody id="contenedor_aulas"></tbody>
-            </table>
+            <!-- ENVOLTORIO RESPONSIVE PARA TABLA -->
+            <div class="contenedor_tabla">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Aula</th>
+                            <th>Edificio</th>
+                            <th>Piso</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenedor_aulas">
+                        <!-- Filas de aulas cargadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>
 
+<!-- MODAL DE EDICIÓN (DIALOG) -->
 <dialog id="dialogo_actualizar_aula">
     <div class="contenedor_actualizar_aula">
-        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
-        <h3>Actualizar Aula Académica</h3>
+        <i id="cerrar_dialogo" class="icon-cancel-circled" title="Cerrar"></i>
+        <h4>Actualizar Aula Académica</h4>
 
         <div id="mensajede_error"></div>
 
@@ -37,16 +43,26 @@
             {% csrf_token %}
             <input type="hidden" name="aulaseleccionar" id="aula_seleccionar">
 
-            <label for="actualizar_nombre_aula">Nombre/Número del Aula:</label>
-            <input type="text" name="actualizar_aula" id="actualizar_nombre_aula" autocomplete="off" required>
+            <!-- FILA 1: Nombre del Aula -->
+            <div class="campo">
+                <label for="actualizar_nombre_aula">Nombre / Número del Aula:</label>
+                <input type="text" name="actualizar_aula" id="actualizar_nombre_aula" autocomplete="off" required>
+            </div>
 
-            <label for="actualizar_nombre_edificio">Nombre del Edificio:</label>
-            <input type="text" name="actualizar_edificio" id="actualizar_nombre_edificio" autocomplete="off" required>
-            
-            <label for="actualizar_piso_edificio">Piso del Edificio</label>
-            <input type="text" name="actualizar_piso" id="actualizar_piso_edificio" autocomplete="off" required>
+            <!-- FILA 2: Edificio y Piso -->
+            <div class="fila-campos">
+                <div class="campo">
+                    <label for="actualizar_nombre_edificio">Nombre del Edificio:</label>
+                    <input type="text" name="actualizar_edificio" id="actualizar_nombre_edificio" autocomplete="off" required>
+                </div>
 
-            <input type="submit" value="Actualizar Aula">
+                <div class="campo">
+                    <label for="actualizar_piso_edificio">Piso del Edificio:</label>
+                    <input type="text" name="actualizar_piso" id="actualizar_piso_edificio" autocomplete="off" required>
+                </div>
+            </div>
+
+            <input type="submit" id="btn_actualizar_aula" value="Actualizar Aula">
         </form> 
     </div>
 </dialog>

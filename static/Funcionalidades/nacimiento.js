@@ -221,9 +221,9 @@ document.addEventListener("DOMContentLoaded", function () {
             "Alto Orinoco", "Atabapo", "Atures", "Autana", "Maroa", "Manapiare", "Río Negro"
         ],
         "Anzoátegui": [
-            "Anaco", "Aragua", "Bolívar", "Bruzual", "Cajigal", "Carvajal", "Diego Bautista Urbaneja",
-            "Freites", "Guanipa", "Guanta", "Independencia", "Libertad", "McGregor", "Miranda",
-            "Monagas", "Peñalver", "Píritu", "San Juan de Capistrano", "Santa Ana", "Simón Rodríguez", "Sotillo"
+            "Anaco", "Aragua", "Bruzual", "Cajigal", "Diego Bautista Urbaneja",
+            "Fernando de Peñalver", "Francisco de Miranda", "Francisco del Carmen Carvajal", "Guanta", "Guanipa", "Independencia", "José Gregorio Monagas", "Juan Antonio Sotillo", "Libertad",
+            "Pedro María Freites", "Píritu", "San Juan de Capistrano", "Santa Ana", "Simón Bolívar", "Simón Rodríguez", "Sir Arthur McGregor"
         ],
         "Apure": [
             "Achaguas", "Biruaca", "Muñoz", "Páez", "Pedro Camejo", "Rómulo Gallegos", "San Fernando"

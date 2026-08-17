@@ -14,20 +14,30 @@
             <form method="post" id="formulario_registrar">
                 {% csrf_token %}
 
-                <label for="registrar_nombre_pnf">Nombre del Programa Nacional de Formación:</label>
-                <input type="text" name="nombrepnf" id="registrar_nombre_pnf" autocomplete="off" required>
-                <small id="mensaje_nombre_pnf"></small>
+                <!-- FILA 1: Nombre y Código del PNF juntos -->
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="registrar_nombre_pnf">Nombre del PNF:</label>
+                        <input type="text" name="nombrepnf" id="registrar_nombre_pnf" autocomplete="off" placeholder="Ej. Informática" required>
+                        <small id="mensaje_nombre_pnf"></small>
+                    </div>
 
-                <label for="registrar_codigo_pnf">Código del Programa Nacional de Formación:</label>
-                <input type="text" name="codigopnf" id="registrar_codigo_pnf" maxlength="8" minlength="8" pattern="[A-Z]{5}[0-9]{3}" title="Debe contener 5 letras mayúsculas y 3 números. Ejemplo: CARRE010" autocomplete="off" required>
-                <small id="mensaje_codigo_pnf"></small>
+                    <div class="campo">
+                        <label for="registrar_codigo_pnf">Código del PNF:</label>
+                        <input type="text" name="codigopnf" id="registrar_codigo_pnf" maxlength="8" minlength="8" pattern="[A-Z]{5}[0-9]{3}" title="Debe contener 5 letras mayúsculas y 3 números. Ejemplo: CARRE010" placeholder="Ej. INF00101" autocomplete="off" required>
+                        <small id="mensaje_codigo_pnf"></small>
+                    </div>
+                </div>
 
-                <label for="registrar_periodo_academico">Periodo Académico:</label>
-                <select name="periodoacademico" id="registrar_periodo_academico">
-                    <option value="">Elije el Periodo Académico</option>
-                    <option value="Trimestre">Trimestre</option>
-                    <option value="Semestre">Semestre</option>
-                </select>
+                <!-- FILA 2: Periodo Académico -->
+                <div class="campo">
+                    <label for="registrar_periodo_academico">Periodo Académico:</label>
+                    <select name="periodoacademico" id="registrar_periodo_academico" required>
+                        <option value="">Elije el Periodo Académico</option>
+                        <option value="Trimestre">Trimestre</option>
+                        <option value="Semestre">Semestre</option>
+                    </select>
+                </div>
 
                 <input type="submit" id="btn_registro" value="Registrar PNF">
             </form>

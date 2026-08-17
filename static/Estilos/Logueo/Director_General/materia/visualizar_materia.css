@@ -1,0 +1,151 @@
+/* ========================================================= ACTUALIZAR MATERIAS (SCOPED) ========================================================= */
+#modulo_materias_actualizar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#modulo_materias_actualizar .contenedor_modulo_materias {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_materias_actualizar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#modulo_materias_actualizar .card_actualizar_materias {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 35px 40px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_materias_actualizar .card_actualizar_materias h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#modulo_materias_actualizar .card_actualizar_materias h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 45px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* ========================================================= FILTRO BÚSQUEDA ========================================================= */
+#modulo_materias_actualizar .campo_busqueda {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 400px;
+}
+
+#modulo_materias_actualizar .campo_busqueda label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#modulo_materias_actualizar select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#modulo_materias_actualizar select:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+/* ========================================================= CONTENEDOR DINÁMICO DE TABLAS ========================================================= */
+#modulo_materias_actualizar #contenedor_tablas_materia {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 10px;
+}
+
+/* Estilos scoped para tablas generadas dinámicamente por JS */
+#modulo_materias_actualizar #contenedor_tablas_materia table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.93rem;
+    background: var(--color-base);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--borde);
+}
+
+#modulo_materias_actualizar #contenedor_tablas_materia thead tr {
+    background-color: var(--background);
+    color: var(--texto);
+    border-bottom: 2px solid var(--borde);
+}
+
+#modulo_materias_actualizar #contenedor_tablas_materia th {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-azulE);
+}
+
+#modulo_materias_actualizar #contenedor_tablas_materia td {
+    padding: 14px 18px;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+#modulo_materias_actualizar #contenedor_tablas_materia tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+#modulo_materias_actualizar #contenedor_tablas_materia tbody tr:hover {
+    background-color: rgba(33, 28, 132, 0.04);
+}
+
+#modulo_materias_actualizar #contenedor_tablas_materia tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #modulo_materias_actualizar .card_actualizar_materias {
+        padding: 25px 20px;
+    }
+
+    #modulo_materias_actualizar .campo_busqueda {
+        max-width: 100%;
+    }
+}

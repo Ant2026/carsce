@@ -4,27 +4,31 @@
 
 {% load static %}
 
-<section id="modulo_autoridades">
+<section id="modulo_autoridades_visualizar">
     <div class="contenedor_modulo_autoridades">
-        <h2>Gestión de Autoridades</h2>
+        <h3>Gestión de Autoridades</h3>
 
-        <h3>Buscar Autoridades</h3>
+        <div class="card_visualizar_autoridades">
+            <h4>Buscar Autoridades</h4>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
-                    <th>Cédula de Identidad</th>
-                    <th>Cargo</th>
-                    <th>Resolución</th>
-                </tr>
-            </thead>
-            <tbody id="contenedor_autoridades">
-
-            </tbody>
-        </table>
-        
+            <!-- ENVOLTORIO RESPONSIVE PARA TABLAS -->
+            <div class="contenedor_tabla">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Cédula de Identidad</th>
+                            <th>Cargo</th>
+                            <th>Resolución</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenedor_autoridades">
+                        <!-- Filas renderizadas dinámicamente por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 

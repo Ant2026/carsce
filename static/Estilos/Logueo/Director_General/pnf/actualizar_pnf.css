@@ -1,0 +1,179 @@
+/* ========================================================= MODIFICAR PNF (SCOPED) ========================================================= */
+#pnfs_modificar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#pnfs_modificar .contenedor_pnfs_modificar {
+    width: 100%;
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pnfs_modificar .contenedor_pnfs_modificar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#pnfs_modificar .card_modificar_pnf {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 40px 45px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pnfs_modificar .card_modificar_pnf h4 {
+    color: var(--texto);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#pnfs_modificar .card_modificar_pnf h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* Separador visual entre búsqueda y edición */
+#pnfs_modificar .separador {
+    border: none;
+    border-top: 1px solid var(--borde);
+    margin: 5px 0;
+}
+
+/* ========================================================= ESTRUCTURA DE CAMPOS ========================================================= */
+#pnfs_modificar .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#pnfs_modificar .campo,
+#pnfs_modificar .campo_buscar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+#pnfs_modificar label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#pnfs_modificar input[type="text"],
+#pnfs_modificar select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#pnfs_modificar input[type="text"]:focus,
+#pnfs_modificar select:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+/* ========================================================= BÚSQUEDA COMBINADA ========================================================= */
+#pnfs_modificar .grupo-campo {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+}
+
+#pnfs_modificar .grupo-campo input[type="text"] {
+    flex: 1;
+}
+
+#pnfs_modificar #btn_buscar {
+    padding: 12px 20px;
+    background: var(--color-azulE);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+#pnfs_modificar #btn_buscar:hover {
+    filter: brightness(1.1);
+}
+
+/* ========================================================= FORMULARIO DE ACTUALIZACIÓN ========================================================= */
+#pnfs_modificar #formulario_actualizar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pnfs_modificar #btn_actualizar {
+    margin-top: 10px;
+    padding: 14px 24px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#pnfs_modificar #btn_actualizar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
+}
+
+#pnfs_modificar #btn_actualizar:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #pnfs_modificar .fila-campos,
+    #pnfs_modificar .grupo-campo {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+    }
+
+    #pnfs_modificar #btn_buscar {
+        width: 100%;
+    }
+
+    #pnfs_modificar .card_modificar_pnf {
+        padding: 28px 20px;
+    }
+}

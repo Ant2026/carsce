@@ -73,7 +73,7 @@ def autenticacion(request):
                 "icon": "error",
                 "descripcion": "El usuario no se encuentra registrado."
             })
-            
+        
         coincide = check_password(contrasenia, credenciales.clave)
         if not coincide:
             return JsonResponse({
@@ -83,8 +83,10 @@ def autenticacion(request):
                 "descripcion": "La contraseña no coincide con la que esta registrada."
             })
 
-        usuario = Usuario.objects.get(id_usuario=credenciales.id_usuario_id)
-
+        usuario = credenciales.id_usuario
+        
+        # --- AQUÍ ASIGNAMOS id_cuenta DESDE credenciales ---
+        request.session['id_cuenta'] = credenciales.id_cuenta
         request.session['cedula_usuario'] = usuario.cedula_identidad
         request.session['usuario_nombre'] = f"{usuario.nombres} {usuario.apellidos}"
 
@@ -93,6 +95,7 @@ def autenticacion(request):
         request.session["rol"] = [r["rol"] for r in roles]
 
         registro_basico = Nacimiento.objects.filter(id_usuario=usuario).exists()
+
         if registro_basico:
             request.session['registro_completado'] = True
 
@@ -107,7 +110,7 @@ def autenticacion(request):
                 "estado": "exito",
                 "url": reverse("comp_registro")
             })
-
+    
     return render(request, 'Sesion/inicio_sesion.html')
 
 def cerrar_sesion(request):

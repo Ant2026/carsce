@@ -1,0 +1,118 @@
+/* ========================================================= TABLA PNFs VISUALIZADO (SCOPED) ========================================================= */
+#pnfs_visualizado {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#pnfs_visualizado .contenedor_pnfs_visualizado {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pnfs_visualizado .contenedor_pnfs_visualizado h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Contenedor Principal de la Tabla */
+#pnfs_visualizado #tabla_pnfs {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 30px 35px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+}
+
+#pnfs_visualizado #tabla_pnfs h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#pnfs_visualizado #tabla_pnfs h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 45px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* Envoltorio Responsive */
+#pnfs_visualizado .contenedor_tabla {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+}
+
+/* Estilos de la Tabla */
+#pnfs_visualizado table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.93rem;
+    background: var(--color-base);
+}
+
+/* Encabezado */
+#pnfs_visualizado table thead tr {
+    background-color: var(--background);
+    color: var(--texto);
+    border-bottom: 2px solid var(--borde);
+}
+
+#pnfs_visualizado table th {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-azulE);
+}
+
+/* Cuerpo de la Tabla */
+#pnfs_visualizado table td {
+    padding: 14px 18px;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+/* Fila interactiva y cebra */
+#pnfs_visualizado table tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+#pnfs_visualizado table tbody tr:hover {
+    background-color: rgba(33, 28, 132, 0.04);
+}
+
+#pnfs_visualizado table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #pnfs_visualizado #tabla_pnfs {
+        padding: 20px 15px;
+    }
+
+    #pnfs_visualizado table th,
+    #pnfs_visualizado table td {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}

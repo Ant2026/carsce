@@ -1,0 +1,112 @@
+/* ========================================================= VISUALIZAR AUTORIDADES (SCOPED) ========================================================= */
+#modulo_autoridades_visualizar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#modulo_autoridades_visualizar .contenedor_modulo_autoridades {
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_autoridades_visualizar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#modulo_autoridades_visualizar .card_visualizar_autoridades {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 35px 40px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_autoridades_visualizar .card_visualizar_autoridades h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#modulo_autoridades_visualizar .card_visualizar_autoridades h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 45px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* ========================================================= TABLA DE AUTORIDADES ========================================================= */
+#modulo_autoridades_visualizar .contenedor_tabla {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+    margin-top: 5px;
+}
+
+#modulo_autoridades_visualizar table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.93rem;
+    background: var(--color-base);
+}
+
+#modulo_autoridades_visualizar thead tr {
+    background-color: var(--background);
+    color: var(--texto);
+    border-bottom: 2px solid var(--borde);
+}
+
+#modulo_autoridades_visualizar th {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-azulE);
+    white-space: nowrap;
+}
+
+#modulo_autoridades_visualizar td {
+    padding: 14px 18px;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+#modulo_autoridades_visualizar tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+#modulo_autoridades_visualizar tbody tr:hover {
+    background-color: rgba(33, 28, 132, 0.04);
+}
+
+#modulo_autoridades_visualizar tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #modulo_autoridades_visualizar .card_visualizar_autoridades {
+        padding: 25px 20px;
+    }
+}

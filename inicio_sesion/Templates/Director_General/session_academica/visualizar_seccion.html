@@ -4,41 +4,55 @@
 
 {% load static %}
 
-<section id="secciones_registrado">
+<section id="modulo_secciones_visualizar">
     <div class="contenedor_secciones_registrado">
-        <h2>Sección U.P.T "José Félix Ribas"</h2>
+        <h3>Secciones UPT "José Félix Ribas"</h3>
 
-        <h3>Visualizar Sección</h3>
+        <div class="card_visualizar_secciones">
+            <h4>Visualizar Secciones</h4>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>SECCIÓN</th>
-                    <th>TURNO</th>
-                </tr>
-            </thead>
-            <tbody id="contenedor_secciones"></tbody>
-        </table>
+            <!-- ENVOLTORIO RESPONSIVE PARA TABLA -->
+            <div class="contenedor_tabla">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sección</th>
+                            <th>Turno</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenedor_secciones">
+                        <!-- Filas renderizadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 
+<!-- MODAL DE EDICIÓN (DIALOG) -->
 <dialog id="dialogo_actualizar_secciones">
     <div class="contenedor_actualizar_secciones">
-        <i id="cerrar_dialogo" class="icon-cancel-circled"></i>
-        <h4>Modificar Núcleo</h4>
+        <i id="cerrar_dialogo" class="icon-cancel-circled" title="Cerrar"></i>
+        <h4>Modificar Sección</h4>
 
         <form method="post" id="formulario_actualizar_seccion">
             {% csrf_token %}
             <input type="hidden" name="seccion" id="secciones_seleccionado">
 
-            <label for="actualizar_seccion_registrado">Sección:</label>
-            <input type="text" name="actualizar_seccion" id="actualizar_seccion_registrado">
-            <small id="mensaje_actualizar_seccion"></small>
+            <div class="campo">
+                <label for="actualizar_seccion_registrado">Sección:</label>
+                <input type="text" name="actualizar_seccion" id="actualizar_seccion_registrado" autocomplete="off" required>
+                <small id="mensaje_actualizar_seccion"></small>
+            </div>
 
-            <label for="actualizar_turno_registrado">Turno:</label>
-            <select name="actualizar_turno" id="actualizar_turno_registrado"></select>
-            
+            <div class="campo">
+                <label for="actualizar_turno_registrado">Turno:</label>
+                <select name="actualizar_turno" id="actualizar_turno_registrado" required>
+                    <!-- Opciones cargadas dinámicamente por JS -->
+                </select>
+            </div>
+
             <input type="submit" id="btn_actualizar" value="Actualizar Sección">
         </form>
     </div>

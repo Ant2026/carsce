@@ -11,34 +11,48 @@
         <form method="post" id="formulario_registrar">
             {% csrf_token %}
             
-            <label for="nombre">Nombres:</label>
-            <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese los nombres">
+            <div class="fila-campos">
+                <div class="campo">
+                    <label for="nombre">Nombres:</label>
+                    <input type="text" name="nombres" id="nombre" autocomplete="off" placeholder="Ingrese los nombres">
+                </div>
 
-            <label for="apellido">Apellidos:</label>
-            <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese los apellidos">
-
-            <label for="cedula_identidad">Cedula Identidad:</label>
-            <div class="grupo-campo">
-                <select name="nacionalidad" id="nacionalidad">
-                    <option value="">N</option>
-                    <option value="V">V</option>
-                    <option value="E">E</option>
-                </select>
-                <input type="text" name="cedula_identidad" id="cedula_identidad" autocomplete="off">
+                <div class="campo">
+                    <label for="apellido">Apellidos:</label>
+                    <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese los apellidos">
+                </div>
             </div>
-            <small id="mensaje_cedula_identidad"></small>
 
-            <label for="correo_electronico">Correo Electrónico (Principal):</label>
-            <div class="grupo-campo">
-                <input type="text" name="correo_electronico" id="correo_electronico" placeholder="Ejemplo: ejemplo123" autocomplete="off">
-                <select name="dominio" id="dominio"></select>
+            <div class="fila-campos">
+                <div class="campo">
+                    <label for="cedula_identidad">Cédula Identidad:</label>
+                    <div class="grupo-campo">
+                        <select name="nacionalidad" id="nacionalidad">
+                            <option value="">N</option>
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                        </select>
+                        <input type="text" name="cedula_identidad" id="cedula_identidad" autocomplete="off">
+                    </div>
+                    <small id="mensaje_cedula_identidad"></small>
+                </div>
+
+                <div class="campo">
+                    <label for="numero_telefonico">Teléfono (Principal):</label>
+                    <div class="grupo-campo">
+                        <select name="prefijo" id="prefijo_telefono"></select>
+                        <input type="text" name="telefono" id="numero_telefonico" autocomplete="off">
+                    </div>
+                </div>
             </div>
-            <small id="mensaje_correo_electronico"></small>
 
-            <label for="numero_telefonico">Telefono (Principal):</label>
-            <div class="grupo-campo">
-                <select name="prefijo" id="prefijo_telefono"></select>
-                <input type="text" name="telefono" id="numero_telefonico" autocomplete="off">
+            <div class="campo">
+                <label for="correo_electronico">Correo Electrónico (Principal):</label>
+                <div class="grupo-campo">
+                    <input type="text" name="correo_electronico" id="correo_electronico" placeholder="Ejemplo: ejemplo123" autocomplete="off">
+                    <select name="dominio" id="dominio"></select>
+                </div>
+                <small id="mensaje_correo_electronico"></small>
             </div>
 
             <div id="contenedor_perfiles">

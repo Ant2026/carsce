@@ -558,7 +558,3 @@ def comp_registro(request):
             })
 
     return render(request, "Actualizaciones/completar_registro.html")
-
-
-
-

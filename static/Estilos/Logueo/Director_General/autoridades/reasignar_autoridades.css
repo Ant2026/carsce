@@ -1,0 +1,174 @@
+/* ========================================================= REASIGNAR CARGOS (SCOPED) ========================================================= */
+#modulo_autoridades_reasignar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#modulo_autoridades_reasignar .contenedor_modulo_autoridades {
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_autoridades_reasignar h3 {
+    color: var(--texto);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#modulo_autoridades_reasignar .card_reasignar_autoridades {
+    background: var(--color-base);
+    border-radius: var(--radio);
+    padding: 35px 40px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borde);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modulo_autoridades_reasignar .card_reasignar_autoridades h4 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--background);
+    position: relative;
+}
+
+#modulo_autoridades_reasignar .card_reasignar_autoridades h4::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 45px;
+    height: 2px;
+    background: var(--color-azulE);
+}
+
+/* ========================================================= FORMULARIO Y TABLA DE REASIGNACIÓN ========================================================= */
+#modulo_autoridades_reasignar #formulario_actualizar {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+#modulo_autoridades_reasignar .contenedor_tabla {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+}
+
+#modulo_autoridades_reasignar table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.93rem;
+    background: var(--color-base);
+}
+
+#modulo_autoridades_reasignar thead tr {
+    background-color: var(--background);
+    color: var(--texto);
+    border-bottom: 2px solid var(--borde);
+}
+
+#modulo_autoridades_reasignar th {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-azulE);
+    white-space: nowrap;
+}
+
+#modulo_autoridades_reasignar td {
+    padding: 12px 18px;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    vertical-align: middle;
+}
+
+#modulo_autoridades_reasignar tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.015);
+}
+
+#modulo_autoridades_reasignar tbody tr:hover {
+    background-color: rgba(33, 28, 132, 0.04);
+}
+
+/* Estilo para los selects dentro de la tabla */
+#modulo_autoridades_reasignar td select {
+    width: 100%;
+    min-width: 180px;
+    padding: 8px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--texto);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#modulo_autoridades_reasignar td select:focus {
+    border-color: var(--color-azulE);
+    background: var(--color-base);
+    box-shadow: 0 0 0 3px rgba(33, 28, 132, 0.12);
+}
+
+/* ========================================================= BOTÓN DE ENVÍO ========================================================= */
+#modulo_autoridades_reasignar .contenedor_acciones {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#modulo_autoridades_reasignar #btn_reasignar,
+#modulo_autoridades_reasignar input[type="submit"] {
+    padding: 14px 28px;
+    background: var(--color-botones);
+    color: var(--color-neutro);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#modulo_autoridades_reasignar #btn_reasignar:hover,
+#modulo_autoridades_reasignar input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
+}
+
+#modulo_autoridades_reasignar #btn_reasignar:active,
+#modulo_autoridades_reasignar input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 680px) {
+    #modulo_autoridades_reasignar .card_reasignar_autoridades {
+        padding: 25px 20px;
+    }
+
+    #modulo_autoridades_reasignar .contenedor_acciones {
+        justify-content: stretch;
+    }
+
+    #modulo_autoridades_reasignar #btn_reasignar,
+    #modulo_autoridades_reasignar input[type="submit"] {
+        width: 100%;
+    }
+}

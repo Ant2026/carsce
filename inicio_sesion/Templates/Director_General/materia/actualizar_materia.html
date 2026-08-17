@@ -4,20 +4,24 @@
 
 {% load static %}
 
-<section id="modulo_materias">
+<section id="modulo_materias_visualizar">
     <div class="contenedor_modulo_materias">
-        <h2>Materias UPT "José Félix Ribas"</h2>
+        <h3>Materias UPT "José Félix Ribas"</h3>
 
-        <h3>Buscar Materia</h3>
+        <div class="card_visualizar_materias">
+            <h4>Vista General de Materias</h4>
 
-        <form method="post" id="buscar_materia">
-            {% csrf_token %}
+            <!-- FORMULARIO DE FILTRO POR PNF -->
+            <form method="post" id="buscar_materia">
+                {% csrf_token %}
 
-            <label for="codigos_buscar_materias">Código del Materia:</label>
-            <input type="text" name="codigo" id="codigos_buscar_materias" minlength="7" maxlength="7" pattern="[A-Z]{4}[0-9]{3}" title="Debe contener 4 letras mayúsculas y 3 números. Ejemplo: MATE001" placeholder="Escribir el código de la materia" autocomplete="off" required>
-
-            <input type="submit" value="Buscar Materia">
-        </form>
+                <div class="campo_busqueda">
+                    <label for="buscar_pnf">Seleccionar P.N.F:</label>
+                    <select name="buscarpnf" id="buscar_pnf">
+                        <!-- Carga dinámica mediante JS -->
+                    </select>
+                </div>
+            </form>
 
 
         <h3>Actuailizar Materias</h3>
@@ -30,10 +34,10 @@
             <input type="text" name="nombresmaterias" id="nombres_actualizar_materias" autocomplete="off" required>
 
             <label for="THEA">Hora Trabajo Estudio Acompañado:</label>
-            <input type="text" name="THEA" id="THEA" pattern="[0-9]{1,2}(,[0-9])?" maxlength="4" inputmode="decimal" placeholder="Hora de Trabajo de Estudio Acompañado" autocomplete="off" required>
+            <input type="text" name="THEA" id="THEA" pattern="[0-9]{1,2}" maxlength="2" inputmode="numeric" placeholder="Hora de Trabajo de Estudio Acompañado" autocomplete="off" required>
             
             <label for="THEI">Hora Trabajo Estudio Independiente:</label>
-            <input type="text" name="THEI" id="THEI" pattern="[0-9]{1,2}(,[0-9])?" maxlength="4" inputmode="decimal" placeholder="Hora de Trabajo de Estudio Independiente" autocomplete="off" required>
+            <input type="text" name="THEI" id="THEI" pattern="[0-9]{1,2}" maxlength="2" inputmode="numeric" placeholder="Hora de Trabajo de Estudio Independiente" autocomplete="off" required>
 
             <label for="reparacion_actualizar_materia">Reparación Materia:</label>
             <select name="reparacionmateria" id="reparacion_actualizar_materia">
@@ -49,6 +53,6 @@
     </div>
 </section>
 
-<script src="{% static 'Funciones_Asincronas/Director_General/Materia/actualizar_materia.js' %}"></script>
+<script src="{% static 'Funciones_Asincronas/Director_General/Materia/visualizar_materia.js' %}"></script>
 
 {% endblock %}
