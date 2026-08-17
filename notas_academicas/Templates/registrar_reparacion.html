@@ -4,9 +4,9 @@
 
 {% load static %}
 
-<section id="modulo_registrar_notas_academicas">
-    <div class="contenedor_registrar_notas_academicas">
-        <h2>Registrar Notas Académicas</h2>
+<section id="modulo_registrar_reparacion">
+    <div class="contenedor_registrar_reparacion">
+        <h2>Registrar Reparación</h2>
 
         <form method="post" id="formulario_registrar">
             {% csrf_token %}
@@ -19,21 +19,18 @@
             <label for="materia_asignada">Materia(s) Asignada(s):</label>
             <select name="materia_asignada" id="materia_asignada"></select>
 
-            <label for="periodo_academico">Periodo Académico:</label>
-            <select name="periodo_academico" id="periodo_academico"></select>
-
-            <label for="trayecto_academico">Trayecto Académico:</label>
+            <label for="trayecto_academico">Trayecto:</label>
             <input type="text" name="trayecto_academico" id="trayecto_academico" readonly>
 
             <div class="contenedor_boton_notas">
-                <input type="submit" value="Registrar" id="btn_registrar_notas">
+                <input type="submit" value="Registrar">
             </div>
 
-            <div id="contenedor_notas_academicas"></div>
+            <div id="contenedor_evaluaciones"></div>
         </form>
     </div>
 </section>
 
-<script src="{% static 'Funciones_Asincronas/Docente/registrar_notas_academicas.js' %}"></script>
+<script src="{% static 'registrar_reparacion.js' %}"></script>
 
 {% endblock %}

@@ -163,12 +163,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function calificaciones_materia() {
         try {
-            if (!nucleo || !pnf || !materia) return;
+            if (!nucleo || !pnf || !materia || !periodo_academico) return;
 
             const formulario = new FormData();
             formulario.append("id_nucleo", nucleo);
             formulario.append("id_pnf", pnf);
             formulario.append("id_materia_asignada", materia);
+            formulario.append("id_periodo_academico", periodo_academico);
 
             const [respuestaEstudiantes, respuestaActividades] = await Promise.all([
                 fetch("/notas_academicas/est_not_acad/", {
@@ -200,8 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const cantidadActividades = resultadoActividades.cantidad_actividades;
+            cantidad_evaluaciones = 0;
             cantidad_evaluaciones = resultadoActividades.cantidad_actividades;
+            console.log(cantidad_evaluaciones)
 
             const tabla = document.createElement("table");
             tabla.classList.add("tabla-calificaciones");
@@ -214,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <th>C.I</th>
             `;
 
-            for (let i = 1; i <= cantidadActividades; i++) {
+            for (let i = 1; i <= cantidad_evaluaciones; i++) {
                 encabezado += `
                     <th>Unidad ${i}</th>
                 `;
@@ -239,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 let controles = "";
 
-                for (let i = 1; i <= cantidadActividades; i++) {
+                for (let i = 1; i <= cantidad_evaluaciones; i++) {
                     controles += `
                         <td>
                             <input
