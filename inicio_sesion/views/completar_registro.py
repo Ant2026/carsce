@@ -557,4 +557,4 @@ def comp_registro(request):
                 "url": reverse("panel_usuario")
             })
 
-    return render(request, "Actualizaciones/completar_registro.html")
+    return render(request, "Actualizaciones/completar_registro.html", {"sin_estilos": True})

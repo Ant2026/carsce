@@ -4,7 +4,8 @@
     grid-template-rows: 120px 1fr;
     grid-template-areas:
         "header header"
-        "aside  main";
+        "aside  main"
+        "footer footer";
     min-height: 100vh;
 }
 
@@ -18,5 +19,8 @@
 
 .main-logueado{
     grid-area: main;
-    
+}
+
+.footer-logueado{
+    grid-area: footer;
 }
