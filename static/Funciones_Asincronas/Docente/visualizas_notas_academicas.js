@@ -119,6 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input_trayecto_academico.value = trayecto;
 
+        select_periodo_academico.innerHTML = "<option value='' selected>Selecciona un Periodo Académico</option>";
+
+        select_periodo_academico.innerHTML = "<option value='' selected>Selecciona un Periodo Académico</option>";
+
+        contenedor_notas_academicas.innerHTML = "";
+
         await periodos_academicos();
 
         await calificaciones_materia();
@@ -155,6 +161,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     select_periodo_academico.addEventListener("change", async (e) => {
         periodo_academico = select_periodo_academico.value;
+
+        select_fecha_registro_academico.innerHTML = "<option value='' selected>Selecciona un Periodo Académico</option>";
+
+        contenedor_notas_academicas.innerHTML = "";
 
         await fecha_calificaciones_materia();
     });
@@ -195,17 +205,9 @@ document.addEventListener("DOMContentLoaded", () => {
         await calificaciones_materia()
     });
 
-
     async function calificaciones_materia() {
         try {
-
-            if (
-                !nucleo ||
-                !pnf ||
-                !materia ||
-                !periodo_academico ||
-                !fecha_calificacion
-            ) {
+            if (!nucleo || !pnf || !materia || !periodo_academico || !fecha_calificacion) {
                 return;
             }
 
@@ -216,174 +218,88 @@ document.addEventListener("DOMContentLoaded", () => {
             formulario.append("id_periodo_academico", periodo_academico);
             formulario.append("fecha_calificacion", fecha_calificacion);
 
-            const csrfToken = document.querySelector(
-                "[name=csrfmiddlewaretoken]"
-            ).value;
-
-            const [
-                respuestaEstudiantes,
-                respuestaActividades
-            ] = await Promise.all([
-
+            const [respuestaEstudiantes, respuestaActividades] = await Promise.all([
                 fetch("/notas_academicas/calf_reg_not/", {
                     method: "POST",
                     headers: {
-                        "X-CSRFToken": csrfToken
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
                     },
                     body: formulario
                 }),
-
                 fetch("/notas_academicas/cant_det_pla/", {
                     method: "POST",
                     headers: {
-                        "X-CSRFToken": csrfToken
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
                     },
                     body: formulario
                 })
 
             ]);
 
-
-            // ==========================================
             // CONVERTIR RESPUESTAS
-            // ==========================================
-
-            const [
-                resultadoEstudiantes,
-                resultadoActividades
-            ] = await Promise.all([
-
+            const [resultadoEstudiantes, resultadoActividades] = await Promise.all([
                 respuestaEstudiantes.json(),
                 respuestaActividades.json()
-
             ]);
 
-
-            console.log(
-                "Calificaciones:",
-                resultadoEstudiantes
-            );
-
-            console.log(
-                "Cantidad de actividades:",
-                resultadoActividades.cantidad_actividades
-            );
-
-
-            // ==========================================
             // VALIDAR RESPUESTAS
-            // ==========================================
-
             if (!respuestaEstudiantes.ok) {
-
-                console.error(
-                    "Error estudiantes:",
-                    resultadoEstudiantes
-                );
-
+                console.error(resultadoEstudiantes);
                 return;
             }
 
             if (!respuestaActividades.ok) {
-
-                console.error(
-                    "Error actividades:",
-                    resultadoActividades
-                );
-
+                console.error(resultadoActividades);
                 return;
             }
 
-
-            // ==========================================
             // LIMPIAR CONTENEDOR
-            // ==========================================
-
             contenedor_notas_academicas.innerHTML = "";
 
-
-            // ==========================================
             // VALIDAR ESTUDIANTES
-            // ==========================================
-
-            if (
-                !resultadoEstudiantes.calificaciones ||
-                resultadoEstudiantes.calificaciones.length === 0
-            ) {
-
+            if (!resultadoEstudiantes.calificaciones || resultadoEstudiantes.calificaciones.length === 0) {
                 contenedor_notas_academicas.innerHTML = `
-                <p>No hay estudiantes registrados para esta materia.</p>
-            `;
-
+                    <p>No hay estudiantes registrados para esta materia.</p>
+                `;
                 return;
             }
 
-
-            // ==========================================
             // CANTIDAD DE ACTIVIDADES
-            // ==========================================
-
-            const cantidadActividades =
-                resultadoActividades.cantidad_actividades || 0;
-
+            const cantidadActividades = resultadoActividades.cantidad_actividades || 0;
             cantidad_evaluaciones = cantidadActividades;
 
-
-            // ==========================================
             // CREAR TABLA
-            // ==========================================
-
             const tabla = document.createElement("table");
+            tabla.classList.add("tabla-calificaciones");
 
-            tabla.classList.add(
-                "tabla-calificaciones"
-            );
-
-
-            // ==========================================
             // ENCABEZADO
-            // ==========================================
-
             let encabezado = `
-            <tr>
-                <th>#</th>
-                <th>Estudiante</th>
-                <th>C.I</th>
-        `;
-
-
-            for (
-                let i = 1;
-                i <= cantidadActividades;
-                i++
-            ) {
-
-                encabezado += `
-                <th>Unidad ${i}</th>
+                <tr>
+                    <th>#</th>
+                    <th>Estudiante</th>
+                    <th>C.I</th>
             `;
+
+            for (let i = 1; i <= cantidadActividades; i++) {
+                encabezado += `
+                    <th>Unidad ${i}</th>
+                `;
             }
 
-
             encabezado += `
-                <th>Asistencia</th>
-                <th>Promedio</th>
-            </tr>
-        `;
-
+                    <th>Asistencia</th>
+                    <th>Promedio</th>
+                </tr>
+            `;
 
             tabla.innerHTML = `
-            <thead>
-                ${encabezado}
-            </thead>
+                <thead>
+                    ${encabezado}
+                </thead>
 
-            <tbody></tbody>
-        `;
-
-
-            const tbody = tabla.querySelector(
-                "tbody"
-            );
-
+                <tbody></tbody>
+            `;
+            const tbody = tabla.querySelector("tbody");
 
             // EVITAR ESTUDIANTES DUPLICADOS
             const estudiantesMostrados = new Set();
@@ -407,18 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const fila = document.createElement("tr");
                 let controles = "";
 
-
                 for (let i = 1; i <= cantidadActividades; i++) {
-
-                    const unidad =
-                        estudiante.unidades?.[i - 1];
-
-
-                    const notaUnidad =
-                        unidad
-                            ? unidad.nota_unidad
-                            : "";
-
+                    const unidad = estudiante.unidades?.[i - 1];
+                    const notaUnidad = unidad ? unidad.nota_unidad : "";
 
                     controles += `
                         <td class="celda-calificacion">
@@ -427,57 +334,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                 }
 
-
-                // ==================================
                 // CONTENIDO DE LA FILA
-                // ==================================
-
                 fila.innerHTML = `
                     <td>
                         ${numeroFila}
                     </td>
-
                     <td>
                         ${estudiante.nombre_estudiante}
                     </td>
-
                     <td>
                         ${estudiante.cedula_identidad}
                     </td>
-
                     ${controles}
-
                     <td class="celda-asistencia">
                         ${estudiante.asistencia}%
                     </td>
-
                     <td class="celda-promedio">
                         ${estudiante.promedio}
                     </td>
                 `;
 
-
-                // ==================================
-                // AGREGAR FILA
-                // ==================================
-
                 tbody.appendChild(fila);
-
-
                 numeroFila++;
-            }
-            );
+            });
 
-
-            // ==========================================
-            // AGREGAR TABLA AL CONTENEDOR
-            // ==========================================
-
-            contenedor_notas_academicas.appendChild(
-                tabla
-            );
-
-
+            contenedor_notas_academicas.appendChild(tabla);
         } catch (error) {
             console.error(error);
         }

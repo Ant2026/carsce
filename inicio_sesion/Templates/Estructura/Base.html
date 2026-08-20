@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,22 +13,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>UPT José Félix Ribas</title>
 </head>
-<body class="{% if request.session.usuario_nombre and not sin_estilos %}body-logueado{% endif %}">
+
+<body class="{% if request.session.usuario_nombre %}body-logueado{% endif %}">
     <script src="{% static 'Librerias/sweetalert2/dist/sweetalert2.min.js' %}"></script>
-    
+
     {% include 'Estructura/Encabezado.html' %}
 
     {% if request.session.usuario_nombre %}
-        {% include 'Estructura/Barra_lateral.html' %} 
+    {% include 'Estructura/Barra_lateral.html' %}
     {% endif %}
 
     <main class="{% if request.session.usuario_nombre %}main-logueado{% endif %}">
-    {% block content %}
+        {% block content %}
 
-    {% endblock %}
+        {% endblock %}
     </main>
-    
-    {% include 'Estructura/Pie_Pagina.html' %} 
 
+    {% if not request.session.usuario_nombre %}
+    {% include 'Estructura/Pie_Pagina.html' %}
+    {% endif %}
+
+    <script src="{% static 'Funciones_Asincronas/Docente/actualizar_trayecto.js' %}"></script>
 </body>
+
 </html>

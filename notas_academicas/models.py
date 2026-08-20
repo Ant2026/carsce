@@ -45,7 +45,16 @@ class PromedioFinal(models.Model):
     promedio_final = models.DecimalField(max_digits=5, decimal_places=2)
     estado = models.CharField(max_length=100)
     fecha_promedio = models.DateField()
-    
+
+class Reparacion(models.Model):
+    id_reparacion = models.AutoField(primary_key=True)
+    id_estudiante = models.ForeignKey(Estudiante, models.PROTECT, related_name="reparaciones")
+    id_materia_asignacion = models.ForeignKey(MateriaAsignada, models.PROTECT, related_name="reparaciones")
+    calificacion = models.DecimalField(max_digits=5, decimal_places=2)
+    fecha_reparacion = models.DateField()
+    trayecto = models.CharField(max_length=20, blank=True, null=True)
+    estado = models.CharField(max_length=100)
+
 class Calificaciones(models.Model):
     id_calificaciones = models.AutoField(primary_key=True)
     periodo_materia = models.ForeignKey(PeriodoNotasMateria, on_delete=models.PROTECT, related_name="calificaciones")
@@ -123,4 +132,3 @@ class HistorialTrayectoEstudiante(models.Model):
 #     evaluacion = models.ForeignKey(DetallePlanEvaluacion, on_delete=models.PROTECT, related_name="calificaciones")
 #     nota = models.DecimalField(max_digits=5, decimal_places=2)
 #     fecha_calificacion = models.DateField(auto_now_add=True)
-

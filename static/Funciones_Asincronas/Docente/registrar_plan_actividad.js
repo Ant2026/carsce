@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
             resultado.datos.forEach(materia => {
                 const option_materia = document.createElement("option");
                 option_materia.value = materia.id_materia_asignada;
-                option_materia.textContent = materia.nombre;
+                option_materia.textContent = materia.nombre + " " + materia.periodo;
                 select_asignacion_materia.append(option_materia);
             });
         } catch (error) {
@@ -190,76 +190,123 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function unidades_registradas() {
         try {
+            if (!materia || !periodo) {
+                console.log("Faltan datos:", {
+                    materia: materia,
+                    periodo: periodo
+                });
+                return;
+            }
+
             const formulario = new FormData();
+
             formulario.append("id_asignacion", materia);
+            formulario.append("id_periodo_academico", periodo);
 
             const respuesta = await fetch("/notas_academicas/cant_und_reg/", {
                 method: "POST",
                 headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value
                 },
                 body: formulario
             });
+
             const resultado = await respuesta.json();
-            console.log(resultado);
+
+            console.log("Resultado unidades:", resultado);
 
             if (resultado.estado !== "ok") {
-                estado_unidades.innerHTML = `${resultado.mensaje}`;
+                estado_unidades.innerHTML =
+                    `${resultado.descripcion || resultado.mensaje || "Ocurrió un error."}`;
 
-                estado_unidades.className = "estado_unidades estado_error";
+                estado_unidades.className =
+                    "estado_unidades estado_error";
+
                 return;
             }
 
             const cantidad = resultado.cantidad;
+
             if (!resultado.existe_plan) {
 
                 estado_unidades.innerHTML = `
-                    <strong>Unidades registradas:</strong>0 de 6
-                    <span class="separador">|</span>
-                    <strong>Mínimo:</strong>4
-                    <span class="separador">|</span>
-                    <strong>Máximo:</strong>6
-                    <p>Aún no se han registrado unidades para esta asignación de materia.</p>
-                `;
+                <strong>Unidades registradas:</strong>0 de 6
+                <span class="separador">|</span>
+                <strong>Mínimo:</strong>4
+                <span class="separador">|</span>
+                <strong>Máximo:</strong>6
 
-                estado_unidades.className = "estado_unidades estado_advertencia";
+                <p>
+                    Aún no se han registrado unidades para
+                    esta asignación de materia.
+                </p>
+            `;
+
+                estado_unidades.className =
+                    "estado_unidades estado_advertencia";
+
                 return;
             }
 
             estado_unidades.innerHTML = `
-                <strong>Unidades registradas:</strong>${cantidad} de 6
+            <strong>Unidades registradas:</strong>${cantidad} de 6
 
-                <span class="separador">|</span>
-                <strong>Mínimo:</strong>4
+            <span class="separador">|</span>
 
-                <span class="separador">|</span>
-                <strong>Máximo:</strong>6
-            `;
+            <strong>Mínimo:</strong>4
+
+            <span class="separador">|</span>
+
+            <strong>Máximo:</strong>6
+        `;
 
             if (cantidad < 4) {
-                estado_unidades.className = "estado_unidades estado_advertencia";
 
-                estado_unidades.innerHTML += `<p>El plan aún no cumple con el mínimo de<strong>4 unidades</strong>.</p>`;
-            } else if (cantidad >= 4 && cantidad <= 6) {
-                estado_unidades.className = "estado_unidades estado_correcto";
+                estado_unidades.className =
+                    "estado_unidades estado_advertencia";
 
                 estado_unidades.innerHTML += `
-                    <p>El plan cumple con la cantidad de unidades
+                <p>
+                    El plan aún no cumple con el mínimo de
+                    <strong>4 unidades</strong>.
+                </p>
+            `;
+
+            } else if (cantidad >= 4 && cantidad <= 6) {
+
+                estado_unidades.className =
+                    "estado_unidades estado_correcto";
+
+                estado_unidades.innerHTML += `
+                <p>
+                    El plan cumple con la cantidad de unidades
                     requerida y puede ser enviado al
                     <strong>Coordinador de PNF</strong>
-                    para su aprobación.</p>
-                `;
+                    para su aprobación.
+                </p>
+            `;
+
             } else {
-                estado_unidades.className = "estado_unidades estado_error";
+
+                estado_unidades.className =
+                    "estado_unidades estado_error";
 
                 estado_unidades.innerHTML += `
-                    <p>El plan supera el máximo permitido de
+                <p>
+                    El plan supera el máximo permitido de
                     <strong>6 unidades</strong>.
-                    No puede ser enviado para aprobación.</p>
-                `;
+                    No puede ser enviado para aprobación.
+                </p>
+            `;
             }
+
         } catch (error) {
-            console.error(error);
+            console.error(
+                "Error al consultar unidades registradas:",
+                error
+            );
         }
     }
 

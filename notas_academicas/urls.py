@@ -33,6 +33,7 @@ urlpatterns = [
     path('mod_mat_not/', views.mod_mat_not, name="mod_mat_not"),
     path('mod_per_not/', views.mod_per_not, name="mod_per_not"),
     path('mod_calf_not/', views.mod_calf_not, name="mod_calf_not"),
+    path('mod_not_acad/', views.mod_not_acad, name="mod_not_acad"),
 
     path('nucleos_est_asig/', views.nucleos_est_asig, name="nucleos_est_asig"),
     path('pnfs_est_asig/', views.pnfs_est_asig, name="pnfs_est_asig"),
@@ -41,4 +42,8 @@ urlpatterns = [
     path('eval_reg_est/', views.eval_reg_est, name="eval_reg_est"),
 
     path('info_acad_est/', views.info_acad_est, name="info_acad_est"),
+
+    path('calc_prom_est/', views.calc_prom_est, name="calc_prom_est"),
+    path('act_tray_est/', views.act_tray_est, name="act_tray_est"),
+
 ]
