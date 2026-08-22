@@ -46,4 +46,5 @@ urlpatterns = [
     path('calc_prom_est/', views.calc_prom_est, name="calc_prom_est"),
     path('act_tray_est/', views.act_tray_est, name="act_tray_est"),
 
+    path('reg_rep_not/', views.reg_rep_not, name="reg_rep_not"),
 ]

@@ -33,6 +33,7 @@ class DetallePlanEvaluacion(models.Model):
     id_evaluacion = models.AutoField(primary_key=True)
     detalle_plan = models.ForeignKey(DetallePlanActividades, on_delete=models.CASCADE, related_name="evaluaciones")
     metodo_evaluacion = models.CharField(max_length=100)
+    porcentaje_evaluacion = models.DecimalField(max_digits=5, decimal_places=2)
     fecha_evaluacion = models.DateField()
 
 # Notas académicas
@@ -40,7 +41,7 @@ class DetallePlanEvaluacion(models.Model):
 class PromedioFinal(models.Model):
     id_promedio_final = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(Estudiante, on_delete=models.PROTECT, related_name="promedios_finales")
-    materia = models.ForeignKey(Materia, on_delete=models.PROTECT, related_name="promedios_finales")
+    materia_asignacion = models.ForeignKey(MateriaAsignada, on_delete=models.PROTECT, related_name="promedios_finales")
     trayecto = models.CharField(max_length=20)
     promedio_final = models.DecimalField(max_digits=5, decimal_places=2)
     estado = models.CharField(max_length=100)
@@ -48,8 +49,8 @@ class PromedioFinal(models.Model):
 
 class Reparacion(models.Model):
     id_reparacion = models.AutoField(primary_key=True)
-    id_estudiante = models.ForeignKey(Estudiante, models.PROTECT, related_name="reparaciones")
-    id_materia_asignacion = models.ForeignKey(MateriaAsignada, models.PROTECT, related_name="reparaciones")
+    estudiante = models.ForeignKey(Estudiante, models.PROTECT, related_name="reparaciones")
+    materia_asignacion = models.ForeignKey(MateriaAsignada, models.PROTECT, related_name="reparaciones")
     calificacion = models.DecimalField(max_digits=5, decimal_places=2)
     fecha_reparacion = models.DateField()
     trayecto = models.CharField(max_length=20, blank=True, null=True)
@@ -79,6 +80,13 @@ class DetalleCalificacionesUnidad(models.Model):
     nota_unidad = models.DecimalField(max_digits=5, decimal_places=2)
     fecha_calificacion = models.DateField(auto_now_add=True)
 
+class DetalleCalificaciones(models.Model):
+    id_detalle_calificaciones = models.AutoField(primary_key=True)
+    calificacion = models.ForeignKey(Calificaciones, on_delete=models.PROTECT, related_name="detalles_evaluacion")
+    evaluacion = models.ForeignKey(DetallePlanEvaluacion, on_delete=models.PROTECT, related_name="calificaciones")
+    nota = models.DecimalField(max_digits=5, decimal_places=2)
+    fecha_calificacion = models.DateField(auto_now_add=True)
+
 # Respaldo de notas académicas
 
 class HistorialModificacionNotas(models.Model):
@@ -105,7 +113,10 @@ class HistorialDetalleNota(models.Model):
     promedio_anterior = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     promedio_nuevo = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
+# Promedio Final y Actualización de Trayecto
+
 class HistorialTrayectoEstudiante(models.Model):
+
     id_historial = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(Estudiante, on_delete=models.PROTECT, related_name="historiales_trayecto")
     anio = models.PositiveIntegerField()
@@ -126,9 +137,3 @@ class HistorialTrayectoEstudiante(models.Model):
             f"{self.trayecto_anterior}"
         )
 
-# class DetalleCalificaciones(models.Model):
-#     id_detalle_calificaciones = models.AutoField(primary_key=True)
-#     calificacion = models.ForeignKey(Calificaciones, on_delete=models.PROTECT, related_name="detalles_evaluacion")
-#     evaluacion = models.ForeignKey(DetallePlanEvaluacion, on_delete=models.PROTECT, related_name="calificaciones")
-#     nota = models.DecimalField(max_digits=5, decimal_places=2)
-#     fecha_calificacion = models.DateField(auto_now_add=True)

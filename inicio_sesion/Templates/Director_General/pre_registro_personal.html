@@ -10,7 +10,7 @@
 
         <form method="post" id="formulario_registrar">
             {% csrf_token %}
-            
+
             <div class="fila-campos">
                 <div class="campo">
                     <label for="nombre">Nombres:</label>
@@ -19,7 +19,8 @@
 
                 <div class="campo">
                     <label for="apellido">Apellidos:</label>
-                    <input type="text" name="apellidos" id="apellido" autocomplete="off" placeholder="Ingrese los apellidos">
+                    <input type="text" name="apellidos" id="apellido" autocomplete="off"
+                        placeholder="Ingrese los apellidos">
                 </div>
             </div>
 
@@ -49,7 +50,8 @@
             <div class="campo">
                 <label for="correo_electronico">Correo Electrónico (Principal):</label>
                 <div class="grupo-campo">
-                    <input type="text" name="correo_electronico" id="correo_electronico" placeholder="Ejemplo: ejemplo123" autocomplete="off">
+                    <input type="text" name="correo_electronico" id="correo_electronico"
+                        placeholder="Ejemplo: ejemplo123" autocomplete="off">
                     <select name="dominio" id="dominio"></select>
                 </div>
                 <small id="mensaje_correo_electronico"></small>
@@ -68,7 +70,7 @@
                 <label>PNF: (Docente)</label>
                 <div id="pnf_docente"></div>
             </div>
-            
+
             <button type="submit" id="btn_registro">Pre Registro</button>
         </form>
     </div>

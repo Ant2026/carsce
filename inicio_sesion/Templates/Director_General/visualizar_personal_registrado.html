@@ -1,0 +1,242 @@
+{% extends 'Estructura/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<style>
+    /* ==========================================================
+       CONTENEDOR PRINCIPAL
+    ========================================================== */
+
+    #modulo_visualizar_personal_registrado {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 40px 25px;
+        box-sizing: border-box;
+    }
+
+    .contenedor_visualizar_registrado {
+        width: 100%;
+        max-width: 1250px;
+        margin: 0 auto;
+        padding: 30px;
+        box-sizing: border-box;
+
+        background: #ffffff;
+        border-radius: 12px;
+
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+
+    /* ==========================================================
+       TÍTULO
+    ========================================================== */
+
+    .contenedor_visualizar_registrado h2 {
+        margin: 0 0 30px 0;
+        text-align: center;
+
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+
+    /* ==========================================================
+       CONTENEDOR DE FILTROS
+    ========================================================== */
+
+    .contenedor_busqueda_personal {
+        width: 100%;
+        margin-bottom: 30px;
+        padding: 20px;
+
+        box-sizing: border-box;
+
+        background: #f8f9fa;
+        border: 1px solid #e1e1e1;
+        border-radius: 10px;
+    }
+
+    .contenedor_busqueda_personal form {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .contenedor_busqueda_personal label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+
+    .contenedor_busqueda_personal select {
+        min-width: 220px;
+        padding: 10px 12px;
+
+        font-size: 14px;
+
+        border: 1px solid #cfcfcf;
+        border-radius: 7px;
+
+        background: #ffffff;
+
+        outline: none;
+        cursor: pointer;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .contenedor_busqueda_personal select:focus {
+        border-color: #777;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* ==========================================================
+       TABLA
+    ========================================================== */
+
+    .contenedor_personal_registrado {
+        width: 100%;
+        overflow-x: auto;
+
+        margin: 0 auto;
+
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+    }
+
+    .contenedor_personal_registrado table {
+        width: 100%;
+        min-width: 800px;
+
+        border-collapse: collapse;
+
+        text-align: center;
+    }
+
+    .contenedor_personal_registrado th {
+        padding: 14px 15px;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        background: #f1f3f5;
+
+        border-bottom: 2px solid #dcdcdc;
+    }
+
+    .contenedor_personal_registrado td {
+        padding: 13px 15px;
+
+        font-size: 14px;
+
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .contenedor_personal_registrado tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .contenedor_personal_registrado tbody tr:hover {
+        background-color: #f7f7f7;
+    }
+
+    .contenedor_personal_registrado tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+
+    /* ==========================================================
+       RESPONSIVE
+    ========================================================== */
+
+    @media (max-width: 700px) {
+
+        #modulo_visualizar_personal_registrado {
+            padding: 25px 12px;
+        }
+
+        .contenedor_visualizar_registrado {
+            padding: 20px;
+        }
+
+        .contenedor_visualizar_registrado h2 {
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+
+        .contenedor_busqueda_personal {
+            padding: 15px;
+        }
+
+        .contenedor_busqueda_personal form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .contenedor_busqueda_personal label {
+            margin-left: 0;
+            margin-top: 5px;
+        }
+
+        .contenedor_busqueda_personal select {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+</style>
+
+<section id="modulo_visualizar_personal_registrado">
+    <div class="contenedor_visualizar_registrado">
+        <h2>Visualizar Personal Registrado</h2>
+
+        <div class="contenedor_busqueda_personal">
+            <form method="post">
+                {% csrf_token %}
+
+                <label for="pnf_registrados">P.N.F</label>
+                <select name="pnf_registrados" id="pnf_registrados"></select>
+
+                <label for="perfiles_registrados">Rol:</label>
+                <select name="perfiles_registrados" id="perfiles_registrados">
+                    <option value="">Selecciona un perfil</option>
+                    <option value="Docente">Docente</option>
+                    <option value="Coordinador de PNF">Coordinador de PNF</option>
+                    <option value="Encargado de Control de Estudio">Encargado de Control de Estudio</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="contenedor_personal_registrado">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOMBRES</th>
+                        <th>APELLIDOS</th>
+                        <th>C.I</th>
+                        <th>ROL</th>
+                        <th>P.N.F Asignados</th>
+                    </tr>
+                </thead>
+                <tbody id="contenedor_personal_registrado"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script
+    src="{% static 'Funciones_Asincronas/Director_General/pre_registro/visualizar_personal_registrado.js' %}"></script>
+
+{% endblock %}

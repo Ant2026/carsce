@@ -2435,7 +2435,6 @@ def calc_prom_est(request):
         "cantidad": cantidad_guardada,
     })
 
-
 @transaction.atomic
 def act_tray_est(request):
 

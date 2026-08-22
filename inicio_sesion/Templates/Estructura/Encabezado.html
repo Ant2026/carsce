@@ -20,63 +20,63 @@
         </div>
 
         {% if not request.session.usuario_nombre %}
-            <div class="contenedor_barra">           
-                <ul class="navbar">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'foro'%}">Inicio</a>
-                    </li>
+        <div class="contenedor_barra">
+            <ul class="navbar">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'foro'%}">Inicio</a>
+                </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#">Institución</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#">Institución</a>
 
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'Historia' %}">Nuestra Historia</a></li>
-                            <li><a class="dropdown-item" href="{% url 'mision_vision' %}">Mision y Vision</a></li>
-                        </ul>
-                    </li>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'Historia' %}">Nuestra Historia</a></li>
+                        <li><a class="dropdown-item" href="{% url 'mision_vision' %}">Mision y Vision</a></li>
+                    </ul>
+                </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#">Formación Estudiantil</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#">Formación Estudiantil</a>
 
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'pst' %}">Proyecto Socio-Tecnologico (PST)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario (PSC)</a></li>
-                        </ul>
-                    </li>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'pst' %}">Proyecto Socio-Tecnologico (PST)</a></li>
+                        <li><a class="dropdown-item" href="{% url 'psc' %}">Proyecto Socio-Comunitario (PSC)</a></li>
+                    </ul>
+                </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#">Guia Estudiantil/Docente</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Trayectoria Academica</a></li>
-                            <li><a class="dropdown-item" href="{% url 'Planificacion_Docente'%}">Planificación Docente</a>
-                            </li>
-                        </ul>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#">Guia Estudiantil/Docente</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'trayectoria' %}">Trayectoria Academica</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Planificacion_Docente'%}">Planificación Docente</a>
+                        </li>
+                    </ul>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'carreras_impartidas' %}">Carreras Impartidas</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carreras_impartidas' %}">Carreras Impartidas</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{% url 'inicio_sesion' %}" class="btn_acceder">Acceder</a>
+                </li>
 
-                </ul>
-            </div>
+            </ul>
+        </div>
         {% endif %}
         {% if request.session.usuario_nombre %}
-            <div class="contenedor_logueado">
-                <ul class="navbar">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link icon-user" href="#">Perfil</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'act_dat_usr' %}">Configuración</a></li>
-                            <li><a class="dropdown-item icon-logout" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        <div class="contenedor_logueado">
+            <ul class="navbar">
+                <li class="nav-item dropdown">
+                    <a class="nav-link icon-user" href="#">Perfil</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><a class="dropdown-item icon-logout" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
         {% endif %}
 
     </nav>

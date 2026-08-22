@@ -12,5 +12,7 @@ from notas_academicas.models import PlanActividadAcademica, DetallePlanActividad
 
 # Registrar Reparacion 
 
+# def mat_rep_not(request):
+
 def reg_rep_not(request):
     return render(request, "registrar_reparacion.html")

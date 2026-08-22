@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.db import transaction
 from django.utils import timezone
 
-from inicio_sesion.models import Usuario, Materia, MateriaAsignada, DocenteAsignadoMateria, CoordinadorPNF, Docente, Bitacora, Materia, SeccionAcademica
+from inicio_sesion.models import Usuario, Pnf, Materia, ControlEstudio, DirectorGeneral, Estudiante, MateriaAsignada, DocenteAsignadoMateria, CoordinadorPNF, Docente, Bitacora, Materia, SeccionAcademica
     
 def docs_reg(request):
     try:
@@ -837,3 +837,604 @@ def asig_desact(request):
         })
 
     return render(request, "Coordinador_PNF/asignacion_materia/reactivar_asignaciones.html")
+
+def per_reg_asig(request):
+    # DIRECTOR GENERAL DE LA SESIÓN
+    director = DirectorGeneral.objects.filter(
+        usuario__cedula_identidad=request.session.get("cedula_usuario")
+    ).select_related(
+        "usuario",
+        "nucleo"
+    ).first()
+
+    if not director:
+        return JsonResponse({
+            "personal": [],
+            "error": "Director General no encontrado"
+        }, status=404)
+
+    nucleo = director.nucleo
+
+    # FILTROS OPCIONALES
+    pnf_filtro = request.POST.get("pnf", "").strip()
+    perfil_filtro = request.POST.get("perfil", "").strip()
+
+    datos = []
+
+    # DOCENTES
+    if not perfil_filtro or perfil_filtro == "Docente":
+        docentes = Docente.objects.filter(
+            nucleo=nucleo
+        ).select_related(
+            "usuario",
+            "pnf"
+        )
+
+        for docente in docentes:
+
+            if Estudiante.objects.filter(
+                usuario=docente.usuario,
+                nucleo=nucleo
+            ).exists():
+                continue
+
+            if docente.pnf:
+                pnf_asignado = docente.pnf.pnf
+                id_pnf = str(docente.pnf.id_pnf)
+            else:
+                pnf_asignado = "NO CUENTA CON P.N.F"
+                id_pnf = ""
+
+            # Filtro por PNF
+            if pnf_filtro and id_pnf != pnf_filtro:
+                continue
+
+            datos.append({
+                "id_usuario": docente.usuario.id_usuario,
+                "nombres": docente.usuario.nombres,
+                "apellidos": docente.usuario.apellidos,
+                "cedula": docente.usuario.cedula_identidad,
+                "rol": "Docente",
+                "pnf": pnf_asignado,
+            })
+
+    # COORDINADORES PNF
+    if not perfil_filtro or perfil_filtro == "Coordinador de PNF":
+        coordinadores = CoordinadorPNF.objects.filter(
+            nucleo=nucleo
+        ).select_related(
+            "usuario",
+            "pnf"
+        )
+
+        for coordinador in coordinadores:
+            if Estudiante.objects.filter(
+                usuario=coordinador.usuario,
+                nucleo=nucleo
+            ).exists():
+                continue
+
+            if coordinador.pnf:
+                pnf_asignado = coordinador.pnf.pnf
+                id_pnf = str(coordinador.pnf.id_pnf)
+            else:
+                pnf_asignado = "NO CUENTA CON P.N.F"
+                id_pnf = ""
+
+            # Filtro por PNF
+            if pnf_filtro and id_pnf != pnf_filtro:
+                continue
+
+            datos.append({
+                "id_usuario": coordinador.usuario.id_usuario,
+                "nombres": coordinador.usuario.nombres,
+                "apellidos": coordinador.usuario.apellidos,
+                "cedula": coordinador.usuario.cedula_identidad,
+                "rol": "Coordinador PNF",
+                "pnf": pnf_asignado,
+            })
+
+    # CONTROL DE ESTUDIO
+    if not perfil_filtro or perfil_filtro == "Encargado de Control de Estudio":
+        controles = ControlEstudio.objects.filter(
+            nucleo=nucleo
+        ).select_related("usuario")
+
+        if not pnf_filtro:
+            for control in controles:
+                if Estudiante.objects.filter(
+                    usuario=control.usuario,
+                    nucleo=nucleo
+                ).exists():
+                    continue
+
+                datos.append({
+                    "id_usuario": control.usuario.id_usuario,
+                    "nombres": control.usuario.nombres,
+                    "apellidos": control.usuario.apellidos,
+                    "cedula": control.usuario.cedula_identidad,
+                    "rol": "Control de Estudio",
+                    "pnf": "NO CUENTA CON P.N.F",
+                })
+
+    return JsonResponse({ "personal": datos })
+
+def vis_per_asig(request):
+    return render(request, "Director_General/visualizar_personal_registrado.html")
+
+def bus_per_asig(request):
+
+    if request.method == "POST":
+
+        nacionalidad = request.POST.get("nacionalidad_registrar")
+        cedula = request.POST.get("cedula_registrar")
+
+        # ==========================================
+        # VALIDAR NACIONALIDAD
+        # ==========================================
+
+        if not nacionalidad:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "warning",
+                "title": "Vacio",
+                "descripcion": "Por favor, selecciona la nacionalidad."
+            })
+
+        # ==========================================
+        # VALIDAR CÉDULA
+        # ==========================================
+
+        if not cedula:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "warning",
+                "title": "Vacio",
+                "descripcion": "Por favor, ingrese los números de su cedula de identidad."
+            })
+
+        cedula_identidad = nacionalidad + "-" + cedula
+
+        # ==========================================
+        # BUSCAR USUARIO
+        # ==========================================
+
+        usuario = Usuario.objects.filter(
+            cedula_identidad=cedula_identidad
+        ).first()
+
+        if not usuario:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "warning",
+                "title": "No encontrado",
+                "descripcion": "No existe un usuario registrado con esa cédula."
+            })
+
+        # ==========================================
+        # BUSCAR DIRECTOR GENERAL
+        # ==========================================
+
+        director = DirectorGeneral.objects.filter(
+            usuario__cedula_identidad=request.session.get("cedula_usuario")
+        ).select_related(
+            "nucleo"
+        ).first()
+
+        if not director:
+            return JsonResponse({
+                "estado": "fallo",
+                "icon": "error",
+                "title": "Error",
+                "descripcion": "No se encontró el Director General."
+            })
+
+        # Núcleo donde se está realizando la actualización
+        nucleo = director.nucleo
+
+        # ==========================================
+        # DATOS DEL USUARIO
+        # ==========================================
+
+        datos_usuario = {
+            "id_usuario": usuario.id_usuario,
+            "nombres": usuario.nombres,
+            "apellidos": usuario.apellidos,
+            "cedula": usuario.cedula_identidad,
+        }
+
+        perfiles = []
+
+        # Guardaremos solamente los tipos de perfil
+        # que ya tiene el usuario.
+        perfiles_asignados = set()
+
+        # ==========================================
+        # DOCENTE
+        # ==========================================
+
+        docentes = Docente.objects.filter(
+            usuario=usuario
+        ).select_related(
+            "nucleo",
+            "pnf"
+        )
+
+        for docente in docentes:
+
+            perfiles_asignados.add("docente")
+
+            perfiles.append({
+                "rol": "Docente",
+                "tipo": "docente",
+                "id_perfil": docente.id_docente,
+                "activo": docente.activo,
+                "estado": "ACTIVO" if docente.activo else "INHABILITADO",
+                "nucleo": docente.nucleo.municipio,
+                "id_pnf": docente.pnf.id_pnf if docente.pnf else None,
+                "pnf": docente.pnf.pnf if docente.pnf else "NO CUENTA CON P.N.F",
+            })
+
+        # ==========================================
+        # COORDINADOR PNF
+        # ==========================================
+
+        coordinadores = CoordinadorPNF.objects.filter(
+            usuario=usuario
+        ).select_related(
+            "nucleo",
+            "pnf"
+        )
+
+        for coordinador in coordinadores:
+
+            perfiles_asignados.add("coordinador_pnf")
+
+            perfiles.append({
+                "rol": "Coordinador de PNF",
+                "tipo": "coordinador_pnf",
+                "id_perfil": coordinador.id_coordinador,
+                "activo": coordinador.activo,
+                "estado": "ACTIVO" if coordinador.activo else "INHABILITADO",
+                "nucleo": coordinador.nucleo.municipio,
+                "id_pnf": coordinador.pnf.id_pnf if coordinador.pnf else None,
+                "pnf": coordinador.pnf.pnf if coordinador.pnf else "NO CUENTA CON P.N.F",
+            })
+
+        # ==========================================
+        # CONTROL DE ESTUDIO
+        # ==========================================
+
+        controles = ControlEstudio.objects.filter(
+            usuario=usuario
+        ).select_related(
+            "nucleo"
+        )
+
+        for control in controles:
+
+            perfiles_asignados.add("control_estudio")
+
+            perfiles.append({
+                "rol": "Encargado de Control de Estudio",
+                "tipo": "control_estudio",
+                "id_perfil": control.id_control,
+                "activo": control.activo,
+                "estado": "ACTIVO" if control.activo else "INHABILITADO",
+                "nucleo": control.nucleo.municipio,
+                "id_pnf": None,
+                "pnf": "NO CUENTA CON P.N.F",
+            })
+
+        # ==========================================
+        # PERFILES DISPONIBLES
+        # ==========================================
+
+        todos_los_perfiles = [
+            {
+                "tipo": "docente",
+                "rol": "Docente"
+            },
+            {
+                "tipo": "coordinador_pnf",
+                "rol": "Coordinador de PNF"
+            },
+            {
+                "tipo": "control_estudio",
+                "rol": "Encargado de Control de Estudio"
+            }
+        ]
+
+        perfiles_disponibles = [
+            perfil
+            for perfil in todos_los_perfiles
+            if perfil["tipo"] not in perfiles_asignados
+        ]
+
+        # ==========================================
+        # PNF QUE YA TIENEN COORDINADOR ACTIVO
+        # ==========================================
+
+        pnfs_coordinador_ocupados = set(
+            CoordinadorPNF.objects.filter(
+                nucleo=nucleo,
+                activo=True
+            ).values_list(
+                "pnf_id",
+                flat=True
+            )
+        )
+
+        # ==========================================
+        # PNF DISPONIBLES PARA COORDINADOR
+        # ==========================================
+
+        pnfs_disponibles_coordinador = Pnf.objects.filter(
+            pnfnucleo__id_nucleo=nucleo
+        ).exclude(
+            id_pnf__in=pnfs_coordinador_ocupados
+        ).values(
+            "id_pnf",
+            "pnf",
+            "codigo"
+        )
+
+        # ==========================================
+        # PNF DEL NÚCLEO
+        # ==========================================
+
+        pnfs_nucleo = Pnf.objects.filter(
+            pnfnucleo__id_nucleo=nucleo
+        ).values(
+            "id_pnf",
+            "pnf",
+            "codigo"
+        )
+
+
+        # ==========================================
+        # PNF QUE EL USUARIO YA TIENE COMO DOCENTE
+        # ==========================================
+
+        pnfs_docente_asignados = set(
+            Docente.objects.filter(
+                usuario=usuario,
+                nucleo=nucleo
+            ).values_list(
+                "pnf_id",
+                flat=True
+            )
+        )
+
+
+        # ==========================================
+        # PNF DISPONIBLES PARA DOCENTE
+        # ==========================================
+
+        pnfs_disponibles_docente = [
+            pnf
+            for pnf in pnfs_nucleo
+            if pnf["id_pnf"] not in pnfs_docente_asignados
+        ]
+
+
+        # ==========================================
+        # PNF QUE YA TIENEN COORDINADOR ACTIVO
+        # ==========================================
+
+        pnfs_coordinador_ocupados = set(
+            CoordinadorPNF.objects.filter(
+                nucleo=nucleo,
+                activo=True
+            ).exclude(
+                usuario=usuario
+            ).values_list(
+                "pnf_id",
+                flat=True
+            )
+        )
+
+
+
+        # ==========================================
+        # PNF QUE EL USUARIO YA TIENE COMO DOCENTE
+        # ==========================================
+
+        pnfs_docente_asignados = set(
+            Docente.objects.filter(
+                usuario=usuario,
+                nucleo=nucleo
+            ).values_list(
+                "pnf_id",
+                flat=True
+            )
+        )
+
+
+        # ==========================================
+        # PNF DISPONIBLES PARA DOCENTE
+        # ==========================================
+
+        pnfs_disponibles_docente = [
+            pnf
+            for pnf in pnfs_nucleo
+            if pnf["id_pnf"] not in pnfs_docente_asignados
+        ]
+
+
+        # ==========================================
+        # PNF QUE YA TIENEN COORDINADOR ACTIVO
+        # ==========================================
+
+        pnfs_coordinador_ocupados = set(
+            CoordinadorPNF.objects.filter(
+                nucleo=nucleo,
+                activo=True
+            ).exclude(
+                usuario=usuario
+            ).values_list(
+                "pnf_id",
+                flat=True
+            )
+        )
+
+
+        # ==========================================
+        # PNF DISPONIBLES PARA COORDINADOR
+        # ==========================================
+
+        pnfs_disponibles_coordinador = [
+            pnf
+            for pnf in pnfs_nucleo
+            if pnf["id_pnf"] not in pnfs_coordinador_ocupados
+        ]
+
+        return JsonResponse({
+            "estado": "exito",
+            "usuario": datos_usuario,
+            "perfiles": perfiles,
+            "perfiles_disponibles": perfiles_disponibles,
+
+            "pnfs_disponibles_docente": pnfs_disponibles_docente,
+
+            "pnfs_disponibles_coordinador": pnfs_disponibles_coordinador
+        })
+
+def act_per_asig(request):
+    if request.method == "POST":
+        cedula_usuario = request.POST.get("cedula_usuario")
+        # PNF seleccionados para Docente
+        pnfs_docente = request.POST.getlist("pnfs_docente")
+        # PNF seleccionados para Coordinador PNF
+        pnfs_coordinador = request.POST.getlist("pnfs_coordinador")
+        # Control de Estudio
+        control_estudio = request.POST.get("control_estudio")
+
+        # DIRECTOR GENERAL
+        director = DirectorGeneral.objects.filter(
+            usuario__cedula_identidad=request.session.get("cedula_usuario")
+        ).select_related("nucleo").first()
+
+        nucleo = director.nucleo
+
+        # BUSCAR USUARIO
+        usuario = Usuario.objects.filter(
+            cedula_identidad=cedula_usuario
+        ).first()
+
+        if not usuario:
+            return JsonResponse({
+                "estado": "fallo",
+                "title": "Usuario no encontrado",
+                "descripcion": "No existe un usuario registrado con esa cédula.",
+                "icon": "warning"
+            })
+
+        try:
+
+            with transaction.atomic():
+
+                # ==========================================
+                # DOCENTE
+                # ==========================================
+
+                for id_pnf in pnfs_docente:
+
+                    pnf = Pnf.objects.filter(
+                        id_pnf=id_pnf
+                    ).first()
+
+                    if not pnf:
+                        continue
+
+                    docente, creado = Docente.objects.get_or_create(
+                        usuario=usuario,
+                        nucleo=nucleo,
+                        pnf=pnf,
+                        defaults={
+                            "activo": True
+                        }
+                    )
+
+                    # Si ya existe pero está inhabilitado,
+                    # se vuelve a activar.
+                    if not creado and not docente.activo:
+
+                        docente.activo = True
+
+                        docente.save(
+                            update_fields=["activo"]
+                        )
+
+                # ==========================================
+                # COORDINADOR PNF
+                # ==========================================
+
+                for id_pnf in pnfs_coordinador:
+
+                    pnf = Pnf.objects.filter(
+                        id_pnf=id_pnf
+                    ).first()
+
+                    if not pnf:
+                        continue
+
+                    coordinador, creado = CoordinadorPNF.objects.get_or_create(
+                        usuario=usuario,
+                        nucleo=nucleo,
+                        pnf=pnf,
+                        defaults={
+                            "activo": True
+                        }
+                    )
+
+                    if not creado and not coordinador.activo:
+
+                        coordinador.activo = True
+
+                        coordinador.save(
+                            update_fields=["activo"]
+                        )
+
+                # ==========================================
+                # CONTROL DE ESTUDIO
+                # ==========================================
+
+                if control_estudio == "1":
+
+                    control, creado = ControlEstudio.objects.get_or_create(
+                        usuario=usuario,
+                        nucleo=nucleo,
+                        defaults={
+                            "activo": True
+                        }
+                    )
+
+                    if not creado and not control.activo:
+
+                        control.activo = True
+
+                        control.save(
+                            update_fields=["activo"]
+                        )
+
+            return JsonResponse({
+                "estado": "exito",
+                "title": "Perfiles actualizados",
+                "descripcion": "Los perfiles fueron actualizados correctamente.",
+                "icon": "success"
+            })
+
+        except Exception as error:
+
+            print("ERROR:", error)
+
+            return JsonResponse({
+                "estado": "fallo",
+                "title": "Error",
+                "descripcion": "Ocurrió un error al actualizar los perfiles.",
+                "icon": "error"
+            })
+
+    return render(request, "Director_General/actualizar_personal_registrado.html")
+

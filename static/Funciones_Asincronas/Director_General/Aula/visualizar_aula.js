@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formulario_actualizar = document.getElementById("formulario_actualizar_aula");
     const contenedor_aulas = document.getElementById("contenedor_aulas");
-    
+
     const dialogo_actualizar_aula = document.getElementById("dialogo_actualizar_aula");
 
     const input_id_aula_oculto = document.getElementById("aula_seleccionar");
@@ -18,26 +18,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const respuesta = await fetch("/aulas_reg/");
             const resultado = await respuesta.json();
 
-            let filas = "";
-            Object.entries(resultado).forEach(([municipio, aulas]) => {
-                aulas.forEach((aula, index) => {
-                    filas += `
-                        <tr data-id="${aula.id_aula}">
+            console.log(resultado);
 
-                            <td>${index + 1}</td>
-                            <td>${aula.nombre_aula}</td>
-                            <td>${aula.nombre_edificio}</td>
-                            <td>${aula.piso_edificio}</td>
-                        </tr>
-                    `;
-                });
+            let filas = "";
+
+            resultado.aulas.forEach((aula, index) => {
+                filas += `
+                <tr data-id="${aula.id_aula}">
+                    <td>${index + 1}</td>
+                    <td>${aula.nombre_aula}</td>
+                    <td>${aula.nombre_edificio}</td>
+                    <td>${aula.piso_edificio}</td>
+                </tr>
+            `;
             });
 
             contenedor_aulas.innerHTML = filas;
+
         } catch (error) {
             console.error(error);
         }
     }
+
     aulas_registradas();
 
     contenedor_aulas.addEventListener("click", async (e) => {
@@ -93,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(resultado);
 
             dialogo_actualizar_aula.close();
-            
+
             await Swal.fire({
                 text: resultado.descripcion,
                 icon: resultado.icon,

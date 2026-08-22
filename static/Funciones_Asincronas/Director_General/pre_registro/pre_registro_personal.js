@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const select_prefijo = document.getElementById("prefijo_telefono");
 
     const btn_registro = document.getElementById("btn_registro");
-  
+
     configurarCedula(select_nacionalidad, input_cedula_identidad);
     configurarCorreo(input_correo_electronico, select_dominio);
     configurarTelefono(input_telefono, select_prefijo);
@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: formulario
             });
-
             const resultado = await respuesta.json();
             console.log(resultado);
 
@@ -133,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    formulario_registrar.addEventListener("submit", async function(e) {
+    formulario_registrar.addEventListener("submit", async function (e) {
         e.preventDefault();
         try {
             const formulario = new FormData(formulario_registrar);
@@ -144,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const resultado = await respuesta.json();
             console.log(resultado);
-            
+
             await Swal.fire({
                 title: resultado.title,
                 text: resultado.descripcion,
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             });
-    
+
             if (resultado.estado == "exito") {
                 formulario_registrar.reset();
             }

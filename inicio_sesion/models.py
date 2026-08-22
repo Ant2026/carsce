@@ -145,6 +145,7 @@ class Materia(models.Model):
     htea = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
     htei = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
     id_pnf = models.ForeignKey(Pnf, models.CASCADE, db_column='id_pnf')
+    activa = models.BooleanField(default=True)
 
     @property
     def thte(self):
@@ -292,6 +293,7 @@ class SeccionEstudiante(models.Model):
 
 class Docente(RolAcademico):
     id_docente = models.AutoField(primary_key=True)
+    activo = models.BooleanField(default=True)
 
     class Meta:
         constraints = [
@@ -403,6 +405,7 @@ class DocumentoCompartido(models.Model):
 
 class CoordinadorPNF(RolAcademico):
     id_coordinador = models.AutoField(primary_key=True)
+    activo = models.BooleanField(default=True)
 
     class Meta:
         constraints = [
@@ -419,6 +422,7 @@ class ControlEstudio(models.Model):
     id_control = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
+    activo = models.BooleanField(default=True)
 
     class Meta:
         constraints = [
@@ -435,7 +439,7 @@ class DirectorGeneral(models.Model):
     id_director = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     nucleo = models.ForeignKey(Nucleos, on_delete=models.CASCADE)
-
+    
     class Meta:
         constraints = [
             models.UniqueConstraint(
